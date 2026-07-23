@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>打字练习乐园</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="login-screen" class="screen active">
+        <div class="login-container">
+            <div class="login-header">
+                <div class="login-logo">⌨️</div>
+                <h1>打字练习乐园</h1>
+                <p>小学三至五年级专用</p>
+            </div>
+            <div class="login-options">
+                <div class="login-card" onclick="showScreen('student-login-screen')">
+                    <div class="login-card-icon">👦</div>
+                    <h3>学生登录</h3>
+                    <p>选择班级，输入姓名和密码</p>
+                </div>
+                <div class="login-card teacher-login-card" onclick="showScreen('teacher-login-screen')">
+                    <div class="login-card-icon">👨‍🏫</div>
+                    <h3>教师登录</h3>
+                    <p>管理学生和练习内容</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="student-login-screen" class="screen">
+        <div class="login-form-container">
+            <button class="back-btn" onclick="showScreen('login-screen')">← 返回</button>
+            <h2>👦 学生登录</h2>
+            <div class="login-form">
+                <div class="form-group">
+                    <label>选择班级</label>
+                    <select id="login-class"><option value="">请选择班级</option></select>
+                </div>
+                <div class="form-group">
+                    <label>输入姓名</label>
+                    <input type="text" id="login-name" placeholder="请输入你的姓名">
+                </div>
+                <div class="form-group">
+                    <label>输入密码</label>
+                    <input type="password" id="login-password" placeholder="首次默认密码 pzxx">
+                </div>
+                <button class="login-btn" onclick="studentLogin()">登 录</button>
+                <p id="student-login-msg" class="form-msg"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="teacher-login-screen" class="screen">
+        <div class="login-form-container">
+            <button class="back-btn" onclick="showScreen('login-screen')">← 返回</button>
+            <h2>👨‍🏫 教师登录</h2>
+            <div class="login-form">
+                <div class="form-group">
+                    <label>用户名</label>
+                    <input type="text" id="teacher-login-user" placeholder="请输入用户名">
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="teacher-login-pwd" placeholder="请输入密码">
+                </div>
+                <button class="login-btn" onclick="teacherLogin()">登 录</button>
+                <p id="teacher-login-msg" class="form-msg"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="home-screen" class="screen">
+        <div class="home-container">
+            <div id="student-bar" class="student-bar">
+                <span id="student-bar-info">👤 <span id="student-bar-name"></span> - <span id="student-bar-class"></span></span>
+                <div class="student-bar-actions">
+                    <button class="bar-btn" onclick="showScreen('student-profile-screen')">修改密码</button>
+                    <button class="bar-btn bar-logout" onclick="logout()">退出登录</button>
+                </div>
+            </div>
+            <div class="home-header">
+                <div class="title-emoji">⌨️</div>
+                <h1 class="home-title">打字练习乐园</h1>
+                <p class="home-subtitle">小学三至五年级专用</p>
+            </div>
+            <div class="home-menu">
+                <div class="menu-card card-practice" onclick="showScreen('practice-screen')">
+                    <div class="menu-icon">🎯</div>
+                    <div class="menu-text"><h3>开始练习</h3></div>
+                </div>
+                <div class="menu-card card-game" onclick="showScreen('game-screen')">
+                    <div class="menu-icon">🎮</div>
+                    <div class="menu-text"><h3>打字游戏</h3></div>
+                </div>
+                <div class="menu-card card-score" onclick="showScreen('score-screen')">
+                    <div class="menu-icon">📊</div>
+                    <div class="menu-text"><h3>我的成绩</h3></div>
+                </div>
+                <div class="menu-card card-settings" onclick="showScreen('settings-screen')">
+                    <div class="menu-icon">⚙️</div>
+                    <div class="menu-text"><h3>设置</h3></div>
+                </div>
+            </div>
+            <div class="daily-tip">
+                <div class="tip-icon">💡</div>
+                <div class="tip-content">
+                    <span class="tip-title">每日小贴士</span>
+                    <p id="tip-text">正确坐姿：身体坐直，双脚平放地面，眼睛与屏幕保持一臂距离。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="student-profile-screen" class="screen">
+        <div class="login-form-container">
+            <button class="back-btn" onclick="showScreen('home-screen')">← 返回</button>
+            <h2>🔑 修改密码</h2>
+            <div class="login-form">
+                <div class="form-group">
+                    <label>当前密码</label>
+                    <input type="password" id="profile-old-pwd" placeholder="请输入当前密码">
+                </div>
+                <div class="form-group">
+                    <label>新密码</label>
+                    <input type="password" id="profile-new-pwd" placeholder="请输入新密码">
+                </div>
+                <div class="form-group">
+                    <label>确认新密码</label>
+                    <input type="password" id="profile-confirm-pwd" placeholder="请再次输入新密码">
+                </div>
+                <button class="login-btn" onclick="changeStudentPassword()">确认修改</button>
+                <p id="profile-msg" class="form-msg"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="teacher-panel-screen" class="screen">
+        <div class="teacher-container">
+            <div class="teacher-header">
+                <h2>👨‍🏫 教师管理后台</h2>
+                <button class="logout-btn" onclick="logout()">退出登录</button>
+            </div>
+            <div class="teacher-tabs">
+                <button class="tab-btn active" onclick="switchTab('students')">👥 学生管理</button>
+                <button class="tab-btn" onclick="switchTab('articles')">📄 文章管理</button>
+                <button class="tab-btn" onclick="switchTab('t-settings')">⚙️ 系统设置</button>
+            </div>
+
+            <div id="tab-students" class="tab-content active">
+                <div class="tab-section">
+                    <h3>添加学生</h3>
+                    <div class="add-student-row">
+                        <select id="stu-class"><option value="">选择班级</option></select>
+                        <input type="text" id="stu-name" placeholder="输入姓名">
+                        <button class="action-btn primary" onclick="addSingleStudent()">添加</button>
+                    </div>
+                    <div class="add-student-bulk">
+                        <p class="bulk-hint">批量添加：每行一个，格式 <b>班级-姓名</b>（如 三年级1班-张三）</p>
+                        <textarea id="stu-bulk" rows="4" placeholder="三年级1班-张三&#10;三年级1班-李四&#10;四年级2班-王五"></textarea>
+                        <button class="action-btn primary" onclick="addBulkStudents()">批量添加</button>
+                    </div>
+                </div>
+                <div class="tab-section">
+                    <h3>学生名单 <span id="stu-count" class="count-badge">0人</span></h3>
+                    <div class="table-wrap">
+                        <table id="stu-table">
+                            <thead><tr><th>班级</th><th>姓名</th><th>密码状态</th><th>操作</th></tr></thead>
+                            <tbody id="stu-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-articles" class="tab-content">
+                <div class="tab-section">
+                    <h3>添加文章</h3>
+                    <div class="add-article-form">
+                        <input type="text" id="art-title" placeholder="文章标题">
+                        <select id="art-difficulty"><option value="easy">简单</option><option value="medium" selected>中等</option><option value="hard">困难</option></select>
+                        <textarea id="art-content" rows="5" placeholder="请输入文章内容..."></textarea>
+                        <button class="action-btn primary" onclick="addArticle()">添加文章</button>
+                    </div>
+                </div>
+                <div class="tab-section">
+                    <h3>文章列表 <span id="art-count" class="count-badge">0篇</span></h3>
+                    <div class="table-wrap">
+                        <table id="art-table">
+                            <thead><tr><th>标题</th><th>难度</th><th>内容预览</th><th>操作</th></tr></thead>
+                            <tbody id="art-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-t-settings" class="tab-content">
+                <div class="tab-section">
+                    <h3>学生默认密码</h3>
+                    <div class="setting-row-inline">
+                        <input type="text" id="set-default-pwd" value="pzxx">
+                        <button class="action-btn primary" onclick="saveDefaultPwd()">保存</button>
+                    </div>
+                </div>
+                <div class="tab-section">
+                    <h3>修改教师密码</h3>
+                    <div class="setting-row-inline">
+                        <input type="password" id="set-old-pwd" placeholder="当前密码">
+                        <input type="password" id="set-new-pwd" placeholder="新密码">
+                        <button class="action-btn primary" onclick="changeTeacherPwd()">修改</button>
+                    </div>
+                    <p id="teacher-settings-msg" class="form-msg"></p>
+                </div>
+                <div class="tab-section">
+                    <h3>数据管理</h3>
+                    <div class="btn-group">
+                        <button class="action-btn" onclick="exportData()">📥 导出数据</button>
+                        <button class="action-btn danger" onclick="importData()">📤 导入数据</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="practice-screen" class="screen">
+        <div class="sub-container">
+            <div class="sub-header">
+                <button class="back-btn" onclick="showScreen('home-screen')">← 返回</button>
+                <h2>📝 开始练习</h2>
+                <div class="header-space"></div>
+            </div>
+            <div class="practice-grid">
+                <div class="practice-card" onclick="startPractice('letters-home')">
+                    <div class="card-emoji">🏠</div><h3>基准键</h3><p>ASDF JKL;</p><span class="tag-easy">入门</span>
+                </div>
+                <div class="practice-card" onclick="startPractice('letters-all')">
+                    <div class="card-emoji">🔤</div><h3>全字母</h3><p>A-Z 大小写</p><span class="tag-medium">进阶</span>
+                </div>
+                <div class="practice-card" onclick="startPractice('numbers')">
+                    <div class="card-emoji">🔢</div><h3>数字键</h3><p>0-9</p><span class="tag-easy">入门</span>
+                </div>
+                <div class="practice-card highlight-card" onclick="startPractice('punctuation-basic')">
+                    <div class="card-emoji">❓</div><h3>基础标点</h3><p>. , ? !</p><span class="tag-focus">重点</span>
+                </div>
+                <div class="practice-card" onclick="startPractice('punctuation-quotes')">
+                    <div class="card-emoji">💬</div><h3>引号练习</h3><p>" " ' '</p><span class="tag-medium">进阶</span>
+                </div>
+                <div class="practice-card" onclick="startPractice('punctuation-cn')">
+                    <div class="card-emoji">🇨🇳</div><h3>中文标点</h3><p>。，！？</p><span class="tag-hard">挑战</span>
+                </div>
+                <div class="practice-card" onclick="startPractice('sentences')">
+                    <div class="card-emoji">📄</div><h3>句子练习</h3><p>完整句子</p><span class="tag-medium">进阶</span>
+                </div>
+                <div class="practice-card" onclick="startPractice('articles')">
+                    <div class="card-emoji">📚</div><h3>短文练习</h3><p>中文短文</p><span class="tag-hard">挑战</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-screen" class="screen">
+        <div class="sub-container">
+            <div class="sub-header">
+                <button class="back-btn" onclick="showScreen('home-screen')">← 返回</button>
+                <h2>🎮 打字游戏</h2>
+                <div class="header-space"></div>
+            </div>
+            <div class="game-grid">
+                <div class="game-card" onclick="startGame('race')">
+                    <div class="game-emoji">🏎️</div><h3>打字赛车</h3><p>输入文字让赛车加速！谁先到达终点？</p><span class="game-tag">限时</span>
+                </div>
+                <div class="game-card" onclick="startGame('bubble')">
+                    <div class="game-emoji">🫧</div><h3>泡泡大作战</h3><p>输入泡泡上的字母，消除泡泡！</p><span class="game-tag">消除</span>
+                </div>
+                <div class="game-card" onclick="startGame('star')">
+                    <div class="game-emoji">🌟</div><h3>摘星星</h3><p>打对字母就能摘到星星！集齐过关！</p><span class="game-tag">闯关</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="gameplay-screen" class="screen">
+        <div class="gameplay-container">
+            <div class="gameplay-header">
+                <button class="back-btn small" onclick="exitGame()">✕ 退出</button>
+                <span id="game-title" class="gameplay-title">打字赛车</span>
+                <div class="gameplay-stats">
+                    <span id="game-score">得分: 0</span>
+                    <span id="game-time">时间: 30s</span>
+                </div>
+            </div>
+            <div id="game-race" class="game-area" style="display:none;">
+                <div class="race-track">
+                    <div id="race-player" class="race-car player-car">🚗</div>
+                    <div class="race-car cpu-car" style="top:30%">🚙</div>
+                    <div class="race-car cpu-car" style="top:55%">🚕</div>
+                </div>
+                <div class="game-input-area"><div id="race-target" class="game-target"></div></div>
+            </div>
+            <div id="game-bubble" class="game-area" style="display:none;">
+                <div id="bubble-container" class="bubble-area"></div>
+                <div class="game-input-area"><div id="bubble-target" class="game-target"></div></div>
+            </div>
+            <div id="game-star" class="game-area" style="display:none;">
+                <div id="star-container" class="star-area"></div>
+                <div class="game-input-area"><div id="star-target" class="game-target"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="typing-screen" class="screen">
+        <div class="typing-container">
+            <div class="status-bar">
+                <div class="stat stat-speed"><span class="stat-label">速度</span><span id="wpm" class="stat-value">0</span><span class="stat-unit">WPM</span></div>
+                <div class="stat stat-acc"><span class="stat-label">正确率</span><span id="accuracy" class="stat-value">100</span><span class="stat-unit">%</span></div>
+                <div class="stat stat-time"><span class="stat-label">时间</span><span id="timer" class="stat-value">0:00</span></div>
+                <div class="stat stat-prog"><span class="stat-label">进度</span><span id="progress-percent" class="stat-value">0%</span></div>
+            </div>
+            <div class="text-display"><div id="text-content"></div></div>
+            <div class="current-key-hint">
+                <span>请按：</span>
+                <span id="hint-key" class="hint-key">A</span>
+                <span id="hint-finger" class="hint-finger">左手食指</span>
+            </div>
+            <div class="keyboard" id="virtual-keyboard">
+                <div class="keyboard-row">
+                    <span class="key" data-key="`">`</span><span class="key" data-key="1">1</span><span class="key" data-key="2">2</span><span class="key" data-key="3">3</span><span class="key" data-key="4">4</span><span class="key" data-key="5">5</span><span class="key" data-key="6">6</span><span class="key" data-key="7">7</span><span class="key" data-key="8">8</span><span class="key" data-key="9">9</span><span class="key" data-key="0">0</span><span class="key" data-key="-">-</span><span class="key" data-key="=">=</span><span class="key key-wide" data-key="Backspace">⌫</span>
+                </div>
+                <div class="keyboard-row">
+                    <span class="key key-wide" data-key="Tab">Tab</span><span class="key" data-key="q">Q</span><span class="key" data-key="w">W</span><span class="key" data-key="e">E</span><span class="key" data-key="r">R</span><span class="key" data-key="t">T</span><span class="key" data-key="y">Y</span><span class="key" data-key="u">U</span><span class="key" data-key="i">I</span><span class="key" data-key="o">O</span><span class="key" data-key="p">P</span><span class="key" data-key="[">[</span><span class="key" data-key="]">]</span><span class="key" data-key="/">\</span>
+                </div>
+                <div class="keyboard-row">
+                    <span class="key key-wide" data-key="CapsLock">Caps</span><span class="key home" data-key="a">A</span><span class="key home" data-key="s">S</span><span class="key home" data-key="d">D</span><span class="key home" data-key="f">F</span><span class="key" data-key="g">G</span><span class="key" data-key="h">H</span><span class="key home" data-key="j">J</span><span class="key home" data-key="k">K</span><span class="key home" data-key="l">L</span><span class="key" data-key=";">;</span><span class="key" data-key="'">'</span><span class="key key-wide" data-key="Enter">Enter</span>
+                </div>
+                <div class="keyboard-row">
+                    <span class="key key-shift" data-key="Shift">Shift</span><span class="key" data-key="z">Z</span><span class="key" data-key="x">X</span><span class="key" data-key="c">C</span><span class="key" data-key="v">V</span><span class="key" data-key="b">B</span><span class="key" data-key="n">N</span><span class="key" data-key="m">M</span><span class="key" data-key=",">,</span><span class="key" data-key=".">.</span><span class="key" data-key="/">/</span><span class="key key-shift" data-key="Shift">Shift</span>
+                </div>
+                <div class="keyboard-row">
+                    <span class="key key-space" data-key=" ">空格</span>
+                </div>
+            </div>
+            <div class="control-buttons">
+                <button class="control-btn" onclick="pausePractice()">⏸ 暂停</button>
+                <button class="control-btn" onclick="restartPractice()">🔄 重新开始</button>
+                <button class="control-btn" onclick="exitPractice()">✕ 退出</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="score-screen" class="screen">
+        <div class="sub-container">
+            <div class="sub-header">
+                <button class="back-btn" onclick="showScreen('home-screen')">← 返回</button>
+                <h2>📊 我的成绩</h2>
+                <div class="header-space"></div>
+            </div>
+            <div class="score-summary">
+                <div class="score-card"><div class="score-icon">🏆</div><div class="score-info"><p class="score-label">等级</p><p class="score-value" id="score-level">Lv.1 打字新手</p></div></div>
+                <div class="score-card"><div class="score-icon">⭐</div><div class="score-info"><p class="score-label">经验值</p><p class="score-value" id="score-xp">0 / 100 XP</p><div class="xp-bar"><div id="score-xp-fill" class="xp-fill" style="width:0%"></div></div></div></div>
+                <div class="score-card"><div class="score-icon">🚀</div><div class="score-info"><p class="score-label">最佳速度</p><p class="score-value" id="score-best-wpm">0 WPM</p></div></div>
+                <div class="score-card"><div class="score-icon">📝</div><div class="score-info"><p class="score-label">练习次数</p><p class="score-value" id="score-count">0 次</p></div></div>
+            </div>
+            <div class="stats-section">
+                <h3>📈 各项练习</h3>
+                <div class="stats-grid">
+                    <div class="stat-item"><span class="stat-name">字母</span><div class="stat-bar"><div class="stat-fill" id="stat-letters" style="width:0%"></div></div><span class="stat-count" id="stat-letters-count">0次</span></div>
+                    <div class="stat-item"><span class="stat-name">数字</span><div class="stat-bar"><div class="stat-fill" id="stat-numbers" style="width:0%"></div></div><span class="stat-count" id="stat-numbers-count">0次</span></div>
+                    <div class="stat-item"><span class="stat-name">标点</span><div class="stat-bar"><div class="stat-fill" id="stat-punctuation" style="width:0%"></div></div><span class="stat-count" id="stat-punctuation-count">0次</span></div>
+                    <div class="stat-item"><span class="stat-name">综合</span><div class="stat-bar"><div class="stat-fill" id="stat-mixed" style="width:0%"></div></div><span class="stat-count" id="stat-mixed-count">0次</span></div>
+                </div>
+            </div>
+            <div class="achievements">
+                <h3>🏅 成就徽章</h3>
+                <div class="badge-grid">
+                    <div class="badge locked" id="badge-first"><span class="badge-icon">🌟</span><span class="badge-name">初次练习</span></div>
+                    <div class="badge locked" id="badge-speed"><span class="badge-icon">⚡</span><span class="badge-name">速度之星</span></div>
+                    <div class="badge locked" id="badge-accuracy"><span class="badge-icon">🎯</span><span class="badge-name">精准达人</span></div>
+                    <div class="badge locked" id="badge-punctuation"><span class="badge-icon">✨</span><span class="badge-name">标点大师</span></div>
+                    <div class="badge locked" id="badge-streak"><span class="badge-icon">🔥</span><span class="badge-name">连续练习</span></div>
+                    <div class="badge locked" id="badge-all"><span class="badge-icon">👑</span><span class="badge-name">全能选手</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings-screen" class="screen">
+        <div class="sub-container">
+            <div class="sub-header">
+                <button class="back-btn" onclick="showScreen('home-screen')">← 返回</button>
+                <h2>⚙️ 设置</h2>
+                <div class="header-space"></div>
+            </div>
+            <div class="settings-list">
+                <div class="setting-row"><label>练习时长</label><select id="setting-duration"><option value="60">1分钟</option><option value="120">2分钟</option><option value="180" selected>3分钟</option><option value="300">5分钟</option></select></div>
+                <div class="setting-row"><label>难度等级</label><select id="setting-difficulty"><option value="easy">简单（三年级）</option><option value="medium" selected>中等（四年级）</option><option value="hard">困难（五年级）</option></select></div>
+                <div class="setting-row"><label>音效反馈</label><label class="switch"><input type="checkbox" id="setting-sound" checked><span class="slider"></span></label></div>
+                <div class="setting-row"><label>按键提示</label><label class="switch"><input type="checkbox" id="setting-guide" checked><span class="slider"></span></label></div>
+                <div class="setting-row"><label>虚拟键盘</label><label class="switch"><input type="checkbox" id="setting-keyboard" checked><span class="slider"></span></label></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="pause-modal" class="modal">
+        <div class="modal-content pause-box">
+            <h2>⏸ 练习已暂停</h2>
+            <p>休息一下，准备好了就继续吧！</p>
+            <button class="modal-btn" onclick="resumePractice()">▶ 继续练习</button>
+        </div>
+    </div>
+    <div id="result-modal" class="modal">
+        <div class="modal-content result-box">
+            <div id="result-icon" class="result-big-icon">🎉</div>
+            <h2 id="result-title">练习完成！</h2>
+            <div class="result-stars" id="result-stars">⭐⭐⭐</div>
+            <div class="result-stats">
+                <div class="result-stat"><span class="r-label">速度</span><span id="result-wpm" class="r-value">0 WPM</span></div>
+                <div class="result-stat"><span class="r-label">正确率</span><span id="result-accuracy" class="r-value">0%</span></div>
+                <div class="result-stat"><span class="r-label">用时</span><span id="result-time" class="r-value">0:00</span></div>
+                <div class="result-stat"><span class="r-label">经验</span><span id="result-xp" class="r-value">+0 XP</span></div>
+            </div>
+            <p id="result-message" class="result-msg">继续加油！</p>
+            <button class="modal-btn primary" onclick="restartPractice()">🔄 再来一次</button>
+            <button class="modal-btn secondary" onclick="closeResultAndGo('practice-screen')">选择其他</button>
+            <button class="modal-btn tertiary" onclick="closeResultAndGo('home-screen')">返回主页</button>
+        </div>
+    </div>
+    <div id="gameover-modal" class="modal">
+        <div class="modal-content result-box">
+            <div class="result-big-icon">🏁</div>
+            <h2>游戏结束！</h2>
+            <div class="result-stars" id="gameover-stars">⭐⭐⭐</div>
+            <div class="result-stats">
+                <div class="result-stat"><span class="r-label">得分</span><span id="gameover-score" class="r-value">0</span></div>
+                <div class="result-stat"><span class="r-label">正确</span><span id="gameover-correct" class="r-value">0</span></div>
+            </div>
+            <p id="gameover-msg" class="result-msg">很棒！</p>
+            <button class="modal-btn primary" onclick="restartCurrentGame()">🔄 再来一局</button>
+            <button class="modal-btn secondary" onclick="closeResultAndGo('game-screen')">返回游戏选择</button>
+            <button class="modal-btn tertiary" onclick="closeResultAndGo('home-screen')">返回主页</button>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
