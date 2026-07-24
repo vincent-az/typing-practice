@@ -18,7 +18,7 @@ const defaultClasses=['三年级1班','三年级2班','三年级3班','三年级
 /* ====== 数据状态 ====== */
 let studentsData=[];
 let articlesData=[];
-let settingsData={defaultPassword:'pzxx',teacherPassword:'teacher123'};
+let settingsData={defaultPassword:'pzxx',teacherPassword:'pzxxzzw'};
 let currentUser=null;
 
 let GS={currentScreen:'login-screen',currentPractice:null,currentText:'',currentIndex:0,correctChars:0,totalChars:0,startTime:null,timerInterval:null,timeLimit:180,isPaused:false,isFinished:false,xp:0,level:1,bestWpm:0,practiceCount:0,practiceStats:{letters:0,numbers:0,punctuation:0,mixed:0},achievements:{first:false,speed:false,accuracy:false,punctuation:false,streak:false,all:false},streakCount:0,lastPracticeDate:null};
@@ -85,7 +85,7 @@ function studentLogin(){
 }
 function teacherLogin(){
     const user=document.getElementById('teacher-login-user').value.trim();
-    const pwd=document.getElementById('teacher-login-pwd').value;
+    const pwd=document.getElementById('teacher-login-pwd').value.trim();
     const msg=document.getElementById('teacher-login-msg');
     if(!user){msg.className='form-msg error';msg.textContent='请输入用户名';return;}
     if(!pwd){msg.className='form-msg error';msg.textContent='请输入密码';return;}
