@@ -363,8 +363,8 @@ function changeStudentPassword(){
 
 /* ====== 下拉框刷新 ====== */
 function refreshClassDropdowns(){
-    const classes=[...new Set(studentsData.map(s=>s.class))];
-    const allClasses=classes.length>0?classes:defaultClasses;
+    const studentClasses=[...new Set(studentsData.map(s=>s.class))];
+    const allClasses=[...new Set([...defaultClasses,...studentClasses])];
     ['stu-class','login-class','bulk-class'].forEach(id=>{
         const sel=document.getElementById(id);
         if(!sel)return;
