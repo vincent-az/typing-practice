@@ -157,8 +157,9 @@
                         <button class="action-btn primary" onclick="addSingleStudent()">添加</button>
                     </div>
                     <div class="add-student-bulk">
-                        <p class="bulk-hint">批量添加：每行一个，格式 <b>班级-姓名</b>（如 三年级1班-张三）</p>
-                        <textarea id="stu-bulk" rows="4" placeholder="三年级1班-张三&#10;三年级1班-李四&#10;四年级2班-王五"></textarea>
+                        <p class="bulk-hint">批量添加：先选择班级，每行输入一个学生姓名</p>
+                        <select id="bulk-class"><option value="">选择班级</option></select>
+                        <textarea id="stu-bulk" rows="4" placeholder="张三&#10;李四&#10;王五"></textarea>
                         <button class="action-btn primary" onclick="addBulkStudents()">批量添加</button>
                     </div>
                 </div>
@@ -181,6 +182,11 @@
                         <select id="art-difficulty"><option value="easy">简单</option><option value="medium" selected>中等</option><option value="hard">困难</option></select>
                         <textarea id="art-content" rows="5" placeholder="请输入文章内容..."></textarea>
                         <button class="action-btn primary" onclick="addArticle()">添加文章</button>
+                        <div class="file-upload-row">
+                            <input type="file" id="art-file" accept=".docx" style="display:none" onchange="handleWordUpload()">
+                            <button type="button" class="action-btn" onclick="document.getElementById('art-file').click()">📄 上传Word文件</button>
+                            <span id="file-name" class="file-name"></span>
+                        </div>
                     </div>
                 </div>
                 <div class="tab-section">
@@ -439,6 +445,7 @@
             <button class="modal-btn tertiary" onclick="closeResultAndGo('home-screen')">返回主页</button>
         </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

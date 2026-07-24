@@ -296,6 +296,10 @@ input:checked+.slider:before{transform:translateX(22px)}
     .control-buttons{flex-direction:column}
     .control-btn{width:100%}
 }
+.file-upload-row{display:flex;align-items:center;gap:10px;margin-top:6px}
+.file-name{color:#6b7280;font-size:0.82em;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.add-student-bulk select{width:100%;padding:10px 12px;border:2px solid #e5e7eb;border-radius:10px;font-size:0.9em;margin-bottom:8px;background:#f9fafb}
+.add-student-bulk select:focus{outline:none;border-color:var(--primary)}
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-track{background:#f1f1f1;border-radius:3px}
 ::-webkit-scrollbar-thumb{background:#c1c1c1;border-radius:3px}

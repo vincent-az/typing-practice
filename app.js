@@ -138,21 +138,20 @@ function addSingleStudent(){
     refreshClassDropdowns();
 }
 function addBulkStudents(){
+    const cls=document.getElementById('bulk-class').value;
     const text=document.getElementById('stu-bulk').value.trim();
-    if(!text){showToast('请输入学生信息','error');return;}
+    if(!cls){showToast('请先选择班级','error');return;}
+    if(!text){showToast('请输入学生姓名','error');return;}
     const lines=text.split('\n').filter(l=>l.trim());
     let count=0;
-    lines.forEach(line=>{
-        const parts=line.trim().split('-');
-        if(parts.length===2){
-            const cls=parts[0].trim(),name=parts[1].trim();
-            if(cls&&name&&!studentsData.some(s=>s.class===cls&&s.name===name)){
-                studentsData.push({id:Date.now()+count,class:cls,name:name,password:settingsData.defaultPassword,isDefault:true});
-                count++;
-            }
+    lines.forEach(name=>{
+        name=name.trim();
+        if(name&&!studentsData.some(s=>s.class===cls&&s.name===name)){
+            studentsData.push({id:Date.now()+count,class:cls,name:name,password:settingsData.defaultPassword,isDefault:true});
+            count++;
         }
     });
-    if(count===0){showToast('格式错误，请按 班级-姓名 格式填写','error');return;}
+    if(count===0){showToast('这些学生已存在','error');return;}
     saveSystemData();
     document.getElementById('stu-bulk').value='';
     showToast('批量添加成功：'+count+'人');
@@ -211,6 +210,35 @@ function addArticle(){
     document.getElementById('art-content').value='';
     showToast('文章添加成功：'+title);
     refreshArticleTable();
+}
+function handleWordUpload(){
+    const fileInput=document.getElementById('art-file');
+    const file=fileInput.files[0];
+    if(!file)return;
+    const fileName=file.name.replace(/\.[^.]+$/,'');
+    document.getElementById('file-name').textContent=file.name;
+    if(file.name.endsWith('.docx')){
+        const reader=new FileReader();
+        reader.onload=function(e){
+            mammoth.extractRawText({arrayBuffer:e.target.result})
+                .then(function(result){
+                    const text=result.value.trim();
+                    if(text){
+                        document.getElementById('art-title').value=fileName;
+                        document.getElementById('art-content').value=text;
+                        showToast('已读取Word文件内容');
+                    }else{
+                        showToast('未能从文件中提取到文字','error');
+                    }
+                })
+                .catch(function(err){
+                    showToast('文件解析失败：'+err.message,'error');
+                });
+        };
+        reader.readAsArrayBuffer(file);
+    }else{
+        showToast('请上传 .docx 格式的Word文件','error');
+    }
 }
 function deleteArticle(id){
     const art=articlesData.find(a=>a.id===id);
@@ -337,7 +365,7 @@ function changeStudentPassword(){
 function refreshClassDropdowns(){
     const classes=[...new Set(studentsData.map(s=>s.class))];
     const allClasses=classes.length>0?classes:defaultClasses;
-    ['stu-class','login-class'].forEach(id=>{
+    ['stu-class','login-class','bulk-class'].forEach(id=>{
         const sel=document.getElementById(id);
         if(!sel)return;
         const current=sel.value;
