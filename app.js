@@ -13,7 +13,7 @@ const practiceData={
 const fingerMap={'q':'left-pinky','a':'left-pinky','z':'left-pinky','1':'left-pinky','`':'left-pinky','w':'left-ring','s':'left-ring','x':'left-ring','2':'left-ring','e':'left-middle','d':'left-middle','c':'left-middle','3':'left-middle','r':'left-index','f':'left-index','v':'left-index','4':'left-index','t':'left-index','g':'left-index','b':'left-index','5':'left-index','y':'right-index','h':'right-index','n':'right-index','6':'right-index','u':'right-index','j':'right-index','m':'right-index','7':'right-index','i':'right-middle','k':'right-middle',',':'right-middle','8':'right-middle','o':'right-ring','l':'right-ring','.':'right-ring','9':'right-ring','p':'right-pinky',';':'right-pinky','/':'right-pinky','0':'right-pinky',"'":'right-pinky','[':'right-pinky',']':'right-pinky','-':'right-pinky','=':'right-pinky',' ':'thumb'};
 const fingerNames={'left-pinky':'左手小指','left-ring':'左手无名指','left-middle':'左手中指','left-index':'左手食指','right-index':'右手食指','right-middle':'右手中指','right-ring':'右手无名指','right-pinky':'右手小指','thumb':'拇指'};
 
-const defaultClasses=['三年级1班','三年级2班','四年级1班','四年级2班','五年级1班','五年级2班'];
+const defaultClasses=['三年级1班','三年级2班','三年级3班','三年级4班','三年级5班','三年级6班','四年级1班','四年级2班','四年级3班','四年级4班','四年级5班','五年级1班','五年级2班','五年级3班','五年级4班','五年级5班'];
 
 /* ====== 数据状态 ====== */
 let studentsData=[];
