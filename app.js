@@ -570,6 +570,156 @@ function endGame(){clearInterval(gameInterval);gameInterval=null;const stars=gam
 function exitGame(){clearInterval(gameInterval);gameInterval=null;showScreen('game-screen');}
 function restartCurrentGame(){document.getElementById('gameover-modal').classList.remove('active');if(gameType)startGame(gameType);}
 
+/* ====== 触屏练习 ====== */
+const pinyinWords=[
+    {char:'我',pinyin:'wo'},{char:'你',pinyin:'ni'},{char:'他',pinyin:'ta'},{char:'好',pinyin:'hao'},
+    {char:'大',pinyin:'da'},{char:'小',pinyin:'xiao'},{char:'人',pinyin:'ren'},{char:'山',pinyin:'shan'},
+    {char:'水',pinyin:'shui'},{char:'花',pinyin:'hua'},{char:'天',pinyin:'tian'},{char:'日',pinyin:'ri'},
+    {char:'月',pinyin:'yue'},{char:'星',pinyin:'xing'},{char:'风',pinyin:'feng'},{char:'云',pinyin:'yun'},
+    {char:'雨',pinyin:'yu'},{char:'春',pinyin:'chun'},{char:'夏',pinyin:'xia'},{char:'秋',pinyin:'qiu'},
+    {char:'冬',pinyin:'dong'},{char:'开',pinyin:'kai'},{char:'上',pinyin:'shang'},{char:'下',pinyin:'xia'},
+    {char:'中',pinyin:'zhong'},{char:'国',pinyin:'guo'},{char:'家',pinyin:'jia'},{char:'学',pinyin:'xue'},
+    {char:'校',pinyin:'xiao'},{char:'老',pinyin:'lao'},{char:'师',pinyin:'shi'},{char:'书',pinyin:'shu'},
+    {char:'画',pinyin:'hua'},{char:'读',pinyin:'du'},{char:'写',pinyin:'xie'},{char:'唱',pinyin:'chang'},
+    {char:'跳',pinyin:'tiao'},{char:'跑',pinyin:'pao'},{char:'走',pinyin:'zou'},{char:'看',pinyin:'kan'},
+    {char:'听',pinyin:'ting'},{char:'说',pinyin:'shuo'},{char:'吃',pinyin:'chi'},{char:'喝',pinyin:'he'},
+    {char:'玩',pinyin:'wan'},{char:'飞',pinyin:'fei'},{char:'鱼',pinyin:'yu'},{char:'马',pinyin:'ma'},
+    {char:'牛',pinyin:'niu'},{char:'羊',pinyin:'yang'},{char:'猫',pinyin:'mao'},{char:'狗',pinyin:'gou'},
+    {char:'爸',pinyin:'ba'},{char:'妈',pinyin:'ma'},{char:'哥',pinyin:'ge'},{char:'姐',pinyin:'jie'},
+    {char:'弟',pinyin:'di'},{char:'妹',pinyin:'mei'},{char:'鸟',pinyin:'niao'},{char:'鱼',pinyin:'yu'},
+    {char:'花',pinyin:'hua'},{char:'草',pinyin:'cao'},{char:'树',pinyin:'shu'},{char:'叶',pinyin:'ye'}
+];
+let touchState={mode:null,items:[],index:0,score:0,total:0,correct:0,typed:'',shiftOn:false};
+
+function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function startTouchPractice(mode){
+    touchState.mode=mode;touchState.score=0;touchState.total=0;touchState.correct=0;touchState.typed='';touchState.shiftOn=false;
+    if(mode==='letter'){
+        touchState.items=shuffleArray([...'abcdefghijklmnopqrstuvwxyz']);
+        document.getElementById('touch-mode-title').textContent='🔤 字母定位';
+        document.getElementById('touch-letter-area').style.display='block';
+        document.getElementById('touch-pinyin-area').style.display='none';
+    }else{
+        touchState.items=shuffleArray([...pinyinWords]);
+        document.getElementById('touch-mode-title').textContent='🀄 拼音打字';
+        document.getElementById('touch-letter-area').style.display='none';
+        document.getElementById('touch-pinyin-area').style.display='block';
+    }
+    touchState.index=0;
+    showScreen('touch-play-screen');
+    showTouchTarget();
+}
+
+function showTouchTarget(){
+    if(touchState.index>=touchState.items.length){showTouchResult();return;}
+    touchState.typed='';
+    if(touchState.mode==='letter'){
+        const letter=touchState.items[touchState.index];
+        document.getElementById('touch-target').textContent=letter.toUpperCase();
+        document.getElementById('touch-progress').textContent='第 '+(touchState.index+1)+' / '+touchState.items.length+' 个字母';
+    }else{
+        const word=touchState.items[touchState.index];
+        document.getElementById('touch-target-char').textContent=word.char;
+        document.getElementById('touch-pinyin-guide').textContent='拼音：'+word.pinyin;
+        document.getElementById('touch-pinyin-typed').textContent='';
+        document.getElementById('touch-pinyin-progress').textContent='第 '+(touchState.index+1)+' / '+touchState.items.length+' 个汉字';
+    }
+    document.getElementById('touch-score').textContent=touchState.score+'分';
+    resetTouchKeys();
+}
+
+function resetTouchKeys(){
+    document.querySelectorAll('.tk-key[data-key]').forEach(k=>k.className='tk-key');
+}
+
+function touchKeyTap(key){
+    if(touchState.index>=touchState.items.length)return;
+    touchState.total++;
+    if(touchState.mode==='letter'){
+        const target=touchState.items[touchState.index];
+        const btn=document.querySelector('.tk-key[data-key="'+key+'"]');
+        if(key===target){
+            touchState.correct++;touchState.score+=10;
+            if(btn){btn.className='tk-key tk-correct';}
+            setTimeout(()=>{touchState.index++;showTouchTarget();},300);
+        }else{
+            touchState.score=Math.max(0,touchState.score-2);
+            if(btn){btn.className='tk-key tk-error';setTimeout(()=>btn.className='tk-key',300);}
+        }
+    }else{
+        const word=touchState.items[touchState.index];
+        const expectedLetter=word.pinyin[touchState.typed.length];
+        const btn=document.querySelector('.tk-key[data-key="'+key+'"]');
+        if(key===expectedLetter){
+            touchState.correct++;touchState.typed+=key;
+            if(btn){btn.className='tk-key tk-correct';setTimeout(()=>btn.className='tk-key',150);}
+            document.getElementById('touch-pinyin-typed').textContent=touchState.typed;
+            if(touchState.typed===word.pinyin){
+                touchState.score+=20;
+                document.getElementById('touch-score').textContent=touchState.score+'分';
+                setTimeout(()=>{touchState.index++;showTouchTarget();},400);
+            }
+        }else{
+            touchState.score=Math.max(0,touchState.score-2);
+            if(btn){btn.className='tk-key tk-error';setTimeout(()=>btn.className='tk-key',300);}
+        }
+    }
+    document.getElementById('touch-score').textContent=touchState.score+'分';
+}
+
+function touchBackspace(){
+    if(touchState.mode!=='pinyin'||touchState.typed.length===0)return;
+    touchState.typed=touchState.typed.slice(0,-1);
+    document.getElementById('touch-pinyin-typed').textContent=touchState.typed;
+}
+
+function touchShiftTap(){
+    touchState.shiftOn=!touchState.shiftOn;
+    const btn=document.getElementById('touch-shift-btn');
+    btn.style.background=touchState.shiftOn?'#6366f1':'white';
+    btn.style.color=touchState.shiftOn?'white':'#1f2937';
+}
+
+function touchSpaceTap(){
+    if(touchState.mode==='pinyin'){
+        const word=touchState.items[touchState.index];
+        if(touchState.typed===word.pinyin){
+            touchState.score+=20;
+            touchState.index++;showTouchTarget();
+        }else{
+            showToast('拼音不完整，继续输入','error');
+        }
+    }
+}
+
+function showTouchResult(){
+    const acc=touchState.total>0?Math.round((touchState.correct/touchState.total)*100):0;
+    const stars=acc>=95?3:acc>=80?2:1;
+    const msgs=['继续加油！','很棒！','太厉害了！'];
+    document.getElementById('touch-result-icon').textContent=stars===3?'🎉':stars===2?'👏':'💪';
+    document.getElementById('touch-result-title').textContent=msgs[stars-1];
+    document.getElementById('touch-result-stars').textContent='⭐'.repeat(stars);
+    document.getElementById('touch-result-score').textContent=touchState.score;
+    document.getElementById('touch-result-acc').textContent=acc+'%';
+    document.getElementById('touch-result-modal').classList.add('active');
+}
+
+function restartTouchPractice(){
+    document.getElementById('touch-result-modal').classList.remove('active');
+    startTouchPractice(touchState.mode);
+}
+
+function closeTouchResult(){
+    document.getElementById('touch-result-modal').classList.remove('active');
+    showScreen('touch-screen');
+}
+
+function exitTouchPractice(){
+    document.getElementById('touch-result-modal').classList.remove('active');
+    showScreen('touch-screen');
+}
+
 /* ====== 初始化 ====== */
 document.addEventListener('DOMContentLoaded',function(){
     loadSystemData();

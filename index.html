@@ -98,6 +98,10 @@
                     <div class="menu-icon">📊</div>
                     <div class="menu-text"><h3>我的成绩</h3></div>
                 </div>
+                <div class="menu-card card-touch" onclick="showScreen('touch-screen')">
+                    <div class="menu-icon">📱</div>
+                    <div class="menu-text"><h3>触屏练习</h3></div>
+                </div>
                 <div class="menu-card card-settings" onclick="showScreen('settings-screen')">
                     <div class="menu-icon">⚙️</div>
                     <div class="menu-text"><h3>设置</h3></div>
@@ -403,6 +407,102 @@
                 <div class="setting-row"><label>按键提示</label><label class="switch"><input type="checkbox" id="setting-guide" checked><span class="slider"></span></label></div>
                 <div class="setting-row"><label>虚拟键盘</label><label class="switch"><input type="checkbox" id="setting-keyboard" checked><span class="slider"></span></label></div>
             </div>
+        </div>
+    </div>
+
+    <div id="touch-screen" class="screen">
+        <div class="sub-container">
+            <div class="sub-header">
+                <button class="back-btn" onclick="showScreen('home-screen')">← 返回</button>
+                <h2>📱 触屏练习</h2>
+                <div class="header-space"></div>
+            </div>
+            <p class="touch-mode-desc">专为手机和平板设计，用手指点击屏幕键盘进行练习</p>
+            <div class="touch-mode-grid">
+                <div class="touch-mode-card" onclick="startTouchPractice('letter')">
+                    <div class="touch-mode-icon">🔤</div>
+                    <h3>字母定位</h3>
+                    <p>在键盘上找到对应的字母，熟悉键盘布局</p>
+                </div>
+                <div class="touch-mode-card" onclick="startTouchPractice('pinyin')">
+                    <div class="touch-mode-icon">🀄</div>
+                    <h3>拼音打字</h3>
+                    <p>用拼音输入汉字，练习拼音拼写</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="touch-play-screen" class="screen">
+        <div class="touch-play-container">
+            <div class="touch-play-header">
+                <button class="back-btn small" onclick="exitTouchPractice()">✕ 退出</button>
+                <span id="touch-mode-title" class="touch-title">字母定位</span>
+                <span id="touch-score" class="touch-score">0分</span>
+            </div>
+            <div id="touch-letter-area" class="touch-target-area">
+                <div id="touch-target" class="touch-target-letter">A</div>
+                <div id="touch-progress" class="touch-progress">第 1 / 26 个字母</div>
+            </div>
+            <div id="touch-pinyin-area" class="touch-target-area" style="display:none">
+                <div id="touch-target-char" class="touch-target-char">我</div>
+                <div id="touch-pinyin-guide" class="touch-pinyin-guide">拼音：wo</div>
+                <div id="touch-pinyin-typed" class="touch-pinyin-typed"></div>
+                <div id="touch-pinyin-progress" class="touch-progress">第 1 / 20 个汉字</div>
+            </div>
+            <div class="touch-keyboard">
+                <div class="tk-row">
+                    <button class="tk-key" data-key="q" onclick="touchKeyTap('q')">Q</button>
+                    <button class="tk-key" data-key="w" onclick="touchKeyTap('w')">W</button>
+                    <button class="tk-key" data-key="e" onclick="touchKeyTap('e')">E</button>
+                    <button class="tk-key" data-key="r" onclick="touchKeyTap('r')">R</button>
+                    <button class="tk-key" data-key="t" onclick="touchKeyTap('t')">T</button>
+                    <button class="tk-key" data-key="y" onclick="touchKeyTap('y')">Y</button>
+                    <button class="tk-key" data-key="u" onclick="touchKeyTap('u')">U</button>
+                    <button class="tk-key" data-key="i" onclick="touchKeyTap('i')">I</button>
+                    <button class="tk-key" data-key="o" onclick="touchKeyTap('o')">O</button>
+                    <button class="tk-key" data-key="p" onclick="touchKeyTap('p')">P</button>
+                </div>
+                <div class="tk-row">
+                    <button class="tk-key" data-key="a" onclick="touchKeyTap('a')">A</button>
+                    <button class="tk-key" data-key="s" onclick="touchKeyTap('s')">S</button>
+                    <button class="tk-key" data-key="d" onclick="touchKeyTap('d')">D</button>
+                    <button class="tk-key" data-key="f" onclick="touchKeyTap('f')">F</button>
+                    <button class="tk-key" data-key="g" onclick="touchKeyTap('g')">G</button>
+                    <button class="tk-key" data-key="h" onclick="touchKeyTap('h')">H</button>
+                    <button class="tk-key" data-key="j" onclick="touchKeyTap('j')">J</button>
+                    <button class="tk-key" data-key="k" onclick="touchKeyTap('k')">K</button>
+                    <button class="tk-key" data-key="l" onclick="touchKeyTap('l')">L</button>
+                </div>
+                <div class="tk-row">
+                    <button class="tk-key tk-key-wide" onclick="touchShiftTap()" id="touch-shift-btn">⇧</button>
+                    <button class="tk-key" data-key="z" onclick="touchKeyTap('z')">Z</button>
+                    <button class="tk-key" data-key="x" onclick="touchKeyTap('x')">X</button>
+                    <button class="tk-key" data-key="c" onclick="touchKeyTap('c')">C</button>
+                    <button class="tk-key" data-key="v" onclick="touchKeyTap('v')">V</button>
+                    <button class="tk-key" data-key="b" onclick="touchKeyTap('b')">B</button>
+                    <button class="tk-key" data-key="n" onclick="touchKeyTap('n')">N</button>
+                    <button class="tk-key" data-key="m" onclick="touchKeyTap('m')">M</button>
+                    <button class="tk-key tk-key-wide" onclick="touchBackspace()">⌫</button>
+                </div>
+                <div class="tk-row">
+                    <button class="tk-key tk-key-space" onclick="touchSpaceTap()">空格</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="touch-result-modal" class="modal">
+        <div class="modal-content result-box">
+            <div class="result-big-icon" id="touch-result-icon">🎉</div>
+            <h2 id="touch-result-title">练习完成！</h2>
+            <div class="result-stars" id="touch-result-stars">⭐⭐⭐</div>
+            <div class="result-stats">
+                <div class="result-stat"><span class="r-label">得分</span><span id="touch-result-score" class="r-value">0</span></div>
+                <div class="result-stat"><span class="r-label">正确率</span><span id="touch-result-acc" class="r-value">0%</span></div>
+            </div>
+            <button class="modal-btn primary" onclick="restartTouchPractice()">🔄 再来一次</button>
+            <button class="modal-btn secondary" onclick="closeTouchResult()">返回选择</button>
         </div>
     </div>
 
