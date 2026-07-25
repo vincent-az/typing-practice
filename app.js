@@ -1,13 +1,13 @@
 /* ====== 练习数据 ====== */
 const practiceData={
-'letters-home':{easy:'asdf jkl; asdf jkl; asdf jkl; asdf jkl;',medium:'ask sad flask dash glad; ask lad; fad lad;',hard:'fall had glad half; ask all; dash flask; salads'},
-'letters-all':{easy:'the quick brown fox jumps over the lazy dog',medium:'pack my box with five dozen liquor jugs',hard:'how vexingly quick daft zebras jump! the quick brown fox.'},
-'numbers':{easy:'123 456 789 123 456 789 012 345 678',medium:'2024 1984 100 200 300 400 500 600 700 800',hard:'3.14159 2.71828 1.41421 1.73205 2.23607'},
-'punctuation-basic':{easy:['hello, world. how are you? i am fine!','the cat is big. the dog is small. do you like cats?','my name is tom. i am ten years old. i like apples.'],medium:['The teacher said, "Good morning!" We replied, "Good morning!"','What is your name? My name is Lily. Nice to meet you!','I like to play football. Do you? Yes, I do!'],hard:['Although it was raining, we still went to the park. The children were excited!','"Who wants ice cream?" asked Mom. Everyone shouted, "I do!"','My favorite season is summer. I can swim, eat ice cream, and play outside!']},
-'punctuation-quotes':{easy:['"hello" and \'world\'','She said "hi" and he said \'hello\'','"open the door" she said'],medium:['The teacher said, "Please open your books." We all said, "Okay!"','Mom asked, "What do you want for dinner?" I said, "Pizza, please!"','"Don\'t forget your homework," said my friend. "I won\'t!" I replied.'],hard:['The book said, "Knowledge is power." I think that\'s true!','"Where are you going?" asked Mom. "To the library," I answered.','"I can\'t believe it\'s already Friday!" she exclaimed.']},
-'punctuation-cn':{easy:['春天来了。花儿开了。小鸟在唱歌。','你好吗？我很好。谢谢！','我喜欢吃苹果，你喜欢吃什么呢？','今天是星期一。明天是星期二。','小明、小红和小李是好朋友。'],medium:['图书馆里有很多书：故事书、科学书、漫画书。你最喜欢哪种？','今天天气真好！我们去公园玩吧。好不好？好！','老师说："明天要带课本。"同学们都记住了。','中国的首都是北京；那里有很多名胜古迹。','这是谁的书？是我的。真的吗？真的！'],hard:['中国的首都是北京。那里有很多名胜古迹：故宫、长城、天坛……','"你长大了想做什么？"妈妈问。"我想当科学家！"我坚定地回答。','科技改变了我们的生活；互联网让我们可以学习更多知识。同学们，加油！','小明说："我今天很开心！"小红问："为什么？"小明回答："因为我学会了打字！"','春天的花开了：桃花、杏花、梨花……五颜六色，美丽极了！']},
-'sentences':{easy:'I like to read books. The sun is warm today.',medium:'My favorite subject is science. We learned about plants yesterday.',hard:'Although it was raining, we still went to the park. The children were excited!'},
-'articles':{easy:'春天来了。花儿开了。小鸟在树上唱歌。小朋友们在公园里玩耍。',medium:'图书馆里有很多书。我最喜欢看故事书。每天放学后，我都会去图书馆看书。',hard:'科技改变了我们的生活。通过互联网，我们可以学习到很多知识。同学们要好好学习，将来为祖国做贡献。'}
+'letters-home':{easy:'asdf jkl; asdf jkl; asdf jkl; asdf jkl; fdsa jkl; asdf jkl; asdf jkl; fdsa;lkj','medium:'ask sad flask dash glad; ask lad; fad lad; dad had salad; glass flask; half glad ask dash; lad had salad','hard:'fall had glad half; ask all; dash flask; salads; all has ad; flask; dad ask had; lad; ask sad; fad; glad; half; salads; flask; class'},
+'letters-all':{easy:'the quick brown fox jumps over the lazy dog; a quick brown fox jumps over the lazy dog','medium:'pack my box with five dozen liquor jugs; the five boxing wizards jump quickly; how vexingly quick daft zebras jump','hard:'how vexingly quick daft zebras jump! the quick brown fox jumps over the lazy dog. pack my box with five dozen liquor jugs. the five boxing wizards jump quickly.'},
+'numbers':{easy:'123 456 789 123 456 789 012 345 678 901 234 567 890 123 456 789','medium:'2024 1984 100 200 300 400 500 600 700 800 900 1000 2025 1998 365 24 60','hard:'3.14159 2.71828 1.41421 1.73205 2.23607 3.14159 2.71828 1.41421 1.73205 2.23607'},
+'punctuation-basic':{easy:['hello, world. how are you? i am fine!','the cat is big. the dog is small. do you like cats?','my name is tom. i am ten years old. i like apples.','what is your name? my name is sam. nice to meet you!','i have a pen. it is blue. do you have a pen?'],medium:['The teacher said, "Good morning!" We replied, "Good morning!"','What is your name? My name is Lily. Nice to meet you!','I like to play football. Do you? Yes, I do!','My mother is kind. She makes dinner for us every day.','Can you help me? Sure! What do you need? I need a book.'],hard:['Although it was raining, we still went to the park. The children were excited!','"Who wants ice cream?" asked Mom. Everyone shouted, "I do!"','My favorite season is summer. I can swim, eat ice cream, and play outside!','"Please pass me the book," said Tom. "Here you are," replied Mary. "Thank you!"','The sun is shining brightly. The birds are singing in the trees. What a lovely day!']},
+'punctuation-quotes':{easy:['"hello" and \'world\'','She said "hi" and he said \'hello\'','"open the door" she said','"come here" he called','Mom said "eat your lunch"'],medium:['The teacher said, "Please open your books." We all said, "Okay!"','Mom asked, "What do you want for dinner?" I said, "Pizza, please!"','"Don\'t forget your homework," said my friend. "I won\'t!" I replied.','Dad said, "Let\'s go to the park." "Great idea!" we shouted.','"Where is my bag?" asked Tom. "It is under the desk," said Anna.'],hard:['The book said, "Knowledge is power." I think that\'s true!','"Where are you going?" asked Mom. "To the library," I answered.','"I can\'t believe it\'s already Friday!" she exclaimed.','My teacher said, "Practice makes perfect." So I practice every day.','"What time is it?" he asked. "It\'s three o\'clock," she replied. "Thank you!"']},
+'punctuation-cn':{easy:['春天来了。花儿开了。小鸟在唱歌。','你好吗？我很好。谢谢！','我喜欢吃苹果，你喜欢吃什么呢？','今天是星期一。明天是星期二。','小明、小红和小李是好朋友。','我家有一只小猫，它很可爱。'],medium:['图书馆里有很多书：故事书、科学书、漫画书。你最喜欢哪种？','今天天气真好！我们去公园玩吧。好不好？好！','老师说："明天要带课本。"同学们都记住了。','中国的首都是北京；那里有很多名胜古迹。','这是谁的书？是我的。真的吗？真的！','妈妈问："你作业写完了吗？"我回答："写完了。"'],hard:['中国的首都是北京。那里有很多名胜古迹：故宫、长城、天坛……','"你长大了想做什么？"妈妈问。"我想当科学家！"我坚定地回答。','科技改变了我们的生活；互联网让我们可以学习更多知识。同学们，加油！','小明说："我今天很开心！"小红问："为什么？"小明回答："因为我学会了打字！"','春天的花开了：桃花、杏花、梨花……五颜六色，美丽极了！','老师对我们说："一寸光阴一寸金，寸金难买寸光阴。要珍惜时间！"']},
+'sentences':{easy:'I like to read books. The sun is warm today. My cat is very cute. I go to school by bus. We have fun at the park. The bird can fly high in the sky.',medium:'My favorite subject is science. We learned about plants yesterday. I like to draw pictures after school. My best friend is very kind and helpful. Every weekend I play basketball with my brother.',hard:'Although it was raining, we still went to the park. The children were excited to play in the rain! My mother says that reading is the key to knowledge. I practice typing every day to become faster and more accurate. The more you practice, the better you will become at typing.'},
+'articles':{easy:'春天来了。花儿开了。小鸟在树上唱歌。小朋友们在公园里玩耍。春天真美丽！我喜欢春天。春天里有很多花朵，有红色的、黄色的、粉色的。蝴蝶在花丛中飞来飞去。',medium:'图书馆里有很多书。我最喜欢看故事书。每天放学后，我都会去图书馆看书。读书可以学到很多知识。高尔基说过："书籍是人类进步的阶梯。"我们要多读书、读好书。',hard:'科技改变了我们的生活。通过互联网，我们可以学习到很多知识。同学们要好好学习，将来为祖国做贡献。打字是一项非常重要的技能。在信息时代，学会快速准确地打字，可以帮助我们更好地学习和工作。坚持练习，你一定能成为打字高手！'}
 };
 
 const fingerMap={'q':'left-pinky','a':'left-pinky','z':'left-pinky','1':'left-pinky','`':'left-pinky','w':'left-ring','s':'left-ring','x':'left-ring','2':'left-ring','e':'left-middle','d':'left-middle','c':'left-middle','3':'left-middle','r':'left-index','f':'left-index','v':'left-index','4':'left-index','t':'left-index','g':'left-index','b':'left-index','5':'left-index','y':'right-index','h':'right-index','n':'right-index','6':'right-index','u':'right-index','j':'right-index','m':'right-index','7':'right-index','i':'right-middle','k':'right-middle',',':'right-middle','8':'right-middle','o':'right-ring','l':'right-ring','.':'right-ring','9':'right-ring','p':'right-pinky',';':'right-pinky','/':'right-pinky','0':'right-pinky',"'":'right-pinky','[':'right-pinky',']':'right-pinky','-':'right-pinky','=':'right-pinky',' ':'thumb'};
@@ -609,6 +609,7 @@ function startTouchPractice(mode){
     touchState.index=0;
     showScreen('touch-play-screen');
     showTouchTarget();
+    try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('landscape').catch(function(){});}catch(e){}
 }
 
 function showTouchTarget(){
@@ -640,11 +641,11 @@ function touchKeyTap(key){
         const target=touchState.items[touchState.index];
         const btn=document.querySelector('.tk-key[data-key="'+key+'"]');
         if(key===target){
-            touchState.correct++;touchState.score+=10;
+            touchState.correct++;touchState.score+=10;playSound('correct');
             if(btn){btn.className='tk-key tk-correct';}
             setTimeout(()=>{touchState.index++;showTouchTarget();},300);
         }else{
-            touchState.score=Math.max(0,touchState.score-2);
+            touchState.score=Math.max(0,touchState.score-2);playSound('error');
             if(btn){btn.className='tk-key tk-error';setTimeout(()=>btn.className='tk-key',300);}
         }
     }else{
@@ -652,7 +653,7 @@ function touchKeyTap(key){
         const expectedLetter=word.pinyin[touchState.typed.length];
         const btn=document.querySelector('.tk-key[data-key="'+key+'"]');
         if(key===expectedLetter){
-            touchState.correct++;touchState.typed+=key;
+            touchState.correct++;touchState.typed+=key;playSound('correct');
             if(btn){btn.className='tk-key tk-correct';setTimeout(()=>btn.className='tk-key',150);}
             document.getElementById('touch-pinyin-typed').textContent=touchState.typed;
             if(touchState.typed===word.pinyin){
@@ -661,7 +662,7 @@ function touchKeyTap(key){
                 setTimeout(()=>{touchState.index++;showTouchTarget();},400);
             }
         }else{
-            touchState.score=Math.max(0,touchState.score-2);
+            touchState.score=Math.max(0,touchState.score-2);playSound('error');
             if(btn){btn.className='tk-key tk-error';setTimeout(()=>btn.className='tk-key',300);}
         }
     }
