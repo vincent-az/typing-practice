@@ -542,31 +542,56 @@ function startGame(type){
     if(type==='race')initRace();else if(type==='bubble')initBubble();else if(type==='star')initStar();
     gameInterval=setInterval(()=>{gameTimeLeft--;document.getElementById('game-time').textContent='时间: '+gameTimeLeft+'s';if(gameTimeLeft<=0)endGame();},1000);
 }
-function initRace(){document.getElementById('race-player').style.left='10%';document.querySelectorAll('.cpu-car').forEach(c=>c.style.left='10%');nextRaceWord();}
-function nextRaceWord(){const w=gameWords[Math.floor(Math.random()*gameWords.length)];gameTarget=w[0];document.getElementById('race-target').textContent=w+' ['+w[0].toUpperCase()+']';}
+function initRace(){
+    document.getElementById('race-player').style.left='10%';
+    document.querySelectorAll('.cpu-car').forEach(c=>c.style.left='10%');
+    const area=document.getElementById('game-race');
+    let kb=area.querySelector('.game-keyboard');
+    if(!kb){
+        kb=document.createElement('div');kb.className='keyboard game-keyboard';
+        kb.style.cssText='margin-top:12px;padding:10px';
+        const rows=['qwertyuiop','asdfghjkl','zxcvbnm'];
+        rows.forEach(r=>{const row=document.createElement('div');row.className='keyboard-row';r.split('').forEach(l=>{const k=document.createElement('div');k.className='key game-keys';k.textContent=l.toUpperCase();k.dataset.gameKey=l;k.addEventListener('click',()=>handleGameKey(l));row.appendChild(k);});kb.appendChild(row);});
+        area.appendChild(kb);
+    }
+    nextRaceWord();
+}
+function nextRaceWord(){const letters='abcdefghijklmnopqrstuvwxyz';const l=letters[Math.floor(Math.random()*26)];gameTarget=l;document.getElementById('race-target').textContent='按字母: '+l.toUpperCase();document.querySelectorAll('.game-keys').forEach(k=>k.classList.toggle('active',k.dataset.gameKey===gameTarget));}
 function initBubble(){
     const bc=document.getElementById('bubble-container');bc.innerHTML='';
-    for(let i=0;i<6;i++){const b=document.createElement('div');b.className='bubble';b.style.left=Math.random()*85+'%';b.style.top=Math.random()*70+'%';b.style.animationDelay=Math.random()*2+'s';const letter=gameWords[Math.floor(Math.random()*gameWords.length)][0];b.textContent=letter;b.dataset.letter=letter;bc.appendChild(b);}
+    const letters='abcdefghijklmnopqrstuvwxyz'.split('').sort(()=>Math.random()-0.5).slice(0,6);
+    letters.forEach(letter=>{const b=document.createElement('div');b.className='bubble';b.style.left=Math.random()*85+'%';b.style.top=Math.random()*70+'%';b.style.animationDelay=Math.random()*2+'s';b.textContent=letter.toUpperCase();b.dataset.letter=letter;bc.appendChild(b);});
     nextBubbleTarget();
 }
-function nextBubbleTarget(){const bubbles=document.querySelectorAll('.bubble');if(bubbles.length===0){gameScore+=50;document.getElementById('game-score').textContent='得分: '+gameScore;initBubble();return;}gameTarget=bubbles[0].dataset.letter;document.getElementById('bubble-target').textContent=bubbles[0].dataset.letter;}
+function nextBubbleTarget(){const bubbles=document.querySelectorAll('.bubble');if(bubbles.length===0){gameScore+=50;document.getElementById('game-score').textContent='得分: '+gameScore;initBubble();return;}gameTarget=bubbles[0].dataset.letter;document.getElementById('bubble-target').textContent=gameTarget.toUpperCase();}
 function initStar(){
     const sc=document.getElementById('star-container');sc.innerHTML='';const letters='abcdefghijklmnopqrstuvwxyz';
+    let badge=document.createElement('div');badge.className='star-target-badge';badge.style.cssText='position:absolute;top:12px;right:12px;background:rgba(251,191,36,0.9);color:#1e1b4b;padding:8px 16px;border-radius:10px;font-weight:bold;font-size:1.3em;z-index:5;box-shadow:0 0 15px rgba(251,191,36,0.5)';sc.appendChild(badge);
     for(let i=0;i<8;i++){const s=document.createElement('div');s.className='star-item';s.style.left=Math.random()*85+'%';s.style.top=Math.random()*65+'%';const starLetter=letters[Math.floor(Math.random()*26)];s.textContent=starLetter.toUpperCase();s.dataset.letter=starLetter;s.style.animationDelay=Math.random()*2+'s';sc.appendChild(s);}
     nextStarTarget();
 }
-function nextStarTarget(){const stars=document.querySelectorAll('.star-item');if(stars.length===0){gameScore+=100;document.getElementById('game-score').textContent='得分: '+gameScore;initStar();return;}gameTarget=stars[0].dataset.letter;document.getElementById('star-target').textContent=stars[0].dataset.letter+' ⭐';}
-document.addEventListener('keydown',function(e){
-    if(GS.currentScreen!=='gameplay-screen')return;if(gameTimeLeft<=0)return;
-    e.preventDefault();
-    const key=e.key.toLowerCase();if(key.length!==1)return;
-    if(key===gameTarget.toLowerCase()){
+function nextStarTarget(){const stars=document.querySelectorAll('.star-item');if(stars.length===0){gameScore+=100;document.getElementById('game-score').textContent='得分: '+gameScore;initStar();return;}gameTarget=stars[0].dataset.letter;document.getElementById('star-target').textContent=gameTarget.toUpperCase()+' ⭐';const badge=document.querySelector('.star-target-badge');if(badge)badge.textContent='目标: '+gameTarget.toUpperCase();}
+function handleGameKey(key){
+    if(GS.currentScreen!=='gameplay-screen'||gameTimeLeft<=0)return;
+    if(key===gameTarget){
         gameCorrect++;gameScore+=10;document.getElementById('game-score').textContent='得分: '+gameScore;
         if(document.getElementById('setting-sound').checked)playSound('correct');
         if(gameType==='race'){const player=document.getElementById('race-player');const cur=parseFloat(player.style.left)||10;player.style.left=Math.min(cur+8,75)+'%';document.querySelectorAll('.cpu-car').forEach(c=>{const cl=parseFloat(c.style.left)||10;c.style.left=Math.min(cl+Math.random()*5,75)+'%';});if(cur>=70){gameScore+=50;document.getElementById('game-score').textContent='得分: '+gameScore;player.style.left='10%';}nextRaceWord();
         }else if(gameType==='bubble'){const b=document.querySelector('.bubble');if(b){b.style.transform='scale(1.5)';b.style.opacity='0';setTimeout(()=>{b.remove();nextBubbleTarget();},300);}else{nextBubbleTarget();}
         }else if(gameType==='star'){const s=document.querySelector('.star-item');if(s){s.style.transform='scale(1.5)';s.style.opacity='0';setTimeout(()=>s.remove(),300);}nextStarTarget();}
     }else{if(document.getElementById('setting-sound').checked)playSound('error');}
+}
+document.addEventListener('keydown',function(e){
+    if(GS.currentScreen!=='gameplay-screen')return;if(gameTimeLeft<=0)return;
+    e.preventDefault();
+    var key=e.key;
+    if(key===undefined||key==='Process'||key==='Dead'||key.length!==1){
+        var code=e.which||e.keyCode;
+        if(code>=65&&code<=90)key=String.fromCharCode(code);
+        else if(code===32)key=' ';
+        else return;
+    }
+    handleGameKey(key.toLowerCase());
 });
 function endGame(){clearInterval(gameInterval);gameInterval=null;const stars=gameScore>=100?3:gameScore>=50?2:1;document.getElementById('gameover-stars').textContent='⭐'.repeat(stars);document.getElementById('gameover-score').textContent=gameScore;document.getElementById('gameover-correct').textContent=gameCorrect;const msgs=['继续加油！','很棒！','太厉害了！'];document.getElementById('gameover-msg').textContent=msgs[stars-1];document.getElementById('gameover-modal').classList.add('active');}
 function exitGame(){clearInterval(gameInterval);gameInterval=null;document.getElementById('gameover-modal').classList.remove('active');showScreen('game-screen');}
