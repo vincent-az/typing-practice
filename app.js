@@ -425,9 +425,10 @@ function updateHint(){
 }
 document.addEventListener('keydown',function(e){
     if(GS.currentScreen!=='typing-screen'||GS.isPaused||GS.isFinished)return;
+    e.preventDefault();
     if(!GS.startTime){GS.startTime=Date.now();startTimer();}
     const key=e.key,currentChar=GS.currentText[GS.currentIndex];
-    if(key==='Backspace'){e.preventDefault();if(GS.currentIndex>0){GS.currentIndex--;const ch=document.querySelector('.char[data-index="'+GS.currentIndex+'"]');if(ch){ch.classList.remove('correct','error');ch.classList.add('current');}updateHint();}return;}
+    if(key==='Backspace'){if(GS.currentIndex>0){GS.currentIndex--;const ch=document.querySelector('.char[data-index="'+GS.currentIndex+'"]');if(ch){ch.classList.remove('correct','error');ch.classList.add('current');}updateHint();}return;}
     if(key==='Shift'||key==='CapsLock'||key==='Tab'||key==='Control'||key==='Alt'||key==='Meta')return;
     GS.totalChars++;
     let ok=key===currentChar||(currentChar===' '&&key===' ')||(key.length===1&&currentChar.length===1&&key.toLowerCase()===currentChar.toLowerCase());
@@ -542,7 +543,7 @@ function startGame(type){
     gameInterval=setInterval(()=>{gameTimeLeft--;document.getElementById('game-time').textContent='时间: '+gameTimeLeft+'s';if(gameTimeLeft<=0)endGame();},1000);
 }
 function initRace(){document.getElementById('race-player').style.left='10%';document.querySelectorAll('.cpu-car').forEach(c=>c.style.left='10%');nextRaceWord();}
-function nextRaceWord(){const w=gameWords[Math.floor(Math.random()*gameWords.length)];gameTarget=w;document.getElementById('race-target').textContent=w;}
+function nextRaceWord(){const w=gameWords[Math.floor(Math.random()*gameWords.length)];gameTarget=w[0];document.getElementById('race-target').textContent=w+' ['+w[0].toUpperCase()+']';}
 function initBubble(){
     const bc=document.getElementById('bubble-container');bc.innerHTML='';
     for(let i=0;i<6;i++){const b=document.createElement('div');b.className='bubble';b.style.left=Math.random()*85+'%';b.style.top=Math.random()*70+'%';b.style.animationDelay=Math.random()*2+'s';const letter=gameWords[Math.floor(Math.random()*gameWords.length)][0];b.textContent=letter;b.dataset.letter=letter;bc.appendChild(b);}
@@ -551,24 +552,26 @@ function initBubble(){
 function nextBubbleTarget(){const bubbles=document.querySelectorAll('.bubble');if(bubbles.length===0){gameScore+=50;document.getElementById('game-score').textContent='得分: '+gameScore;initBubble();return;}gameTarget=bubbles[0].dataset.letter;document.getElementById('bubble-target').textContent=bubbles[0].dataset.letter;}
 function initStar(){
     const sc=document.getElementById('star-container');sc.innerHTML='';const letters='abcdefghijklmnopqrstuvwxyz';
-    for(let i=0;i<8;i++){const s=document.createElement('div');s.className='star-item';s.style.left=Math.random()*85+'%';s.style.top=Math.random()*65+'%';s.textContent='⭐';s.dataset.letter=letters[Math.floor(Math.random()*26)];s.style.animationDelay=Math.random()*2+'s';sc.appendChild(s);}
+    for(let i=0;i<8;i++){const s=document.createElement('div');s.className='star-item';s.style.left=Math.random()*85+'%';s.style.top=Math.random()*65+'%';const starLetter=letters[Math.floor(Math.random()*26)];s.textContent=starLetter.toUpperCase();s.dataset.letter=starLetter;s.style.animationDelay=Math.random()*2+'s';sc.appendChild(s);}
     nextStarTarget();
 }
 function nextStarTarget(){const stars=document.querySelectorAll('.star-item');if(stars.length===0){gameScore+=100;document.getElementById('game-score').textContent='得分: '+gameScore;initStar();return;}gameTarget=stars[0].dataset.letter;document.getElementById('star-target').textContent=stars[0].dataset.letter+' ⭐';}
 document.addEventListener('keydown',function(e){
     if(GS.currentScreen!=='gameplay-screen')return;if(gameTimeLeft<=0)return;
+    e.preventDefault();
     const key=e.key.toLowerCase();if(key.length!==1)return;
     if(key===gameTarget.toLowerCase()){
         gameCorrect++;gameScore+=10;document.getElementById('game-score').textContent='得分: '+gameScore;
         if(document.getElementById('setting-sound').checked)playSound('correct');
         if(gameType==='race'){const player=document.getElementById('race-player');const cur=parseFloat(player.style.left)||10;player.style.left=Math.min(cur+8,75)+'%';document.querySelectorAll('.cpu-car').forEach(c=>{const cl=parseFloat(c.style.left)||10;c.style.left=Math.min(cl+Math.random()*5,75)+'%';});if(cur>=70){gameScore+=50;document.getElementById('game-score').textContent='得分: '+gameScore;player.style.left='10%';}nextRaceWord();
-        }else if(gameType==='bubble'){const b=document.querySelector('.bubble');if(b){b.style.transform='scale(1.5)';b.style.opacity='0';setTimeout(()=>b.remove(),300);}nextBubbleTarget();
+        }else if(gameType==='bubble'){const b=document.querySelector('.bubble');if(b){b.style.transform='scale(1.5)';b.style.opacity='0';setTimeout(()=>{b.remove();nextBubbleTarget();},300);}else{nextBubbleTarget();}
         }else if(gameType==='star'){const s=document.querySelector('.star-item');if(s){s.style.transform='scale(1.5)';s.style.opacity='0';setTimeout(()=>s.remove(),300);}nextStarTarget();}
     }else{if(document.getElementById('setting-sound').checked)playSound('error');}
 });
 function endGame(){clearInterval(gameInterval);gameInterval=null;const stars=gameScore>=100?3:gameScore>=50?2:1;document.getElementById('gameover-stars').textContent='⭐'.repeat(stars);document.getElementById('gameover-score').textContent=gameScore;document.getElementById('gameover-correct').textContent=gameCorrect;const msgs=['继续加油！','很棒！','太厉害了！'];document.getElementById('gameover-msg').textContent=msgs[stars-1];document.getElementById('gameover-modal').classList.add('active');}
-function exitGame(){clearInterval(gameInterval);gameInterval=null;showScreen('game-screen');}
+function exitGame(){clearInterval(gameInterval);gameInterval=null;document.getElementById('gameover-modal').classList.remove('active');showScreen('game-screen');}
 function restartCurrentGame(){document.getElementById('gameover-modal').classList.remove('active');if(gameType)startGame(gameType);}
+function closeGameOverAndGo(id){document.getElementById('gameover-modal').classList.remove('active');showScreen(id);}
 
 /* ====== 触屏练习 ====== */
 const pinyinWords=[
