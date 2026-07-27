@@ -22,6 +22,61 @@ let settingsData={defaultPassword:'pzxx',teacherPassword:'pzxxzzw'};
 let currentUser=null;
 let studentGrades={};
 
+/* ====== Supabase 云存储配置 ====== */
+const SUPABASE_URL = ''; // ← 请填写 Supabase Project URL
+const SUPABASE_ANON_KEY = ''; // ← 请填写 Supabase anon public key
+let supabaseClient = null;
+
+function initSupabase() {
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return false;
+    try { supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); return true; } catch (e) { return false; }
+}
+
+async function supabaseLoadStudents() {
+    if (!supabaseClient) return false;
+    const { data, error } = await supabaseClient.from('students').select('*');
+    if (error) return false;
+    studentsData = (data || []).map(s => ({ id: s.id, class: s.class, name: s.name, password: s.password, isDefault: s.is_default }));
+    return true;
+}
+async function supabaseLoadArticles() {
+    if (!supabaseClient) return false;
+    const { data, error } = await supabaseClient.from('articles').select('*');
+    if (error) return false;
+    articlesData = (data || []).map(a => ({ id: a.id, title: a.title, content: a.content, difficulty: a.difficulty }));
+    return true;
+}
+async function supabaseLoadSettings() {
+    if (!supabaseClient) return false;
+    const { data, error } = await supabaseClient.from('settings').select('key, value');
+    if (error) return false;
+    if (data && data.length > 0) {
+        data.forEach(r => {
+            if (r.key === 'teacherPassword') settingsData.teacherPassword = r.value;
+            if (r.key === 'defaultPassword') settingsData.defaultPassword = r.value;
+        });
+    }
+    return true;
+}
+async function supabaseLoadGrades() {
+    if (!supabaseClient) return false;
+    const { data, error } = await supabaseClient.from('grades').select('*');
+    if (error) return false;
+    studentGrades = {};
+    (data || []).forEach(g => {
+        const key = g.class + '-' + g.name;
+        if (!studentGrades[key]) studentGrades[key] = [];
+        studentGrades[key].push({
+            date: g.date, type: g.type, wpm: g.wpm, accuracy: g.accuracy, stars: g.stars, xp: g.xp
+        });
+    });
+    return true;
+}
+async function supabaseUpsertSetting(key, value) {
+    if (!supabaseClient) return;
+    await supabaseClient.from('settings').upsert({ key, value }, { onConflict: 'key' });
+}
+
 let GS={currentScreen:'login-screen',currentPractice:null,currentText:'',currentIndex:0,correctChars:0,totalChars:0,startTime:null,timerInterval:null,timeLimit:180,isPaused:false,isFinished:false,xp:0,level:1,bestWpm:0,practiceCount:0,practiceStats:{letters:0,numbers:0,punctuation:0,mixed:0},achievements:{first:false,speed:false,accuracy:false,punctuation:false,streak:false,all:false},streakCount:0,lastPracticeDate:null};
 let gameInterval=null,gameScore=0,gameCorrect=0,gameTimeLeft=30,gameType=null,gameTarget='';
 
@@ -32,7 +87,20 @@ function saveSystemData(){
     localStorage.setItem('tpSettings',JSON.stringify(settingsData));
     localStorage.setItem('tpGrades',JSON.stringify(studentGrades));
 }
-function loadSystemData(){
+
+async function loadSystemData(){
+    const sbOk = initSupabase();
+    if (sbOk) {
+        const results = await Promise.all([
+            supabaseLoadStudents(), supabaseLoadArticles(), supabaseLoadSettings(), supabaseLoadGrades()
+        ]);
+        if (results.every(r => r)) {
+            saveSystemData();
+            const u = localStorage.getItem('tpCurrentUser');
+            if (u) try { currentUser = JSON.parse(u); } catch(e) {}
+            return;
+        }
+    }
     const s=localStorage.getItem('tpStudents');
     if(s)try{studentsData=JSON.parse(s);}catch(e){}
     const a=localStorage.getItem('tpArticles');
@@ -129,32 +197,41 @@ function checkAutoLogin(){
 }
 
 /* ====== 学生管理 ====== */
-function addSingleStudent(){
+async function addSingleStudent(){
     const cls=document.getElementById('stu-class').value;
     const name=document.getElementById('stu-name').value.trim();
     if(!cls||!name){showToast('请选择班级并输入姓名','error');return;}
     if(studentsData.some(s=>s.class===cls&&s.name===name)){showToast('该学生已存在','error');return;}
-    studentsData.push({id:Date.now(),class:cls,name:name,password:settingsData.defaultPassword,isDefault:true});
+    let id=Date.now();
+    if(supabaseClient){
+        const {data}=await supabaseClient.from('students').insert({class:cls,name,password:settingsData.defaultPassword,is_default:true}).select();
+        if(data&&data[0])id=data[0].id;
+    }
+    studentsData.push({id,class:cls,name:name,password:settingsData.defaultPassword,isDefault:true});
     saveSystemData();
     document.getElementById('stu-name').value='';
     showToast('添加成功：'+name);
     refreshStudentTable();
     refreshClassDropdowns();
 }
-function addBulkStudents(){
+async function addBulkStudents(){
     const cls=document.getElementById('bulk-class').value;
     const text=document.getElementById('stu-bulk').value.trim();
     if(!cls){showToast('请先选择班级','error');return;}
     if(!text){showToast('请输入学生姓名','error');return;}
     const lines=text.split('\n').filter(l=>l.trim());
     let count=0;
-    lines.forEach(name=>{
-        name=name.trim();
-        if(name&&!studentsData.some(s=>s.class===cls&&s.name===name)){
-            studentsData.push({id:Date.now()+count,class:cls,name:name,password:settingsData.defaultPassword,isDefault:true});
-            count++;
+    for(const rawName of lines){
+        const name=rawName.trim();
+        if(!name||studentsData.some(s=>s.class===cls&&s.name===name))continue;
+        let id=Date.now()+count;
+        if(supabaseClient){
+            const {data}=await supabaseClient.from('students').insert({class:cls,name,password:settingsData.defaultPassword,is_default:true}).select();
+            if(data&&data[0])id=data[0].id;
         }
-    });
+        studentsData.push({id,class:cls,name,password:settingsData.defaultPassword,isDefault:true});
+        count++;
+    }
     if(count===0){showToast('这些学生已存在','error');return;}
     saveSystemData();
     document.getElementById('stu-bulk').value='';
@@ -162,22 +239,24 @@ function addBulkStudents(){
     refreshStudentTable();
     refreshClassDropdowns();
 }
-function deleteStudent(id){
+async function deleteStudent(id){
     const stu=studentsData.find(s=>s.id===id);
     if(!stu)return;
     if(!confirm('确定要删除学生 '+stu.name+' 吗？'))return;
     studentsData=studentsData.filter(s=>s.id!==id);
     saveSystemData();
+    if(supabaseClient)await supabaseClient.from('students').delete().eq('id',id);
     showToast('已删除：'+stu.name);
     refreshStudentTable();
     refreshClassDropdowns();
 }
-function resetStudentPwd(id){
+async function resetStudentPwd(id){
     const stu=studentsData.find(s=>s.id===id);
     if(!stu||!confirm('确定要重置 '+stu.name+' 的密码吗？'))return;
     stu.password=settingsData.defaultPassword;
     stu.isDefault=true;
     saveSystemData();
+    if(supabaseClient)await supabaseClient.from('students').update({password:settingsData.defaultPassword,is_default:true}).eq('id',id);
     showToast('已重置：'+stu.name+' 的密码');
     refreshStudentTable();
 }
@@ -206,13 +285,14 @@ function refreshStudentTable(){
     `).join('');
 }
 function toggleAllStudents(checked){document.querySelectorAll('.stu-checkbox').forEach(cb=>cb.checked=checked);}
-function batchDeleteStudents(){
+async function batchDeleteStudents(){
     const cbs=document.querySelectorAll('.stu-checkbox:checked');
     if(cbs.length===0){showToast('请先选择要删除的学生','error');return;}
     if(!confirm('确定要删除选中的 '+cbs.length+' 名学生吗？此操作不可恢复！'))return;
     const ids=[...cbs].map(cb=>parseInt(cb.dataset.id));
     studentsData=studentsData.filter(s=>!ids.includes(s.id));
     saveSystemData();
+    if(supabaseClient)await supabaseClient.from('students').delete().in('id',ids);
     showToast('已删除 '+ids.length+' 名学生');
     refreshStudentTable();
     refreshClassDropdowns();
@@ -301,12 +381,17 @@ function downloadGradesCSV(){
 }
 
 /* ====== 文章管理 ====== */
-function addArticle(){
+async function addArticle(){
     const title=document.getElementById('art-title').value.trim();
     const content=document.getElementById('art-content').value.trim();
     const diff=document.getElementById('art-difficulty').value;
     if(!title||!content){showToast('请输入文章标题和内容','error');return;}
-    articlesData.push({id:Date.now(),title,content,difficulty:diff});
+    let id=Date.now();
+    if(supabaseClient){
+        const {data}=await supabaseClient.from('articles').insert({title,content,difficulty:diff}).select();
+        if(data&&data[0])id=data[0].id;
+    }
+    articlesData.push({id,title,content,difficulty:diff});
     saveSystemData();
     document.getElementById('art-title').value='';
     document.getElementById('art-content').value='';
@@ -342,11 +427,12 @@ function handleWordUpload(){
         showToast('请上传 .docx 格式的Word文件','error');
     }
 }
-function deleteArticle(id){
+async function deleteArticle(id){
     const art=articlesData.find(a=>a.id===id);
     if(!art||!confirm('确定要删除文章 "'+art.title+'" 吗？'))return;
     articlesData=articlesData.filter(a=>a.id!==id);
     saveSystemData();
+    if(supabaseClient)await supabaseClient.from('articles').delete().eq('id',id);
     showToast('已删除文章');
     refreshArticleTable();
 }
@@ -380,14 +466,15 @@ function previewArticle(id){
 }
 
 /* ====== 系统设置 ====== */
-function saveDefaultPwd(){
+async function saveDefaultPwd(){
     const pwd=document.getElementById('set-default-pwd').value.trim();
     if(!pwd||pwd.length<3){showToast('密码长度至少3位','error');return;}
     settingsData.defaultPassword=pwd;
     saveSystemData();
+    if(supabaseClient)await supabaseUpsertSetting('defaultPassword',pwd);
     showToast('默认密码已设置为：'+pwd);
 }
-function changeTeacherPwd(){
+async function changeTeacherPwd(){
     const old=document.getElementById('set-old-pwd').value;
     const nw=document.getElementById('set-new-pwd').value.trim();
     const msg=document.getElementById('teacher-settings-msg');
@@ -396,6 +483,7 @@ function changeTeacherPwd(){
     if(nw.length<4){msg.className='form-msg error';msg.textContent='新密码长度至少4位';return;}
     settingsData.teacherPassword=nw;
     saveSystemData();
+    if(supabaseClient)await supabaseUpsertSetting('teacherPassword',nw);
     document.getElementById('set-old-pwd').value='';
     document.getElementById('set-new-pwd').value='';
     msg.className='form-msg success';
@@ -411,15 +499,15 @@ function exportData(){
     a.click();
     showToast('数据已导出（含成绩）');
 }
-function importData(){
+async function importData(){
     const input=document.createElement('input');
     input.type='file';
     input.accept='.json';
-    input.onchange=function(e){
+    input.onchange=async function(e){
         const file=e.target.files[0];
         if(!file)return;
         const reader=new FileReader();
-        reader.onload=function(ev){
+        reader.onload=async function(ev){
             try{
                 const data=JSON.parse(ev.target.result);
                 if(!confirm('导入将覆盖当前所有数据（学生、文章、成绩），确定继续吗？'))return;
@@ -428,6 +516,22 @@ function importData(){
                 if(data.settings)Object.assign(settingsData,data.settings);
                 if(data.grades)studentGrades=data.grades;
                 saveSystemData();
+                if(supabaseClient){
+                    await supabaseClient.from('students').delete().neq('id',0);
+                    if(studentsData.length>0)await supabaseClient.from('students').insert(studentsData.map(s=>({class:s.class,name:s.name,password:s.password,is_default:s.isDefault})));
+                    await supabaseClient.from('articles').delete().neq('id',0);
+                    if(articlesData.length>0)await supabaseClient.from('articles').insert(articlesData.map(a=>({title:a.title,content:a.content,difficulty:a.difficulty})));
+                    await supabaseClient.from('settings').delete().neq('key','');
+                    await supabaseUpsertSetting('teacherPassword',settingsData.teacherPassword);
+                    await supabaseUpsertSetting('defaultPassword',settingsData.defaultPassword);
+                    await supabaseClient.from('grades').delete().neq('id',0);
+                    const gradesToInsert=[];
+                    Object.keys(studentGrades).forEach(key=>{
+                        const [cls,name]=key.split('-');
+                        studentGrades[key].forEach(g=>{gradesToInsert.push({class:cls,name,date:g.date,type:g.type,wpm:g.wpm,accuracy:g.accuracy,stars:g.stars,xp:g.xp});});
+                    });
+                    if(gradesToInsert.length>0)await supabaseClient.from('grades').insert(gradesToInsert);
+                }
                 refreshStudentTable();
                 refreshArticleTable();
                 refreshClassDropdowns();
@@ -440,7 +544,7 @@ function importData(){
 }
 
 /* ====== 学生修改密码 ====== */
-function changeStudentPassword(){
+async function changeStudentPassword(){
     const old=document.getElementById('profile-old-pwd').value;
     const nw=document.getElementById('profile-new-pwd').value;
     const cf=document.getElementById('profile-confirm-pwd').value;
@@ -456,6 +560,7 @@ function changeStudentPassword(){
     stu.password=nw;
     stu.isDefault=false;
     saveSystemData();
+    if(supabaseClient)await supabaseClient.from('students').update({password:nw,is_default:false}).eq('id',stu.id);
     document.getElementById('profile-old-pwd').value='';
     document.getElementById('profile-new-pwd').value='';
     document.getElementById('profile-confirm-pwd').value='';
@@ -561,7 +666,7 @@ function startTimer(){
         if(el>=GS.timeLimit)finishPractice(true);
     },1000);
 }
-function finishPractice(completed){
+async function finishPractice(completed){
     if(GS.isFinished)return;GS.isFinished=true;clearInterval(GS.timerInterval);
     const t=(Date.now()-GS.startTime)/1000/60;
     const wpm=t>0?Math.round((GS.correctChars/5)/t):0;
@@ -574,8 +679,10 @@ function finishPractice(completed){
     if(currentUser&&currentUser.type==='student'){
         const key=currentUser.class+'-'+currentUser.name;
         if(!studentGrades[key])studentGrades[key]=[];
-        studentGrades[key].push({date:new Date().toISOString(),type:GS.currentPractice,wpm,accuracy:acc,stars,xp});
+        const grade={date:new Date().toISOString(),type:GS.currentPractice,wpm,accuracy:acc,stars,xp};
+        studentGrades[key].push(grade);
         saveSystemData();
+        if(supabaseClient)await supabaseClient.from('grades').insert({class:currentUser.class,name:currentUser.name,date:grade.date,type:grade.type,wpm:grade.wpm,accuracy:grade.accuracy,stars:grade.stars,xp:grade.xp});
     }
 }
 function updatePracticeStats(){const p=GS.currentPractice;if(p.includes('letter'))GS.practiceStats.letters++;else if(p.includes('number'))GS.practiceStats.numbers++;else if(p.includes('punctuation'))GS.practiceStats.punctuation++;else GS.practiceStats.mixed++;}
@@ -861,16 +968,22 @@ function exitTouchPractice(){
 }
 
 /* ====== 初始化 ====== */
-document.addEventListener('DOMContentLoaded',function(){
-    loadSystemData();
+document.addEventListener('DOMContentLoaded',async function(){
+    await loadSystemData();
     loadGameState();
     if(studentsData.length===0){
+        const defaults=[];
         defaultClasses.forEach(cls=>{
             ['赵小明','王小红','张大力'].forEach(name=>{
-                studentsData.push({id:Date.now()+studentsData.length,class:cls,name:name,password:settingsData.defaultPassword,isDefault:true});
+                defaults.push({class:cls,name:name,password:settingsData.defaultPassword,isDefault:true});
             });
         });
+        defaults.forEach(d=>{studentsData.push({id:Date.now()+studentsData.length,...d});});
         saveSystemData();
+        if(supabaseClient){
+            const {error}=await supabaseClient.from('students').insert(defaults.map(d=>({class:d.class,name:d.name,password:d.password,is_default:true})));
+            if(error)console.error('批量插入默认学生失败:',error);
+        }
     }
     refreshClassDropdowns();
     refreshStudentTable();
