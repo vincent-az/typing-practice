@@ -403,13 +403,13 @@ function changeTeacherPwd(){
     setTimeout(()=>msg.textContent='',2000);
 }
 function exportData(){
-    const data={students:studentsData,articles:articlesData,settings:settingsData};
+    const data={students:studentsData,articles:articlesData,settings:settingsData,grades:studentGrades};
     const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
     const a=document.createElement('a');
     a.href=URL.createObjectURL(blob);
-    a.download='typing_practice_data.json';
+    a.download='typing_practice_data_'+new Date().toISOString().slice(0,10)+'.json';
     a.click();
-    showToast('数据已导出');
+    showToast('数据已导出（含成绩）');
 }
 function importData(){
     const input=document.createElement('input');
@@ -422,10 +422,11 @@ function importData(){
         reader.onload=function(ev){
             try{
                 const data=JSON.parse(ev.target.result);
-                if(!confirm('导入将覆盖当前所有数据，确定继续吗？'))return;
+                if(!confirm('导入将覆盖当前所有数据（学生、文章、成绩），确定继续吗？'))return;
                 if(data.students)studentsData=data.students;
                 if(data.articles)articlesData=data.articles;
                 if(data.settings)Object.assign(settingsData,data.settings);
+                if(data.grades)studentGrades=data.grades;
                 saveSystemData();
                 refreshStudentTable();
                 refreshArticleTable();
