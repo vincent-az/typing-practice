@@ -5,18 +5,22 @@ body{font-family:'Microsoft YaHei','PingFang SC',-apple-system,sans-serif;backgr
 .screen.active{display:flex;justify-content:center;align-items:center}
 
 /* ====== 登录选屏 ====== */
-.login-container{text-align:center;background:var(--card-bg);padding:48px 36px 40px;border-radius:32px;box-shadow:var(--shadow);max-width:440px;width:92%;position:relative;z-index:1}
-.login-header{margin-bottom:32px}
+.login-container{text-align:center;background:var(--card-bg);padding:48px 36px 40px;border-radius:32px;box-shadow:var(--shadow);max-width:480px;width:92%;position:relative;z-index:1}
+.login-header{margin-bottom:28px}
 .login-logo{margin-bottom:12px;display:inline-block}
 .login-header h1{font-size:2em;font-weight:800;background:linear-gradient(135deg,var(--primary-dark),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:2px}
+.login-subtitle{color:#6b7280;font-size:0.95em;margin-top:8px}
 .login-options{display:flex;flex-direction:column;gap:18px}
-.login-card{display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,#6366f1,#818cf8);color:white;padding:22px 24px;border-radius:20px;cursor:pointer;transition:all 0.3s;box-shadow:0 4px 18px rgba(99,102,241,0.3);text-align:left}
-.login-card:hover{transform:translateY(-4px);box-shadow:0 8px 28px rgba(99,102,241,0.45)}
-.login-card.teacher-login-card{background:linear-gradient(135deg,#10b981,#06b6d4);box-shadow:0 4px 18px rgba(16,185,129,0.3)}
-.login-card.teacher-login-card:hover{box-shadow:0 8px 28px rgba(16,185,129,0.45)}
+.login-card{display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,#6366f1,#818cf8);color:white;padding:28px 28px;border-radius:20px;cursor:pointer;transition:all 0.3s;box-shadow:0 6px 24px rgba(99,102,241,0.35);text-align:left}
+.login-card:hover{transform:translateY(-4px);box-shadow:0 10px 32px rgba(99,102,241,0.5)}
+.student-card{background:linear-gradient(135deg,#6366f1,#818cf8)}
+.student-card:hover{background:linear-gradient(135deg,#4f46e5,#6366f1)}
 .login-card-icon{flex-shrink:0;width:50px;height:50px;display:flex;align-items:center;justify-content:center}
-.login-card h3{font-size:1.15em;margin-bottom:2px}
-.login-card p{font-size:0.82em;opacity:0.85}
+.login-card h3{font-size:1.2em;margin-bottom:2px}
+.login-card p{font-size:0.85em;opacity:0.85}
+.teacher-login-link{text-align:center;margin-top:24px}
+.teacher-login-link a{color:#9ca3af;font-size:0.85em;cursor:pointer;text-decoration:none;transition:color 0.3s}
+.teacher-login-link a:hover{color:#6366f1;text-decoration:underline}
 
 /* ====== 登录表单 ====== */
 .login-form-container{text-align:center;background:var(--card-bg);padding:40px 34px;border-radius:32px;box-shadow:var(--shadow);max-width:400px;width:92%;position:relative;z-index:1}
@@ -68,6 +72,15 @@ body{font-family:'Microsoft YaHei','PingFang SC',-apple-system,sans-serif;backgr
 .action-btn.danger{background:#ef4444;color:white}
 .action-btn.danger:hover{background:#dc2626}
 
+/* ====== 筛选行 ====== */
+.filter-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.filter-row select{padding:10px 14px;border:2px solid #e5e7eb;border-radius:12px;font-size:0.9em;background:#f9fafb;min-width:140px}
+.filter-row select:focus{outline:none;border-color:var(--primary)}
+.filter-row input{flex:1;min-width:150px;padding:10px 14px;border:2px solid #e5e7eb;border-radius:12px;font-size:0.9em;background:#f9fafb}
+.filter-row input:focus{outline:none;border-color:var(--primary)}
+.grade-acc{color:var(--success);font-weight:600}
+.grade-wpm{color:var(--primary-dark);font-weight:600}
+
 /* ====== 表格 ====== */
 .table-wrap{overflow-x:auto;border-radius:14px;border:1px solid #e5e7eb}
 table{width:100%;border-collapse:collapse;font-size:0.9em}
@@ -104,8 +117,8 @@ tr:hover td{background:#f9fafb}
 .btn-group{display:flex;gap:10px;flex-wrap:wrap}
 
 /* ====== 首页 ====== */
-.home-container{text-align:center;background:var(--card-bg);padding:36px 28px 32px;border-radius:32px;box-shadow:var(--shadow);max-width:540px;width:92%;position:relative;z-index:1}
-.home-header{margin-bottom:28px}
+.home-container{text-align:center;background:var(--card-bg);padding:32px 28px 28px;border-radius:32px;box-shadow:var(--shadow);max-width:600px;width:92%;position:relative;z-index:1}
+.home-header{margin-bottom:24px}
 .title-emoji{display:inline-block;margin-bottom:8px;filter:drop-shadow(0 4px 8px rgba(99,102,241,0.3))}
 .home-title{font-size:1.8em;font-weight:800;background:linear-gradient(135deg,var(--primary-dark),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:2px;line-height:1.3}
 .home-menu{display:flex;flex-direction:row;justify-content:center;gap:12px;margin-bottom:24px;flex-wrap:wrap}
@@ -356,6 +369,8 @@ input:checked+.slider:before{transform:translateX(22px)}
     .text-display{font-size:1em}
     .login-header h1{font-size:1.4em}
     .home-title{font-size:1.3em}
+    .filter-row{flex-direction:column;align-items:stretch}
+    .filter-row select,.filter-row input{min-width:auto;width:100%}
 }
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-track{background:#f1f1f1;border-radius:3px}

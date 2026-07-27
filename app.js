@@ -20,6 +20,7 @@ let studentsData=[];
 let articlesData=[];
 let settingsData={defaultPassword:'pzxx',teacherPassword:'pzxxzzw'};
 let currentUser=null;
+let studentGrades={};
 
 let GS={currentScreen:'login-screen',currentPractice:null,currentText:'',currentIndex:0,correctChars:0,totalChars:0,startTime:null,timerInterval:null,timeLimit:180,isPaused:false,isFinished:false,xp:0,level:1,bestWpm:0,practiceCount:0,practiceStats:{letters:0,numbers:0,punctuation:0,mixed:0},achievements:{first:false,speed:false,accuracy:false,punctuation:false,streak:false,all:false},streakCount:0,lastPracticeDate:null};
 let gameInterval=null,gameScore=0,gameCorrect=0,gameTimeLeft=30,gameType=null,gameTarget='';
@@ -29,6 +30,7 @@ function saveSystemData(){
     localStorage.setItem('tpStudents',JSON.stringify(studentsData));
     localStorage.setItem('tpArticles',JSON.stringify(articlesData));
     localStorage.setItem('tpSettings',JSON.stringify(settingsData));
+    localStorage.setItem('tpGrades',JSON.stringify(studentGrades));
 }
 function loadSystemData(){
     const s=localStorage.getItem('tpStudents');
@@ -37,6 +39,8 @@ function loadSystemData(){
     if(a)try{articlesData=JSON.parse(a);}catch(e){}
     const t=localStorage.getItem('tpSettings');
     if(t)try{const d=JSON.parse(t);Object.assign(settingsData,d);}catch(e){}
+    const g=localStorage.getItem('tpGrades');
+    if(g)try{studentGrades=JSON.parse(g);}catch(e){}
     const u=localStorage.getItem('tpCurrentUser');
     if(u)try{currentUser=JSON.parse(u);}catch(e){}
 }
@@ -180,13 +184,17 @@ function resetStudentPwd(id){
 function refreshStudentTable(){
     const tbody=document.getElementById('stu-tbody');
     const count=document.getElementById('stu-count');
-    count.textContent=studentsData.length+'人';
-    if(studentsData.length===0){
-        tbody.innerHTML='<tr><td colspan="4" style="text-align:center;color:#9ca3af;padding:30px">暂无学生，请添加</td></tr>';
+    const filterClass=document.getElementById('stu-filter-class').value;
+    let list=studentsData;
+    if(filterClass)list=studentsData.filter(s=>s.class===filterClass);
+    count.textContent=list.length+'人';
+    if(list.length===0){
+        tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:#9ca3af;padding:30px">暂无学生，请添加</td></tr>';
         return;
     }
-    tbody.innerHTML=studentsData.map(s=>`
+    tbody.innerHTML=list.map(s=>`
         <tr>
+            <td><input type="checkbox" class="stu-checkbox" data-id="${s.id}"></td>
             <td>${s.class}</td>
             <td>${s.name}</td>
             <td><span class="pwd-status ${s.isDefault?'default':'changed'}">${s.isDefault?'默认密码':'已修改'}</span></td>
@@ -196,6 +204,100 @@ function refreshStudentTable(){
             </td>
         </tr>
     `).join('');
+}
+function toggleAllStudents(checked){document.querySelectorAll('.stu-checkbox').forEach(cb=>cb.checked=checked);}
+function batchDeleteStudents(){
+    const cbs=document.querySelectorAll('.stu-checkbox:checked');
+    if(cbs.length===0){showToast('请先选择要删除的学生','error');return;}
+    if(!confirm('确定要删除选中的 '+cbs.length+' 名学生吗？此操作不可恢复！'))return;
+    const ids=[...cbs].map(cb=>parseInt(cb.dataset.id));
+    studentsData=studentsData.filter(s=>!ids.includes(s.id));
+    saveSystemData();
+    showToast('已删除 '+ids.length+' 名学生');
+    refreshStudentTable();
+    refreshClassDropdowns();
+}
+
+/* ====== 成绩管理 ====== */
+function refreshGradeTable(){
+    const tbody=document.getElementById('grade-tbody');
+    const count=document.getElementById('grade-count');
+    const filterClass=document.getElementById('grade-class-filter').value;
+    const searchName=(document.getElementById('grade-search').value||'').trim();
+    let rows=[];
+    studentsData.forEach(stu=>{
+        if(filterClass&&stu.class!==filterClass)return;
+        if(searchName&&!stu.name.includes(searchName))return;
+        const key=stu.class+'-'+stu.name;
+        const grades=studentGrades[key]||[];
+        const avgWpm=grades.length>0?Math.round(grades.reduce((s,g)=>s+g.wpm,0)/grades.length):0;
+        const avgAcc=grades.length>0?Math.round(grades.reduce((s,g)=>s+g.accuracy,0)/grades.length):0;
+        const maxWpm=grades.length>0?Math.max(...grades.map(g=>g.wpm)):0;
+        rows.push({class:stu.class,name:stu.name,count:grades.length,avgWpm,avgAcc,maxWpm});
+    });
+    rows.sort((a,b)=>a.class.localeCompare(b.class)||a.name.localeCompare(b.name));
+    count.textContent=rows.length+'人';
+    if(rows.length===0){
+        tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:#9ca3af;padding:30px">暂无成绩数据</td></tr>';
+        return;
+    }
+    tbody.innerHTML=rows.map(r=>`
+        <tr>
+            <td>${r.class}</td>
+            <td>${r.name}</td>
+            <td>${r.count}次</td>
+            <td class="grade-wpm">${r.avgWpm} WPM</td>
+            <td class="grade-acc">${r.avgAcc}%</td>
+            <td>${r.maxWpm} WPM</td>
+            <td><button class="table-btn view" onclick="showGradeDetail('${r.class.replace(/'/g,"\\'")}','${r.name.replace(/'/g,"\\'")}')">详情</button></td>
+        </tr>
+    `).join('');
+}
+const gradeTypeNames={'letters-home':'基准键','letters-all':'全字母','numbers':'数字键','punctuation-basic':'基础标点','punctuation-quotes':'引号练习','punctuation-cn':'中文标点','sentences':'句子练习','articles':'短文练习'};
+function showGradeDetail(cls,name){
+    const key=cls+'-'+name;
+    const grades=studentGrades[key]||[];
+    document.getElementById('grade-detail-title').textContent=name+' 的成绩详情 ('+cls+')';
+    const tbody=document.getElementById('grade-detail-tbody');
+    if(grades.length===0){
+        tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:#9ca3af;padding:20px">暂无练习记录</td></tr>';
+    }else{
+        tbody.innerHTML=grades.slice().reverse().map(g=>{
+            const d=new Date(g.date);
+            const dateStr=(d.getMonth()+1)+'/'+d.getDate()+' '+d.getHours()+':'+String(d.getMinutes()).padStart(2,'0');
+            return `<tr><td>${dateStr}</td><td>${gradeTypeNames[g.type]||g.type}</td><td class="grade-wpm">${g.wpm} WPM</td><td class="grade-acc">${g.accuracy}%</td><td>${'⭐'.repeat(g.stars)}</td></tr>`;
+        }).join('');
+    }
+    document.getElementById('grade-list-view').style.display='none';
+    document.getElementById('grade-detail-view').style.display='block';
+}
+function closeGradeDetail(){
+    document.getElementById('grade-list-view').style.display='block';
+    document.getElementById('grade-detail-view').style.display='none';
+}
+function downloadGradesCSV(){
+    const filterClass=document.getElementById('grade-class-filter').value;
+    const searchName=(document.getElementById('grade-search').value||'').trim();
+    let csv='\uFEFF班级,姓名,练习次数,平均速度(WPM),平均正确率(%),最高速度(WPM)\n';
+    let count=0;
+    studentsData.forEach(stu=>{
+        if(filterClass&&stu.class!==filterClass)return;
+        if(searchName&&!stu.name.includes(searchName))return;
+        const key=stu.class+'-'+stu.name;
+        const grades=studentGrades[key]||[];
+        const avgWpm=grades.length>0?Math.round(grades.reduce((s,g)=>s+g.wpm,0)/grades.length):0;
+        const avgAcc=grades.length>0?Math.round(grades.reduce((s,g)=>s+g.accuracy,0)/grades.length):0;
+        const maxWpm=grades.length>0?Math.max(...grades.map(g=>g.wpm)):0;
+        csv+=stu.class+','+stu.name+','+grades.length+','+avgWpm+','+avgAcc+','+maxWpm+'\n';
+        count++;
+    });
+    if(count===0){showToast('没有可下载的成绩数据','error');return;}
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='学生成绩_'+(filterClass||'全部班级')+'_'+new Date().toISOString().slice(0,10)+'.csv';
+    a.click();
+    showToast('已下载 '+count+' 名学生的成绩');
 }
 
 /* ====== 文章管理 ====== */
@@ -365,11 +467,12 @@ function changeStudentPassword(){
 function refreshClassDropdowns(){
     const studentClasses=[...new Set(studentsData.map(s=>s.class))];
     const allClasses=[...new Set([...defaultClasses,...studentClasses])];
-    ['stu-class','login-class','bulk-class'].forEach(id=>{
+    ['stu-class','login-class','bulk-class','stu-filter-class','grade-class-filter'].forEach(id=>{
         const sel=document.getElementById(id);
         if(!sel)return;
         const current=sel.value;
-        sel.innerHTML='<option value="">选择班级</option>'+allClasses.map(c=>'<option value="'+c+'">'+c+'</option>').join('');
+        const firstOption=id.includes('filter')?'<option value="">全部班级</option>':'<option value="">选择班级</option>';
+        sel.innerHTML=firstOption+allClasses.map(c=>'<option value="'+c+'">'+c+'</option>').join('');
         if(current)sel.value=current;
     });
 }
@@ -393,6 +496,7 @@ function switchTab(tab){
     document.getElementById('tab-'+tab).classList.add('active');
     if(tab==='students'){refreshStudentTable();refreshClassDropdowns();}
     if(tab==='articles')refreshArticleTable();
+    if(tab==='grades'){refreshGradeTable();closeGradeDetail();}
 }
 
 /* ====== 现有打字练习功能（保持不变） ====== */
@@ -466,6 +570,12 @@ function finishPractice(completed){
     if(wpm>GS.bestWpm)GS.bestWpm=wpm;updatePracticeStats();
     const xn=GS.level*100;if(GS.xp>=xn){GS.level++;GS.xp-=xn;}
     checkAchievements(wpm,acc);updateStreak();saveGameState();showResult(stars,wpm,acc,xp,completed);
+    if(currentUser&&currentUser.type==='student'){
+        const key=currentUser.class+'-'+currentUser.name;
+        if(!studentGrades[key])studentGrades[key]=[];
+        studentGrades[key].push({date:new Date().toISOString(),type:GS.currentPractice,wpm,accuracy:acc,stars,xp});
+        saveSystemData();
+    }
 }
 function updatePracticeStats(){const p=GS.currentPractice;if(p.includes('letter'))GS.practiceStats.letters++;else if(p.includes('number'))GS.practiceStats.numbers++;else if(p.includes('punctuation'))GS.practiceStats.punctuation++;else GS.practiceStats.mixed++;}
 function getTargetWpm(){const d=document.getElementById('setting-difficulty').value;return d==='easy'?15:d==='medium'?20:25;}

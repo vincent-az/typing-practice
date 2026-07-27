@@ -11,26 +11,21 @@
         <div class="login-container">
             <div class="login-header">
                 <div class="login-logo">
-                    <svg viewBox="0 0 100 100" width="80" height="80"><rect x="10" y="25" width="80" height="55" rx="8" fill="#6366f1"/><rect x="15" y="30" width="70" height="35" rx="4" fill="#eef2ff"/><rect x="18" y="35" width="12" height="4" rx="2" fill="#6366f1"/><rect x="33" y="35" width="12" height="4" rx="2" fill="#6366f1"/><rect x="48" y="35" width="12" height="4" rx="2" fill="#6366f1"/><rect x="63" y="35" width="12" height="4" rx="2" fill="#6366f1"/><rect x="18" y="43" width="12" height="4" rx="2" fill="#6366f1"/><rect x="33" y="43" width="12" height="4" rx="2" fill="#6366f1"/><rect x="48" y="43" width="12" height="4" rx="2" fill="#6366f1"/><rect x="63" y="43" width="12" height="4" rx="2" fill="#6366f1"/><rect x="18" y="51" width="40" height="4" rx="2" fill="#6366f1"/><circle cx="42" cy="75" r="6" fill="#818cf8"/><circle cx="58" cy="75" r="6" fill="#818cf8"/><line x1="42" y1="75" x2="58" y2="75" stroke="#818cf8" stroke-width="2"/><text x="50" y="22" text-anchor="middle" font-size="14" fill="#4f46e5" font-weight="bold">潘庄小学</text></svg>
+                    <svg viewBox="0 0 100 70" width="120" height="80"><rect x="5" y="5" width="90" height="55" rx="8" fill="#6366f1"/><rect x="10" y="10" width="80" height="35" rx="4" fill="#eef2ff"/><rect x="14" y="15" width="8" height="3" rx="1.5" fill="#6366f1"/><rect x="25" y="15" width="8" height="3" rx="1.5" fill="#6366f1"/><rect x="36" y="15" width="8" height="3" rx="1.5" fill="#6366f1"/><rect x="47" y="15" width="8" height="3" rx="1.5" fill="#6366f1"/><rect x="58" y="15" width="8" height="3" rx="1.5" fill="#6366f1"/><rect x="69" y="15" width="8" height="3" rx="1.5" fill="#6366f1"/><rect x="80" y="15" width="8" height="3" rx="1.5" fill="#6366f1"/><rect x="14" y="22" width="8" height="3" rx="1.5" fill="#818cf8"/><rect x="25" y="22" width="8" height="3" rx="1.5" fill="#818cf8"/><rect x="36" y="22" width="8" height="3" rx="1.5" fill="#818cf8"/><rect x="47" y="22" width="8" height="3" rx="1.5" fill="#818cf8"/><rect x="58" y="22" width="8" height="3" rx="1.5" fill="#818cf8"/><rect x="69" y="22" width="8" height="3" rx="1.5" fill="#818cf8"/><rect x="80" y="22" width="8" height="3" rx="1.5" fill="#818cf8"/><rect x="14" y="29" width="8" height="3" rx="1.5" fill="#a5b4fc"/><rect x="25" y="29" width="8" height="3" rx="1.5" fill="#a5b4fc"/><rect x="36" y="29" width="8" height="3" rx="1.5" fill="#a5b4fc"/><rect x="47" y="29" width="8" height="3" rx="1.5" fill="#a5b4fc"/><rect x="58" y="29" width="8" height="3" rx="1.5" fill="#a5b4fc"/><rect x="69" y="29" width="8" height="3" rx="1.5" fill="#a5b4fc"/><rect x="80" y="29" width="8" height="3" rx="1.5" fill="#a5b4fc"/><rect x="14" y="36" width="35" height="3" rx="1.5" fill="#c7d2fe"/><circle cx="30" cy="55" r="4" fill="#818cf8"/><circle cx="40" cy="55" r="4" fill="#818cf8"/><circle cx="50" cy="55" r="4" fill="#818cf8"/><circle cx="60" cy="55" r="4" fill="#818cf8"/></svg>
                 </div>
-                <h1>潘庄小学打字练习乐园</h1>
+                <h1>在线打字练习</h1>
+                <p class="login-subtitle">提升打字速度，成为键盘高手</p>
             </div>
             <div class="login-options">
-                <div class="login-card" onclick="showScreen('student-login-screen')">
+                <div class="login-card student-card" onclick="showScreen('student-login-screen')">
                     <div class="login-card-icon">
-                        <svg viewBox="0 0 60 60" width="50" height="50"><circle cx="30" cy="20" r="12" fill="#fbbf24"/><circle cx="30" cy="20" r="8" fill="#f59e0b"/><path d="M12 50 Q12 35 30 35 Q48 35 48 50" fill="#fbbf24"/><path d="M16 50 Q16 38 30 38 Q44 38 44 50" fill="#f59e0b"/></svg>
+                        <svg viewBox="0 0 60 60" width="50" height="50"><circle cx="30" cy="20" r="12" fill="rgba(255,255,255,0.3)"/><circle cx="30" cy="20" r="8" fill="rgba(255,255,255,0.5)"/><path d="M12 50 Q12 35 30 35 Q48 35 48 50" fill="rgba(255,255,255,0.3)"/><path d="M16 50 Q16 38 30 38 Q44 38 44 50" fill="rgba(255,255,255,0.5)"/></svg>
                     </div>
-                    <h3>学生登录</h3>
+                    <h3>开始练习</h3>
                     <p>选择班级，输入姓名和密码</p>
                 </div>
-                <div class="login-card teacher-login-card" onclick="showScreen('teacher-login-screen')">
-                    <div class="login-card-icon">
-                        <svg viewBox="0 0 60 60" width="50" height="50"><rect x="10" y="25" width="40" height="30" rx="5" fill="#e0e7ff"/><rect x="15" y="28" width="30" height="3" rx="1.5" fill="#6366f1"/><rect x="15" y="34" width="20" height="3" rx="1.5" fill="#6366f1"/><rect x="15" y="40" width="25" height="3" rx="1.5" fill="#6366f1"/><circle cx="30" cy="12" r="9" fill="#c7d2fe"/><circle cx="30" cy="12" r="6" fill="#818cf8"/><path d="M12 55 L30 48 L48 55" fill="#e0e7ff" stroke="#a5b4fc" stroke-width="1"/></svg>
-                    </div>
-                    <h3>教师登录</h3>
-                    <p>管理学生和练习内容</p>
-                </div>
             </div>
+            <div class="teacher-login-link"><a onclick="showScreen('teacher-login-screen')">教师登录</a></div>
         </div>
     </div>
 
@@ -86,10 +81,7 @@
                 </div>
             </div>
             <div class="home-header">
-                <div class="title-emoji">
-                    <svg viewBox="0 0 80 80" width="70" height="70"><rect x="8" y="18" width="64" height="44" rx="6" fill="#6366f1"/><rect x="12" y="22" width="56" height="28" rx="3" fill="#eef2ff"/><rect x="15" y="26" width="10" height="3" rx="1.5" fill="#6366f1"/><rect x="28" y="26" width="10" height="3" rx="1.5" fill="#6366f1"/><rect x="41" y="26" width="10" height="3" rx="1.5" fill="#6366f1"/><rect x="54" y="26" width="10" height="3" rx="1.5" fill="#6366f1"/><rect x="15" y="33" width="10" height="3" rx="1.5" fill="#6366f1"/><rect x="28" y="33" width="10" height="3" rx="1.5" fill="#6366f1"/><rect x="41" y="33" width="10" height="3" rx="1.5" fill="#6366f1"/><rect x="54" y="33" width="10" height="3" rx="1.5" fill="#6366f1"/><rect x="15" y="40" width="32" height="3" rx="1.5" fill="#6366f1"/><circle cx="34" cy="60" r="5" fill="#818cf8"/><circle cx="46" cy="60" r="5" fill="#818cf8"/></svg>
-                </div>
-                <h1 class="home-title">潘庄小学打字练习乐园</h1>
+                <h1 class="home-title">打字练习</h1>
             </div>
             <div class="home-menu">
                 <div class="menu-card card-practice" onclick="showScreen('practice-screen')">
@@ -165,6 +157,7 @@
             <div class="teacher-tabs">
                 <button class="tab-btn active" onclick="switchTab('students')">👥 学生管理</button>
                 <button class="tab-btn" onclick="switchTab('articles')">📄 文章管理</button>
+                <button class="tab-btn" onclick="switchTab('grades')">📊 成绩管理</button>
                 <button class="tab-btn" onclick="switchTab('t-settings')">⚙️ 系统设置</button>
             </div>
 
@@ -185,9 +178,13 @@
                 </div>
                 <div class="tab-section">
                     <h3>学生名单 <span id="stu-count" class="count-badge">0人</span></h3>
+                    <div class="filter-row">
+                        <select id="stu-filter-class" onchange="refreshStudentTable()"><option value="">全部班级</option></select>
+                        <button class="action-btn danger" onclick="batchDeleteStudents()">批量删除</button>
+                    </div>
                     <div class="table-wrap">
                         <table id="stu-table">
-                            <thead><tr><th>班级</th><th>姓名</th><th>密码状态</th><th>操作</th></tr></thead>
+                            <thead><tr><th><input type="checkbox" id="stu-check-all" onchange="toggleAllStudents(this.checked)"></th><th>班级</th><th>姓名</th><th>密码状态</th><th>操作</th></tr></thead>
                             <tbody id="stu-tbody"></tbody>
                         </table>
                     </div>
@@ -216,6 +213,37 @@
                             <thead><tr><th>标题</th><th>难度</th><th>内容预览</th><th>操作</th></tr></thead>
                             <tbody id="art-tbody"></tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-grades" class="tab-content">
+                <div id="grade-list-view">
+                    <div class="tab-section">
+                        <h3>学生成绩 <span id="grade-count" class="count-badge">0人</span></h3>
+                        <div class="filter-row">
+                            <select id="grade-class-filter" onchange="refreshGradeTable()"><option value="">全部班级</option></select>
+                            <input type="text" id="grade-search" placeholder="搜索学生姓名..." oninput="refreshGradeTable()">
+                            <button class="action-btn primary" onclick="downloadGradesCSV()">📥 下载成绩</button>
+                        </div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead><tr><th>班级</th><th>姓名</th><th>练习次数</th><th>平均速度</th><th>平均正确率</th><th>最高速度</th><th>操作</th></tr></thead>
+                                <tbody id="grade-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="grade-detail-view" style="display:none">
+                    <div class="tab-section">
+                        <h3 id="grade-detail-title">学生成绩详情</h3>
+                        <div class="table-wrap">
+                            <table>
+                                <thead><tr><th>日期</th><th>练习类型</th><th>速度(WPM)</th><th>正确率</th><th>星级</th></tr></thead>
+                                <tbody id="grade-detail-tbody"></tbody>
+                            </table>
+                        </div>
+                        <button class="action-btn" onclick="closeGradeDetail()" style="margin-top:12px">← 返回列表</button>
                     </div>
                 </div>
             </div>
