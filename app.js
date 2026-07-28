@@ -220,22 +220,37 @@ async function addBulkStudents(){
     if(!cls){showToast('请先选择班级','error');return;}
     if(!text){showToast('请输入学生姓名','error');return;}
     const lines=text.split('\n').filter(l=>l.trim());
-    let count=0;
+    const added=[];
+    const skipped=[];
     for(const rawName of lines){
         const name=rawName.trim();
-        if(!name||studentsData.some(s=>s.class===cls&&s.name===name))continue;
-        let id=Date.now()+count;
-        if(supabaseClient){
-            const {data}=await supabaseClient.from('students').insert({class:cls,name,password:settingsData.defaultPassword,is_default:true}).select();
-            if(data&&data[0])id=data[0].id;
+        if(!name)continue;
+        if(studentsData.some(s=>s.class===cls&&s.name===name)){
+            skipped.push(name);
+            continue;
         }
-        studentsData.push({id,class:cls,name,password:settingsData.defaultPassword,isDefault:true});
-        count++;
+        added.push({class:cls,name,password:settingsData.defaultPassword,isDefault:true});
     }
-    if(count===0){showToast('这些学生已存在','error');return;}
+    if(added.length===0){showToast('这些学生都已存在，无需添加','error');return;}
+    if(supabaseClient){
+        const {data,error}=await supabaseClient.from('students').insert(
+            added.map(a=>({class:a.class,name:a.name,password:a.password,is_default:true}))
+        ).select();
+        if(error){showToast('云存储写入失败，已保存到本地','error');console.error(error);}
+        if(data){
+            added.forEach((a,i)=>{
+                const id=data[i]?data[i].id:Date.now()+i;
+                studentsData.push({id,class:a.class,name:a.name,password:a.password,isDefault:true});
+            });
+        }
+    }else{
+        added.forEach((a,i)=>{studentsData.push({id:Date.now()+i,...a});});
+    }
     saveSystemData();
     document.getElementById('stu-bulk').value='';
-    showToast('批量添加成功：'+count+'人');
+    let msg='成功添加 '+added.length+' 名学生';
+    if(skipped.length>0)msg+='（'+skipped.length+' 名已存在已跳过）';
+    showToast(msg);
     refreshStudentTable();
     refreshClassDropdowns();
 }
