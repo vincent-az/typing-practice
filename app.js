@@ -23,8 +23,8 @@ let currentUser=null;
 let studentGrades={};
 
 /* ====== Supabase 云存储配置 ====== */
-const SUPABASE_URL = ''; // ← 请填写 Supabase Project URL
-const SUPABASE_ANON_KEY = ''; // ← 请填写 Supabase anon public key
+const SUPABASE_URL = 'https://ezbsuywvaimjgbuhrubj.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_OPzKEGQZPL_LZEuSjwWOKg_CgZprhgj';
 let supabaseClient = null;
 
 function initSupabase() {
