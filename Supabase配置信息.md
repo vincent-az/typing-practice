@@ -22,18 +22,16 @@
 | Project URL | `https://ezbsuywvaimjgbuhrubj.supabase.co` |
 | 控制台地址 | `https://supabase.com/dashboard/project/ezbsuywvaimjgbuhrubj` |
 
-## 密钥（需手动填写）
+## 密钥
 
-⚠️ 以下密钥需要您从控制台复制填写：
-
-1. 打开 https://supabase.com/dashboard/project/ezbsuywvaimjgbuhrubj/settings/api-keys
-2. 在 **Project API keys** 区域，复制 **anon public** 那一行的值（以 `eyJ` 开头的长字符串）
-3. 填入 `app.js` 中的 `SUPABASE_ANON_KEY`
+| 名称 | 值 |
+|------|-----|
+| anon public key | `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6YnN1eXd2YWltamdidWhydWJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyMjQ2MTksImV4cCI6MjEwMDgwMDYxOX0.fPf5rCNmWVq_gSUYaWtL9RCwVsdOI-xh0CBER9BzD-g` |
 
 当前状态：
 ```
 SUPABASE_URL = 'https://ezbsuywvaimjgbuhrubj.supabase.co'
-SUPABASE_ANON_KEY = 'sb_publishable_...'  ← 需要替换为 anon public 密钥
+SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'  ✅ 已填入
 ```
 
 ## 数据库表结构

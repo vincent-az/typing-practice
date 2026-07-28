@@ -24,7 +24,7 @@ let studentGrades={};
 
 /* ====== Supabase 云存储配置 ====== */
 const SUPABASE_URL = 'https://ezbsuywvaimjgbuhrubj.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_OPzKEGQZPL_LZEuSjwWOKg_CgZprhgj';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6YnN1eXd2YWltamdidWhydWJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyMjQ2MTksImV4cCI6MjEwMDgwMDYxOX0.fPf5rCNmWVq_gSUYaWtL9RCwVsdOI-xh0CBER9BzD-g';
 let supabaseClient = null;
 
 function initSupabase() {
