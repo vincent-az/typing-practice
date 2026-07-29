@@ -74,7 +74,8 @@ async function supabaseLoadGrades() {
 }
 async function supabaseUpsertSetting(key, value) {
     if (!supabaseClient) return;
-    await supabaseClient.from('settings').upsert({ key, value }, { onConflict: 'key' });
+    const {error}=await supabaseClient.from('settings').upsert({ key, value }, { onConflict: 'key' });
+    if(error)console.error('Supabase保存设置失败:',key,error);
 }
 
 let GS={currentScreen:'login-screen',currentPractice:null,currentText:'',currentIndex:0,correctChars:0,totalChars:0,startTime:null,timerInterval:null,timeLimit:180,isPaused:false,isFinished:false,xp:0,level:1,bestWpm:0,practiceCount:0,practiceStats:{letters:0,numbers:0,punctuation:0,mixed:0},achievements:{first:false,speed:false,accuracy:false,punctuation:false,streak:false,all:false},streakCount:0,lastPracticeDate:null};
@@ -89,18 +90,6 @@ function saveSystemData(){
 }
 
 async function loadSystemData(){
-    const sbOk = initSupabase();
-    if (sbOk) {
-        const results = await Promise.all([
-            supabaseLoadStudents(), supabaseLoadArticles(), supabaseLoadSettings(), supabaseLoadGrades()
-        ]);
-        if (results.every(r => r)) {
-            saveSystemData();
-            const u = localStorage.getItem('tpCurrentUser');
-            if (u) try { currentUser = JSON.parse(u); } catch(e) {}
-            return;
-        }
-    }
     const s=localStorage.getItem('tpStudents');
     if(s)try{studentsData=JSON.parse(s);}catch(e){}
     const a=localStorage.getItem('tpArticles');
@@ -111,6 +100,22 @@ async function loadSystemData(){
     if(g)try{studentGrades=JSON.parse(g);}catch(e){}
     const u=localStorage.getItem('tpCurrentUser');
     if(u)try{currentUser=JSON.parse(u);}catch(e){}
+
+    const sbOk = initSupabase();
+    if (sbOk) {
+        const backupStudents=[...studentsData], backupArticles=[...articlesData], backupGrades={...studentGrades};
+        const results = await Promise.all([
+            supabaseLoadStudents(), supabaseLoadArticles(), supabaseLoadSettings(), supabaseLoadGrades()
+        ]);
+        if (results.every(r => r)) {
+            if (studentsData.length===0 && backupStudents.length>0) studentsData=backupStudents;
+            if (articlesData.length===0 && backupArticles.length>0) articlesData=backupArticles;
+            if (Object.keys(studentGrades).length===0 && Object.keys(backupGrades).length>0) studentGrades=backupGrades;
+            saveSystemData();
+            return;
+        }
+        studentsData=backupStudents; articlesData=backupArticles; studentGrades=backupGrades;
+    }
 }
 function saveCurrentUser(){
     if(currentUser){
@@ -204,7 +209,8 @@ async function addSingleStudent(){
     if(studentsData.some(s=>s.class===cls&&s.name===name)){showToast('该学生已存在','error');return;}
     let id=Date.now();
     if(supabaseClient){
-        const {data}=await supabaseClient.from('students').insert({class:cls,name,password:settingsData.defaultPassword,is_default:true}).select();
+        const {data,error}=await supabaseClient.from('students').insert({class:cls,name,password:settingsData.defaultPassword,is_default:true}).select();
+        if(error){console.error('Supabase添加学生失败:',error);showToast('云存储写入失败','error');}
         if(data&&data[0])id=data[0].id;
     }
     studentsData.push({id,class:cls,name:name,password:settingsData.defaultPassword,isDefault:true});
@@ -236,12 +242,14 @@ async function addBulkStudents(){
         const {data,error}=await supabaseClient.from('students').insert(
             added.map(a=>({class:a.class,name:a.name,password:a.password,is_default:true}))
         ).select();
-        if(error){showToast('云存储写入失败，已保存到本地','error');console.error(error);}
+        if(error){showToast('云存储写入失败，已保存到本地','error');console.error('Supabase批量添加失败:',error);}
         if(data){
             added.forEach((a,i)=>{
                 const id=data[i]?data[i].id:Date.now()+i;
                 studentsData.push({id,class:a.class,name:a.name,password:a.password,isDefault:true});
             });
+        }else{
+            added.forEach((a,i)=>{studentsData.push({id:Date.now()+i,class:a.class,name:a.name,password:a.password,isDefault:true});});
         }
     }else{
         added.forEach((a,i)=>{studentsData.push({id:Date.now()+i,...a});});
@@ -260,7 +268,7 @@ async function deleteStudent(id){
     if(!confirm('确定要删除学生 '+stu.name+' 吗？'))return;
     studentsData=studentsData.filter(s=>s.id!==id);
     saveSystemData();
-    if(supabaseClient)await supabaseClient.from('students').delete().eq('id',id);
+    if(supabaseClient){const {error}=await supabaseClient.from('students').delete().eq('id',id);if(error)console.error('Supabase删除学生失败:',error);}
     showToast('已删除：'+stu.name);
     refreshStudentTable();
     refreshClassDropdowns();
@@ -271,7 +279,7 @@ async function resetStudentPwd(id){
     stu.password=settingsData.defaultPassword;
     stu.isDefault=true;
     saveSystemData();
-    if(supabaseClient)await supabaseClient.from('students').update({password:settingsData.defaultPassword,is_default:true}).eq('id',id);
+    if(supabaseClient){const {error}=await supabaseClient.from('students').update({password:settingsData.defaultPassword,is_default:true}).eq('id',id);if(error)console.error('Supabase重置密码失败:',error);}
     showToast('已重置：'+stu.name+' 的密码');
     refreshStudentTable();
 }
@@ -307,7 +315,7 @@ async function batchDeleteStudents(){
     const ids=[...cbs].map(cb=>parseInt(cb.dataset.id));
     studentsData=studentsData.filter(s=>!ids.includes(s.id));
     saveSystemData();
-    if(supabaseClient)await supabaseClient.from('students').delete().in('id',ids);
+    if(supabaseClient){const {error}=await supabaseClient.from('students').delete().in('id',ids);if(error)console.error('Supabase批量删除失败:',error);}
     showToast('已删除 '+ids.length+' 名学生');
     refreshStudentTable();
     refreshClassDropdowns();
@@ -403,7 +411,8 @@ async function addArticle(){
     if(!title||!content){showToast('请输入文章标题和内容','error');return;}
     let id=Date.now();
     if(supabaseClient){
-        const {data}=await supabaseClient.from('articles').insert({title,content,difficulty:diff}).select();
+        const {data,error}=await supabaseClient.from('articles').insert({title,content,difficulty:diff}).select();
+        if(error){console.error('Supabase添加文章失败:',error);showToast('云存储写入失败','error');}
         if(data&&data[0])id=data[0].id;
     }
     articlesData.push({id,title,content,difficulty:diff});
@@ -447,7 +456,7 @@ async function deleteArticle(id){
     if(!art||!confirm('确定要删除文章 "'+art.title+'" 吗？'))return;
     articlesData=articlesData.filter(a=>a.id!==id);
     saveSystemData();
-    if(supabaseClient)await supabaseClient.from('articles').delete().eq('id',id);
+    if(supabaseClient){const {error}=await supabaseClient.from('articles').delete().eq('id',id);if(error)console.error('Supabase删除文章失败:',error);}
     showToast('已删除文章');
     refreshArticleTable();
 }
@@ -532,20 +541,20 @@ async function importData(){
                 if(data.grades)studentGrades=data.grades;
                 saveSystemData();
                 if(supabaseClient){
-                    await supabaseClient.from('students').delete().neq('id',0);
-                    if(studentsData.length>0)await supabaseClient.from('students').insert(studentsData.map(s=>({class:s.class,name:s.name,password:s.password,is_default:s.isDefault})));
-                    await supabaseClient.from('articles').delete().neq('id',0);
-                    if(articlesData.length>0)await supabaseClient.from('articles').insert(articlesData.map(a=>({title:a.title,content:a.content,difficulty:a.difficulty})));
-                    await supabaseClient.from('settings').delete().neq('key','');
+                    let {error:e1}=await supabaseClient.from('students').delete().neq('id',0);if(e1)console.error('导入-清空students失败:',e1);
+                    if(studentsData.length>0){let {error:e2}=await supabaseClient.from('students').insert(studentsData.map(s=>({class:s.class,name:s.name,password:s.password,is_default:s.isDefault})));if(e2)console.error('导入-写入students失败:',e2);}
+                    let {error:e3}=await supabaseClient.from('articles').delete().neq('id',0);if(e3)console.error('导入-清空articles失败:',e3);
+                    if(articlesData.length>0){let {error:e4}=await supabaseClient.from('articles').insert(articlesData.map(a=>({title:a.title,content:a.content,difficulty:a.difficulty})));if(e4)console.error('导入-写入articles失败:',e4);}
+                    let {error:e5}=await supabaseClient.from('settings').delete().neq('key','');if(e5)console.error('导入-清空settings失败:',e5);
                     await supabaseUpsertSetting('teacherPassword',settingsData.teacherPassword);
                     await supabaseUpsertSetting('defaultPassword',settingsData.defaultPassword);
-                    await supabaseClient.from('grades').delete().neq('id',0);
+                    let {error:e6}=await supabaseClient.from('grades').delete().neq('id',0);if(e6)console.error('导入-清空grades失败:',e6);
                     const gradesToInsert=[];
                     Object.keys(studentGrades).forEach(key=>{
                         const [cls,name]=key.split('-');
                         studentGrades[key].forEach(g=>{gradesToInsert.push({class:cls,name,date:g.date,type:g.type,wpm:g.wpm,accuracy:g.accuracy,stars:g.stars,xp:g.xp});});
                     });
-                    if(gradesToInsert.length>0)await supabaseClient.from('grades').insert(gradesToInsert);
+                    if(gradesToInsert.length>0){let {error:e7}=await supabaseClient.from('grades').insert(gradesToInsert);if(e7)console.error('导入-写入grades失败:',e7);}
                 }
                 refreshStudentTable();
                 refreshArticleTable();
@@ -556,6 +565,33 @@ async function importData(){
         reader.readAsText(file);
     };
     input.click();
+}
+
+async function syncToSupabase(){
+    if(!supabaseClient){showToast('Supabase未连接','error');return;}
+    if(!confirm('确定要将所有本地数据同步到云端吗？将覆盖云端现有数据。'))return;
+    showToast('正在同步数据到Supabase...');
+    try{
+        let {error:e1}=await supabaseClient.from('students').delete().neq('id',0);
+        if(e1){showToast('清空云端学生失败','error');console.error(e1);return;}
+        if(studentsData.length>0){let {error:e2}=await supabaseClient.from('students').insert(studentsData.map(s=>({class:s.class,name:s.name,password:s.password,is_default:s.isDefault})));if(e2){showToast('同步学生失败','error');console.error(e2);return;}}
+        let {error:e3}=await supabaseClient.from('articles').delete().neq('id',0);
+        if(e3){showToast('清空云端文章失败','error');console.error(e3);return;}
+        if(articlesData.length>0){let {error:e4}=await supabaseClient.from('articles').insert(articlesData.map(a=>({title:a.title,content:a.content,difficulty:a.difficulty})));if(e4){showToast('同步文章失败','error');console.error(e4);return;}}
+        let {error:e5}=await supabaseClient.from('settings').delete().neq('key','');
+        if(e5){showToast('清空云端设置失败','error');console.error(e5);return;}
+        await supabaseUpsertSetting('teacherPassword',settingsData.teacherPassword);
+        await supabaseUpsertSetting('defaultPassword',settingsData.defaultPassword);
+        let {error:e6}=await supabaseClient.from('grades').delete().neq('id',0);
+        if(e6){showToast('清空云端成绩失败','error');console.error(e6);return;}
+        const gradesToInsert=[];
+        Object.keys(studentGrades).forEach(key=>{
+            const [cls,name]=key.split('-');
+            studentGrades[key].forEach(g=>{gradesToInsert.push({class:cls,name,date:g.date,type:g.type,wpm:g.wpm,accuracy:g.accuracy,stars:g.stars,xp:g.xp});});
+        });
+        if(gradesToInsert.length>0){let {error:e7}=await supabaseClient.from('grades').insert(gradesToInsert);if(e7){showToast('同步成绩失败','error');console.error(e7);return;}}
+        showToast('所有数据已同步到云端！');
+    }catch(e){showToast('同步失败：'+e.message,'error');console.error(e);}
 }
 
 /* ====== 学生修改密码 ====== */
@@ -575,7 +611,7 @@ async function changeStudentPassword(){
     stu.password=nw;
     stu.isDefault=false;
     saveSystemData();
-    if(supabaseClient)await supabaseClient.from('students').update({password:nw,is_default:false}).eq('id',stu.id);
+    if(supabaseClient){const {error}=await supabaseClient.from('students').update({password:nw,is_default:false}).eq('id',stu.id);if(error)console.error('Supabase修改密码失败:',error);}
     document.getElementById('profile-old-pwd').value='';
     document.getElementById('profile-new-pwd').value='';
     document.getElementById('profile-confirm-pwd').value='';
@@ -697,7 +733,7 @@ async function finishPractice(completed){
         const grade={date:new Date().toISOString(),type:GS.currentPractice,wpm,accuracy:acc,stars,xp};
         studentGrades[key].push(grade);
         saveSystemData();
-        if(supabaseClient)await supabaseClient.from('grades').insert({class:currentUser.class,name:currentUser.name,date:grade.date,type:grade.type,wpm:grade.wpm,accuracy:grade.accuracy,stars:grade.stars,xp:grade.xp});
+        if(supabaseClient){const {error}=await supabaseClient.from('grades').insert({class:currentUser.class,name:currentUser.name,date:grade.date,type:grade.type,wpm:grade.wpm,accuracy:grade.accuracy,stars:grade.stars,xp:grade.xp});if(error)console.error('Supabase保存成绩失败:',error);}
     }
 }
 function updatePracticeStats(){const p=GS.currentPractice;if(p.includes('letter'))GS.practiceStats.letters++;else if(p.includes('number'))GS.practiceStats.numbers++;else if(p.includes('punctuation'))GS.practiceStats.punctuation++;else GS.practiceStats.mixed++;}
