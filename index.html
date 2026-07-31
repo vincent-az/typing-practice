@@ -584,8 +584,8 @@
                 <h2>📱 触屏练习</h2>
                 <div class="header-space"></div>
             </div>
-            <p class="touch-mode-desc">专为手机和平板设计，建议将设备横屏放置，用手指点击屏幕键盘进行练习</p>
-            <div class="touch-orientation-tip">🔄 建议横屏使用，键盘更大更好按</div>
+            <p class="touch-mode-desc">专为手机和平板设计，进入练习后自动切换横屏显示，用手指点击屏幕键盘进行练习</p>
+            <div class="touch-orientation-tip">🔄 已自动切换横屏，请将手机横过来使用（浏览器可能提示旋转设备）</div>
             <div class="touch-mode-grid">
                 <div class="touch-mode-card" onclick="startTouchPractice('letter')">
                     <div class="touch-mode-icon-big">
@@ -633,7 +633,7 @@
                 <div id="touch-word-level" class="touch-word-level">三年级 · 第1关「文具与问候」</div>
                 <div class="touch-word-row">
                     <div id="touch-word-target" class="touch-target-letter">cat</div>
-                    <button class="touch-sound-btn" onclick="replayTouchWord()" title="点击朗读">🔊</button>
+                    <button id="touch-sound-btn" class="touch-sound-btn" onclick="replayTouchWord()" title="点击朗读">🔊</button>
                 </div>
                 <div id="touch-word-cn" class="touch-word-cn">中文意思：猫</div>
                 <div id="touch-word-typed" class="touch-word-typed"></div>

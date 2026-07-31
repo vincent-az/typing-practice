@@ -834,6 +834,7 @@ function showScreen(id){
     document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     GS.currentScreen=id;
+    if(id==='touch-screen'||id==='touch-play-screen'){enterLandscape();}else{exitLandscape();}
     if(id==='score-screen'){updateScoreDisplay();updateBadges();}
     if(id==='home-screen'){updatePetMessage();}
     if(id==='feedback-screen'){
@@ -1317,17 +1318,35 @@ function showTouchTarget(){
 }
 let touchSpeechTimer=null;
 let touchSpeechOn=false;
+let touchAudio=null;
+function setTouchSoundBtn(on){
+    const b=document.getElementById('touch-sound-btn');
+    if(b){if(on)b.classList.add('speaking');else b.classList.remove('speaking');}
+}
+function getTouchAudio(){
+    if(!touchAudio){
+        touchAudio=new Audio();
+        touchAudio.preload='auto';
+        touchAudio.addEventListener('playing',()=>setTouchSoundBtn(true));
+        touchAudio.addEventListener('ended',()=>setTouchSoundBtn(false));
+        touchAudio.addEventListener('pause',()=>setTouchSoundBtn(false));
+        touchAudio.addEventListener('error',()=>setTouchSoundBtn(false));
+    }
+    return touchAudio;
+}
 function stopTouchSpeech(){
     touchSpeechOn=false;
     clearInterval(touchSpeechTimer);touchSpeechTimer=null;
+    if(touchAudio){try{touchAudio.pause();}catch(e){}}
     try{if(typeof speechSynthesis!=='undefined')speechSynthesis.cancel();}catch(e){}
+    setTouchSoundBtn(false);
 }
 function buildTouchUtterance(text){
     const u=new SpeechSynthesisUtterance(text);
     u.lang='en-GB';u.rate=0.8;u.pitch=1;
-    u.onstart=function(){const b=document.getElementById('touch-sound-btn');if(b)b.classList.add('speaking');};
-    u.onend=function(){const b=document.getElementById('touch-sound-btn');if(b)b.classList.remove('speaking');};
-    u.onerror=function(){const b=document.getElementById('touch-sound-btn');if(b)b.classList.remove('speaking');};
+    u.onstart=()=>setTouchSoundBtn(true);
+    u.onend=()=>setTouchSoundBtn(false);
+    u.onerror=()=>setTouchSoundBtn(false);
     return u;
 }
 function speakTouchWord(force){
@@ -1336,35 +1355,75 @@ function speakTouchWord(force){
     if(!w||!w.en)return;
     if(!force&&touchState.typed===w.en)return;
     try{
-        if(typeof speechSynthesis==='undefined')return;
-        if(speechSynthesis.speaking||speechSynthesis.pending)return;
-        speechSynthesis.speak(buildTouchUtterance(w.en));
-    }catch(e){}
+        const a=getTouchAudio();
+        a.src='https://dict.youdao.com/dictvoice?audio='+encodeURIComponent(w.en)+'&type=1';
+        const p=a.play();
+        if(p&&p.catch){
+            p.catch(function(){
+                try{
+                    if(typeof speechSynthesis!=='undefined'&&!speechSynthesis.speaking&&!speechSynthesis.pending){
+                        speechSynthesis.speak(buildTouchUtterance(w.en));
+                    }
+                }catch(e){}
+            });
+        }
+    }catch(e){
+        try{
+            if(typeof speechSynthesis!=='undefined')speechSynthesis.speak(buildTouchUtterance(w.en));
+        }catch(e2){}
+    }
 }
 function startTouchSpeech(){
     stopTouchSpeech();
     touchSpeechOn=true;
-    setTimeout(()=>{if(touchSpeechOn)speakTouchWord(true);},100);
+    speakTouchWord(true);
     touchSpeechTimer=setInterval(()=>speakTouchWord(),2000);
 }
 function replayTouchWord(){
     if(touchState.mode!=='word'||GS.currentScreen!=='touch-play-screen')return;
     try{
-        if(typeof speechSynthesis==='undefined')return;
-        speechSynthesis.cancel();
-        const w=touchState.items[touchState.index];
-        if(!w||!w.en)return;
-        setTimeout(()=>{
-            if(touchState.mode==='word'&&GS.currentScreen==='touch-play-screen'&&!speechSynthesis.speaking&&!speechSynthesis.pending){
-                speechSynthesis.speak(buildTouchUtterance(w.en));
-            }
-        },100);
+        const a=getTouchAudio();
+        a.src='https://dict.youdao.com/dictvoice?audio='+encodeURIComponent(touchState.items[touchState.index].en)+'&type=1';
+        const p=a.play();
+        if(p&&p.catch){
+            p.catch(function(){
+                try{
+                    if(typeof speechSynthesis!=='undefined')speechSynthesis.speak(buildTouchUtterance(touchState.items[touchState.index].en));
+                }catch(e){}
+            });
+        }
     }catch(e){}
 }
 
 function resetTouchKeys(){
     document.querySelectorAll('.tk-key[data-key]').forEach(k=>k.className='tk-key');
 }
+
+/* ====== 触屏练习强制横屏（手机/平板竖屏时自动旋转显示） ====== */
+let landscapeOn=false;
+function applyLandscapeCSS(){
+    const needRotate=window.innerHeight>window.innerWidth&&window.innerWidth<1024;
+    document.body.classList.toggle('landscape-rotated',needRotate);
+}
+function enterLandscape(){
+    if(landscapeOn)return;
+    landscapeOn=true;
+    try{
+        if(screen.orientation&&screen.orientation.lock){
+            const p=screen.orientation.lock('landscape');
+            if(p&&p.catch)p.catch(function(){});
+        }
+    }catch(e){}
+    applyLandscapeCSS();
+}
+function exitLandscape(){
+    if(!landscapeOn)return;
+    landscapeOn=false;
+    document.body.classList.remove('landscape-rotated');
+    try{if(screen.orientation&&screen.orientation.unlock)screen.orientation.unlock();}catch(e){}
+}
+window.addEventListener('orientationchange',function(){if(landscapeOn)applyLandscapeCSS();});
+window.addEventListener('resize',function(){if(landscapeOn)applyLandscapeCSS();});
 
 function touchKeyTap(key){
     if(touchState.index>=touchState.items.length)return;
