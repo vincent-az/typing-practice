@@ -401,7 +401,10 @@ input:checked+.slider:before{transform:translateX(22px)}
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-track{background:#f1f1f1;border-radius:3px}
 ::-webkit-scrollbar-thumb{background:#c1c1c1;border-radius:3px}
-/* ====== 触屏练习强制横屏（手机/平板竖屏时自动旋转显示） ====== */
+/* ====== 触屏练习横/竖屏切换（手机/平板竖屏时自动旋转为横屏显示） ====== */
+.touch-header-right{display:flex;align-items:center;gap:8px}
+.touch-landscape-btn{border:none;background:white;color:#4f46e5;font-size:0.8em;font-weight:700;border-radius:14px;padding:5px 10px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.1);border:2px solid #e0e7ff;white-space:nowrap}
+.touch-landscape-btn:active{transform:scale(0.95)}
 body.landscape-rotated{
     position:fixed !important;
     top:0 !important;
@@ -413,3 +416,46 @@ body.landscape-rotated{
     overflow:auto !important;
     -webkit-transform:rotate(90deg) !important;
 }
+body.landscape-rotated .screen{padding:0;min-height:0;height:100vw}
+body.landscape-rotated .touch-play-container{
+    width:100vh;
+    height:100vw;
+    max-width:none;
+    max-height:none;
+    border-radius:0;
+    overflow:auto;
+    padding:8px 12px;
+}
+body.landscape-rotated .touch-play-header{padding:0;margin-bottom:2px}
+body.landscape-rotated .touch-target-area{padding:4px 6px 6px;min-height:0}
+body.landscape-rotated .touch-target-letter{font-size:min(15vh,4em);margin-bottom:2px}
+body.landscape-rotated .touch-target-char{font-size:min(13vh,3.6em)}
+body.landscape-rotated .touch-progress{font-size:0.8em;margin-top:3px}
+body.landscape-rotated .touch-word-level{font-size:0.85em;padding:3px 12px;margin-bottom:3px}
+body.landscape-rotated .touch-word-cn{font-size:0.95em;padding:2px 12px;margin:2px 0}
+body.landscape-rotated .touch-word-typed{font-size:1.9em;min-height:1.2em;padding:2px 0}
+body.landscape-rotated .touch-sound-btn{width:40px;height:40px;font-size:1.1em}
+body.landscape-rotated .touch-keyboard{
+    flex:1;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    padding:4px 4px;
+    margin-top:2px;
+}
+body.landscape-rotated .tk-row{
+    flex:1;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:3px;
+    gap:5px;
+}
+body.landscape-rotated .tk-row:last-child{margin-bottom:0}
+body.landscape-rotated .tk-key{
+    height:min(12.5vw,58px);
+    max-width:min(9vh,64px);
+    font-size:min(3.2vh,1.15em);
+}
+body.landscape-rotated .tk-key-wide{max-width:min(11vh,80px);font-size:0.9em}
+body.landscape-rotated .tk-key-space{max-width:min(34vh,240px);font-size:0.9em}
+@media(min-width:1024px){.touch-landscape-btn{display:none}}

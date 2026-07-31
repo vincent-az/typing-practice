@@ -834,7 +834,7 @@ function showScreen(id){
     document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     GS.currentScreen=id;
-    if(id==='touch-screen'||id==='touch-play-screen'){enterLandscape();}else{exitLandscape();}
+    if(id==='touch-play-screen'){enterLandscape();}else{exitLandscape();}
     if(id==='score-screen'){updateScoreDisplay();updateBadges();}
     if(id==='home-screen'){updatePetMessage();}
     if(id==='feedback-screen'){
@@ -1399,10 +1399,16 @@ function resetTouchKeys(){
     document.querySelectorAll('.tk-key[data-key]').forEach(k=>k.className='tk-key');
 }
 
-/* ====== 触屏练习强制横屏（手机/平板竖屏时自动旋转显示） ====== */
+/* ====== 触屏练习横/竖屏切换（手机/平板竖屏时自动旋转显示） ====== */
 let landscapeOn=false;
+function updateLandscapeBtn(){
+    const b=document.getElementById('touch-landscape-btn');
+    if(!b)return;
+    if(landscapeOn){b.textContent='📱 竖屏';b.title='切换到竖屏';}
+    else{b.textContent='🔄 横屏';b.title='切换到横屏';}
+}
 function applyLandscapeCSS(){
-    const needRotate=window.innerHeight>window.innerWidth&&window.innerWidth<1024;
+    const needRotate=landscapeOn&&window.innerHeight>window.innerWidth&&window.innerWidth<1024;
     document.body.classList.toggle('landscape-rotated',needRotate);
 }
 function enterLandscape(){
@@ -1415,12 +1421,17 @@ function enterLandscape(){
         }
     }catch(e){}
     applyLandscapeCSS();
+    updateLandscapeBtn();
 }
 function exitLandscape(){
     if(!landscapeOn)return;
     landscapeOn=false;
     document.body.classList.remove('landscape-rotated');
     try{if(screen.orientation&&screen.orientation.unlock)screen.orientation.unlock();}catch(e){}
+    updateLandscapeBtn();
+}
+function toggleTouchLandscape(){
+    if(landscapeOn){exitLandscape();}else{enterLandscape();}
 }
 window.addEventListener('orientationchange',function(){if(landscapeOn)applyLandscapeCSS();});
 window.addEventListener('resize',function(){if(landscapeOn)applyLandscapeCSS();});
