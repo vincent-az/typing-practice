@@ -921,6 +921,41 @@ function updateScoreDisplay(){
     document.getElementById('stat-punctuation-count').textContent=GS.practiceStats.punctuation+'次';
     document.getElementById('stat-mixed-count').textContent=GS.practiceStats.mixed+'次';
     updateMyRecent();
+    updateClassRanking();
+}
+function updateClassRanking(){
+    const tbody=document.getElementById('class-rank-tbody');
+    if(!tbody)return;
+    if(!currentUser||currentUser.type!=='student'){
+        tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:#9ca3af;padding:20px">请先登录后再查看</td></tr>';
+        return;
+    }
+    const myClass=currentUser.class;
+    let rows=[];
+    studentsData.forEach(stu=>{
+        if(stu.class!==myClass)return;
+        const grades=studentGrades[stu.class+'-'+stu.name]||[];
+        const avgWpm=grades.length>0?Math.round(grades.reduce((s,g)=>s+g.wpm,0)/grades.length):0;
+        const avgAcc=grades.length>0?Math.round(grades.reduce((s,g)=>s+g.accuracy,0)/grades.length):0;
+        const maxWpm=grades.length>0?Math.max(...grades.map(g=>g.wpm)):0;
+        rows.push({name:stu.name,count:grades.length,avgWpm,avgAcc,maxWpm,isMe:stu.name===currentUser.name});
+    });
+    rows.sort((a,b)=>b.avgWpm-a.avgWpm||b.maxWpm-a.maxWpm||b.count-a.count);
+    if(rows.length===0){
+        tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:#9ca3af;padding:20px">暂无本班同学成绩数据</td></tr>';
+        return;
+    }
+    tbody.innerHTML=rows.map((r,i)=>{
+        const rank=['🥇','🥈','🥉'][i]||(i+1);
+        return `<tr${r.isMe?' style="background:#eef2ff;font-weight:bold"':''}>
+            <td>${rank}</td>
+            <td>${r.name}${r.isMe?' (我)':''}</td>
+            <td>${r.count}次</td>
+            <td class="grade-wpm">${r.avgWpm} WPM</td>
+            <td class="grade-acc">${r.avgAcc}%</td>
+            <td>${r.maxWpm} WPM</td>
+        </tr>`;
+    }).join('');
 }
 function updateMyRecent(){
     const tbody=document.getElementById('my-recent-tbody');
@@ -1036,7 +1071,19 @@ const pinyinWords=[
     {char:'弟',pinyin:'di'},{char:'妹',pinyin:'mei'},{char:'鸟',pinyin:'niao'},{char:'鱼',pinyin:'yu'},
     {char:'花',pinyin:'hua'},{char:'草',pinyin:'cao'},{char:'树',pinyin:'shu'},{char:'叶',pinyin:'ye'}
 ];
-let touchState={mode:null,items:[],index:0,score:0,total:0,correct:0,typed:'',shiftOn:false};
+const englishWordLevels=[
+    {name:'动物世界',words:['cat','dog','pig','duck','bear','bird','fish','cow','hen','fox']},
+    {name:'森林动物',words:['monkey','panda','tiger','lion','elephant','rabbit','sheep','horse','mouse','frog']},
+    {name:'美味水果',words:['apple','banana','orange','pear','peach','grape','mango','melon','lemon','berry']},
+    {name:'食物饮料',words:['milk','bread','cake','egg','rice','water','juice','candy','meat','noodle']},
+    {name:'七彩颜色',words:['red','blue','green','black','white','yellow','brown','pink','grey','purple']},
+    {name:'学习文具',words:['pen','pencil','ruler','eraser','book','bag','crayon','desk','chair','paper']},
+    {name:'我的身体',words:['eye','ear','nose','mouth','face','head','hand','arm','leg','foot']},
+    {name:'幸福一家',words:['mom','dad','sister','brother','grandma','grandpa','uncle','aunt','baby','family']},
+    {name:'数字天地',words:['one','two','three','four','five','six','seven','eight','nine','ten']},
+    {name:'快乐校园',words:['hello','hi','goodbye','thank','sorry','please','happy','friend','school','teacher']}
+];
+let touchState={mode:null,items:[],index:0,score:0,total:0,correct:0,typed:'',shiftOn:false,wordLevel:1};
 
 function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 
@@ -1047,13 +1094,40 @@ function startTouchPractice(mode){
         document.getElementById('touch-mode-title').textContent='🔤 字母定位';
         document.getElementById('touch-letter-area').style.display='block';
         document.getElementById('touch-pinyin-area').style.display='none';
+        document.getElementById('touch-word-area').style.display='none';
+    }else if(mode==='word'){
+        buildWordLevelGrid();
+        document.getElementById('word-level-modal').classList.add('active');
+        return;
     }else{
         touchState.items=shuffleArray([...pinyinWords]);
         document.getElementById('touch-mode-title').textContent='🀄 拼音打字';
         document.getElementById('touch-letter-area').style.display='none';
         document.getElementById('touch-pinyin-area').style.display='block';
+        document.getElementById('touch-word-area').style.display='none';
     }
     touchState.index=0;
+    showScreen('touch-play-screen');
+    showTouchTarget();
+    try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('landscape').catch(function(){});}catch(e){}
+}
+function buildWordLevelGrid(){
+    const grid=document.getElementById('word-level-grid');
+    grid.innerHTML=englishWordLevels.map((lv,i)=>{
+        return '<button class="level-btn" onclick="chooseWordLevel('+(i+1)+')">第 '+(i+1)+' 关<span class="level-name">'+lv.name+'</span></button>';
+    }).join('');
+}
+function chooseWordLevel(level){
+    document.getElementById('word-level-modal').classList.remove('active');
+    const lv=englishWordLevels[level-1];
+    touchState.wordLevel=level;
+    touchState.items=shuffleArray([...lv.words]);
+    touchState.index=0;touchState.score=0;touchState.total=0;touchState.correct=0;touchState.typed='';touchState.shiftOn=false;
+    document.getElementById('touch-mode-title').textContent='🔤 英文单词 · 第'+level+'关';
+    document.getElementById('touch-letter-area').style.display='none';
+    document.getElementById('touch-pinyin-area').style.display='none';
+    document.getElementById('touch-word-area').style.display='block';
+    document.getElementById('touch-next-level-btn').style.display='none';
     showScreen('touch-play-screen');
     showTouchTarget();
     try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('landscape').catch(function(){});}catch(e){}
@@ -1066,6 +1140,12 @@ function showTouchTarget(){
         const letter=touchState.items[touchState.index];
         document.getElementById('touch-target').textContent=letter.toUpperCase();
         document.getElementById('touch-progress').textContent='第 '+(touchState.index+1)+' / '+touchState.items.length+' 个字母';
+    }else if(touchState.mode==='word'){
+        const word=touchState.items[touchState.index];
+        document.getElementById('touch-word-level').textContent='第 '+touchState.wordLevel+' 关 · '+englishWordLevels[touchState.wordLevel-1].name;
+        document.getElementById('touch-word-target').textContent=word;
+        document.getElementById('touch-word-typed').textContent='';
+        document.getElementById('touch-word-progress').textContent='第 '+(touchState.index+1)+' / '+touchState.items.length+' 个单词';
     }else{
         const word=touchState.items[touchState.index];
         document.getElementById('touch-target-char').textContent=word.char;
@@ -1095,6 +1175,23 @@ function touchKeyTap(key){
             touchState.score=Math.max(0,touchState.score-2);playSound('error');
             if(btn){btn.className='tk-key tk-error';setTimeout(()=>btn.className='tk-key',300);}
         }
+    }else if(touchState.mode==='word'){
+        const word=touchState.items[touchState.index];
+        const expectedLetter=word[touchState.typed.length];
+        const btn=document.querySelector('.tk-key[data-key="'+key+'"]');
+        if(key===expectedLetter){
+            touchState.correct++;touchState.typed+=key;playSound('correct');
+            if(btn){btn.className='tk-key tk-correct';setTimeout(()=>btn.className='tk-key',150);}
+            document.getElementById('touch-word-typed').textContent=touchState.typed;
+            if(touchState.typed===word){
+                touchState.score+=20;
+                document.getElementById('touch-score').textContent=touchState.score+'分';
+                setTimeout(()=>{touchState.index++;showTouchTarget();},400);
+            }
+        }else{
+            touchState.score=Math.max(0,touchState.score-2);playSound('error');
+            if(btn){btn.className='tk-key tk-error';setTimeout(()=>btn.className='tk-key',300);}
+        }
     }else{
         const word=touchState.items[touchState.index];
         const expectedLetter=word.pinyin[touchState.typed.length];
@@ -1117,9 +1214,10 @@ function touchKeyTap(key){
 }
 
 function touchBackspace(){
-    if(touchState.mode!=='pinyin'||touchState.typed.length===0)return;
+    if((touchState.mode!=='pinyin'&&touchState.mode!=='word')||touchState.typed.length===0)return;
     touchState.typed=touchState.typed.slice(0,-1);
-    document.getElementById('touch-pinyin-typed').textContent=touchState.typed;
+    const el=touchState.mode==='word'?document.getElementById('touch-word-typed'):document.getElementById('touch-pinyin-typed');
+    el.textContent=touchState.typed;
 }
 
 function touchShiftTap(){
@@ -1138,24 +1236,60 @@ function touchSpaceTap(){
         }else{
             showToast('拼音不完整，继续输入','error');
         }
+    }else if(touchState.mode==='word'){
+        const word=touchState.items[touchState.index];
+        if(touchState.typed===word){
+            touchState.score+=20;
+            touchState.index++;showTouchTarget();
+        }else{
+            showToast('单词没输完，继续输入','error');
+        }
     }
 }
 
 function showTouchResult(){
     const acc=touchState.total>0?Math.round((touchState.correct/touchState.total)*100):0;
     const stars=acc>=95?3:acc>=80?2:1;
-    const msgs=['继续加油！','很棒！','太厉害了！'];
-    document.getElementById('touch-result-icon').textContent=stars===3?'🎉':stars===2?'👏':'💪';
-    document.getElementById('touch-result-title').textContent=msgs[stars-1];
+    const isWord=touchState.mode==='word';
+    if(isWord){
+        const levelName=englishWordLevels[touchState.wordLevel-1].name;
+        document.getElementById('touch-result-icon').textContent=stars===3?'🎉':stars===2?'👏':'💪';
+        document.getElementById('touch-result-title').textContent='第'+touchState.wordLevel+'关「'+levelName+'」完成！';
+        const nextBtn=document.getElementById('touch-next-level-btn');
+        if(touchState.wordLevel<englishWordLevels.length){
+            nextBtn.style.display='block';
+            nextBtn.textContent='▶ 第'+(touchState.wordLevel+1)+'关';
+        }else{
+            nextBtn.style.display='none';
+            document.getElementById('touch-result-icon').textContent='🏆';
+            document.getElementById('touch-result-title').textContent='恭喜通关全部10关！';
+        }
+    }else{
+        const msgs=['继续加油！','很棒！','太厉害了！'];
+        document.getElementById('touch-result-icon').textContent=stars===3?'🎉':stars===2?'👏':'💪';
+        document.getElementById('touch-result-title').textContent=msgs[stars-1];
+        document.getElementById('touch-next-level-btn').style.display='none';
+    }
     document.getElementById('touch-result-stars').textContent='⭐'.repeat(stars);
     document.getElementById('touch-result-score').textContent=touchState.score;
     document.getElementById('touch-result-acc').textContent=acc+'%';
     document.getElementById('touch-result-modal').classList.add('active');
 }
 
+function nextTouchLevel(){
+    if(touchState.mode!=='word')return;
+    document.getElementById('touch-result-modal').classList.remove('active');
+    const next=Math.min(touchState.wordLevel+1,englishWordLevels.length);
+    chooseWordLevel(next);
+}
+
 function restartTouchPractice(){
     document.getElementById('touch-result-modal').classList.remove('active');
-    startTouchPractice(touchState.mode);
+    if(touchState.mode==='word'){
+        chooseWordLevel(touchState.wordLevel);
+    }else{
+        startTouchPractice(touchState.mode);
+    }
 }
 
 function closeTouchResult(){
