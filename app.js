@@ -1316,9 +1316,19 @@ function showTouchTarget(){
     resetTouchKeys();
 }
 let touchSpeechTimer=null;
+let touchSpeechOn=false;
 function stopTouchSpeech(){
+    touchSpeechOn=false;
     clearInterval(touchSpeechTimer);touchSpeechTimer=null;
     try{if(typeof speechSynthesis!=='undefined')speechSynthesis.cancel();}catch(e){}
+}
+function buildTouchUtterance(text){
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang='en-GB';u.rate=0.8;u.pitch=1;
+    u.onstart=function(){const b=document.getElementById('touch-sound-btn');if(b)b.classList.add('speaking');};
+    u.onend=function(){const b=document.getElementById('touch-sound-btn');if(b)b.classList.remove('speaking');};
+    u.onerror=function(){const b=document.getElementById('touch-sound-btn');if(b)b.classList.remove('speaking');};
+    return u;
 }
 function speakTouchWord(force){
     if(touchState.mode!=='word'||GS.currentScreen!=='touch-play-screen'){stopTouchSpeech();return;}
@@ -1327,18 +1337,29 @@ function speakTouchWord(force){
     if(!force&&touchState.typed===w.en)return;
     try{
         if(typeof speechSynthesis==='undefined')return;
-        speechSynthesis.cancel();
-        const u=new SpeechSynthesisUtterance(w.en);
-        u.lang='en-GB';
-        u.rate=0.8;
-        u.pitch=1;
-        speechSynthesis.speak(u);
+        if(speechSynthesis.speaking||speechSynthesis.pending)return;
+        speechSynthesis.speak(buildTouchUtterance(w.en));
     }catch(e){}
 }
 function startTouchSpeech(){
     stopTouchSpeech();
-    speakTouchWord(true);
+    touchSpeechOn=true;
+    setTimeout(()=>{if(touchSpeechOn)speakTouchWord(true);},100);
     touchSpeechTimer=setInterval(()=>speakTouchWord(),2000);
+}
+function replayTouchWord(){
+    if(touchState.mode!=='word'||GS.currentScreen!=='touch-play-screen')return;
+    try{
+        if(typeof speechSynthesis==='undefined')return;
+        speechSynthesis.cancel();
+        const w=touchState.items[touchState.index];
+        if(!w||!w.en)return;
+        setTimeout(()=>{
+            if(touchState.mode==='word'&&GS.currentScreen==='touch-play-screen'&&!speechSynthesis.speaking&&!speechSynthesis.pending){
+                speechSynthesis.speak(buildTouchUtterance(w.en));
+            }
+        },100);
+    }catch(e){}
 }
 
 function resetTouchKeys(){

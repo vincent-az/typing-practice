@@ -291,6 +291,8 @@ input:checked+.slider:before{transform:translateX(22px)}
 .touch-word-cn{font-size:1.3em;font-weight:bold;color:#b45309;background:#fef3c7;display:inline-block;padding:4px 18px;border-radius:16px;margin:6px 0 4px}
 .touch-sound-btn{border:none;background:#dcfce7;color:#166534;font-size:1.3em;border-radius:50%;width:46px;height:46px;cursor:pointer;transition:all 0.2s;box-shadow:0 2px 8px rgba(22,101,52,0.15)}
 .touch-sound-btn:hover{transform:scale(1.12);background:#bbf7d0}
+.touch-sound-btn.speaking{background:#6366f1;color:#fff;box-shadow:0 0 0 4px rgba(99,102,241,0.25);animation:pulse-sound 0.8s infinite alternate}
+@keyframes pulse-sound{from{transform:scale(1)}to{transform:scale(1.12)}}
 .touch-word-typed{font-size:2.2em;font-weight:bold;color:var(--primary);min-height:1.3em;letter-spacing:4px;padding:6px 0}
 .grade-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
 .grade-btn{padding:20px 8px;border:none;border-radius:16px;color:white;font-size:1.1em;font-weight:bold;cursor:pointer;transition:all 0.3s;display:flex;flex-direction:column;align-items:center;gap:4px}
