@@ -287,7 +287,19 @@ input:checked+.slider:before{transform:translateX(22px)}
 .touch-pinyin-typed{font-size:2.2em;font-weight:bold;color:var(--primary);min-height:1.3em;letter-spacing:4px;padding:6px 0}
 .touch-progress{font-size:0.82em;color:#9ca3af;margin-top:6px}
 .touch-word-level{font-size:0.95em;font-weight:bold;color:#166534;background:#dcfce7;display:inline-block;padding:4px 16px;border-radius:20px;margin-bottom:6px}
+.touch-word-row{display:flex;align-items:center;justify-content:center;gap:14px}
+.touch-word-cn{font-size:1.3em;font-weight:bold;color:#b45309;background:#fef3c7;display:inline-block;padding:4px 18px;border-radius:16px;margin:6px 0 4px}
+.touch-sound-btn{border:none;background:#dcfce7;color:#166534;font-size:1.3em;border-radius:50%;width:46px;height:46px;cursor:pointer;transition:all 0.2s;box-shadow:0 2px 8px rgba(22,101,52,0.15)}
+.touch-sound-btn:hover{transform:scale(1.12);background:#bbf7d0}
 .touch-word-typed{font-size:2.2em;font-weight:bold;color:var(--primary);min-height:1.3em;letter-spacing:4px;padding:6px 0}
+.grade-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.grade-btn{padding:20px 8px;border:none;border-radius:16px;color:white;font-size:1.1em;font-weight:bold;cursor:pointer;transition:all 0.3s;display:flex;flex-direction:column;align-items:center;gap:4px}
+.grade-btn:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,0.2)}
+.grade-btn .grade-name{font-size:1.05em}
+.grade-btn .grade-desc{font-size:0.7em;font-weight:400;opacity:0.9}
+.grade-g3{background:linear-gradient(135deg,#10b981,#34d399)}
+.grade-g4{background:linear-gradient(135deg,#f59e0b,#fbbf24)}
+.grade-g5{background:linear-gradient(135deg,#6366f1,#818cf8)}
 .level-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
 .level-btn{padding:14px 6px;border:none;border-radius:12px;background:linear-gradient(135deg,#10b981,#34d399);color:white;font-size:1em;font-weight:bold;cursor:pointer;transition:all 0.3s}
 .level-btn:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(16,185,129,0.4)}
@@ -355,6 +367,7 @@ input:checked+.slider:before{transform:translateX(22px)}
     .tk-key-wide{max-width:52px}
     .tk-key-space{max-width:170px}
     .level-grid{grid-template-columns:repeat(2,1fr)}
+    .grade-grid{grid-template-columns:1fr;max-width:260px;margin:0 auto 20px}
     .typing-container,.gameplay-container{padding:16px}
     .home-container{padding:28px 18px 24px}
     .login-container{padding:36px 22px 32px}

@@ -892,7 +892,18 @@ function updateHint(){
     let sel=c===' '?'.key[data-key=" "]':c==='\''?'.key[data-key="\']"':'.key[data-key="'+c+'"]';
     const ke=document.querySelector(sel);if(ke)ke.classList.add('active');
 }
-function isCJKChar(c){return /[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\u3000-\u303f\uff00-\uffef]/.test(c);}
+function isCJKChar(c){return /[^\u0000-\u007f]/.test(c);}
+let imeBuffer='';
+document.addEventListener('compositionstart',function(){
+    imeBuffer='';
+    const sc=GS.currentScreen;
+    if(sc==='touch-play-screen'){
+        showToast('检测到中文输入法，请按 Shift 切换到英文输入法再打字','error');
+    }else if(sc==='typing-screen'&&GS.currentText[GS.currentIndex]&&!isCJKChar(GS.currentText[GS.currentIndex])){
+        showToast('检测到中文输入法，请按 Shift 切换到英文输入法再打字母','error');
+    }
+});
+document.addEventListener('compositionupdate',function(e){imeBuffer=e.data||'';});
 document.addEventListener('keydown',function(e){
     if(GS.currentScreen!=='typing-screen'||GS.isPaused||GS.isFinished)return;
     if(e.isComposing||e.key==='Process'||e.keyCode===229)return;
@@ -911,7 +922,8 @@ document.addEventListener('keydown',function(e){
 });
 document.addEventListener('compositionend',function(e){
     if(GS.currentScreen!=='typing-screen'||GS.isPaused||GS.isFinished)return;
-    const data=(e.data||'').trim();
+    const data=(e.data||imeBuffer||'').trim();
+    imeBuffer='';
     if(!data||!isCJKChar(data))return;
     if(!GS.startTime){GS.startTime=Date.now();startTimer();}
     const expected=GS.currentText.substring(GS.currentIndex,GS.currentIndex+data.length);
@@ -1191,19 +1203,33 @@ const pinyinWords=[
     {char:'弟',pinyin:'di'},{char:'妹',pinyin:'mei'},{char:'鸟',pinyin:'niao'},{char:'鱼',pinyin:'yu'},
     {char:'花',pinyin:'hua'},{char:'草',pinyin:'cao'},{char:'树',pinyin:'shu'},{char:'叶',pinyin:'ye'}
 ];
-const englishWordLevels=[
-    {name:'动物世界',words:['cat','dog','pig','duck','bear','bird','fish','cow','hen','fox']},
-    {name:'森林动物',words:['monkey','panda','tiger','lion','elephant','rabbit','sheep','horse','mouse','frog']},
-    {name:'美味水果',words:['apple','banana','orange','pear','peach','grape','mango','melon','lemon','berry']},
-    {name:'食物饮料',words:['milk','bread','cake','egg','rice','water','juice','candy','meat','noodle']},
-    {name:'七彩颜色',words:['red','blue','green','black','white','yellow','brown','pink','grey','purple']},
-    {name:'学习文具',words:['pen','pencil','ruler','eraser','book','bag','crayon','desk','chair','paper']},
-    {name:'我的身体',words:['eye','ear','nose','mouth','face','head','hand','arm','leg','foot']},
-    {name:'幸福一家',words:['mom','dad','sister','brother','grandma','grandpa','uncle','aunt','baby','family']},
-    {name:'数字天地',words:['one','two','three','four','five','six','seven','eight','nine','ten']},
-    {name:'快乐校园',words:['hello','hi','goodbye','thank','sorry','please','happy','friend','school','teacher']}
-];
-let touchState={mode:null,items:[],index:0,score:0,total:0,correct:0,typed:'',shiftOn:false,wordLevel:1};
+const englishWordGrades={
+    g3:{name:'三年级',icon:'🌱',levels:[
+        {name:'文具与问候',words:[{en:'pen',cn:'钢笔'},{en:'pencil',cn:'铅笔'},{en:'ruler',cn:'尺子'},{en:'eraser',cn:'橡皮'},{en:'crayon',cn:'蜡笔'},{en:'bag',cn:'书包'},{en:'book',cn:'书'},{en:'hello',cn:'你好'},{en:'hi',cn:'嗨'},{en:'goodbye',cn:'再见'}]},
+        {name:'缤纷颜色',words:[{en:'red',cn:'红色'},{en:'yellow',cn:'黄色'},{en:'green',cn:'绿色'},{en:'blue',cn:'蓝色'},{en:'black',cn:'黑色'},{en:'white',cn:'白色'},{en:'orange',cn:'橙色'},{en:'brown',cn:'棕色'},{en:'pink',cn:'粉色'},{en:'grey',cn:'灰色'}]},
+        {name:'我的身体',words:[{en:'head',cn:'头'},{en:'face',cn:'脸'},{en:'nose',cn:'鼻子'},{en:'mouth',cn:'嘴巴'},{en:'eye',cn:'眼睛'},{en:'ear',cn:'耳朵'},{en:'hand',cn:'手'},{en:'arm',cn:'手臂'},{en:'leg',cn:'腿'},{en:'foot',cn:'脚'}]},
+        {name:'可爱动物',words:[{en:'cat',cn:'猫'},{en:'dog',cn:'狗'},{en:'duck',cn:'鸭子'},{en:'pig',cn:'猪'},{en:'bear',cn:'熊'},{en:'bird',cn:'鸟'},{en:'fish',cn:'鱼'},{en:'panda',cn:'熊猫'},{en:'monkey',cn:'猴子'},{en:'tiger',cn:'老虎'}]},
+        {name:'数字天地',words:[{en:'one',cn:'一'},{en:'two',cn:'二'},{en:'three',cn:'三'},{en:'four',cn:'四'},{en:'five',cn:'五'},{en:'six',cn:'六'},{en:'seven',cn:'七'},{en:'eight',cn:'八'},{en:'nine',cn:'九'},{en:'ten',cn:'十'}]},
+        {name:'美味食物',words:[{en:'cake',cn:'蛋糕'},{en:'bread',cn:'面包'},{en:'egg',cn:'鸡蛋'},{en:'milk',cn:'牛奶'},{en:'water',cn:'水'},{en:'juice',cn:'果汁'},{en:'rice',cn:'米饭'},{en:'meat',cn:'肉'},{en:'noodle',cn:'面条'},{en:'fish',cn:'鱼'}]}
+    ]},
+    g4:{name:'四年级',icon:'🌿',levels:[
+        {name:'我的教室',words:[{en:'classroom',cn:'教室'},{en:'window',cn:'窗户'},{en:'door',cn:'门'},{en:'picture',cn:'图画'},{en:'board',cn:'黑板'},{en:'light',cn:'灯'},{en:'computer',cn:'电脑'},{en:'fan',cn:'风扇'},{en:'wall',cn:'墙壁'},{en:'floor',cn:'地板'}]},
+        {name:'我的书包',words:[{en:'schoolbag',cn:'书包'},{en:'notebook',cn:'笔记本'},{en:'storybook',cn:'故事书'},{en:'toy',cn:'玩具'},{en:'key',cn:'钥匙'},{en:'candy',cn:'糖果'},{en:'kite',cn:'风筝'},{en:'maths',cn:'数学'},{en:'english',cn:'英语'},{en:'chinese',cn:'语文'}]},
+        {name:'朋友与家庭',words:[{en:'friend',cn:'朋友'},{en:'tall',cn:'高的'},{en:'short',cn:'矮的'},{en:'strong',cn:'强壮的'},{en:'quiet',cn:'文静的'},{en:'family',cn:'家庭'},{en:'parents',cn:'父母'},{en:'uncle',cn:'叔叔'},{en:'aunt',cn:'阿姨'},{en:'baby',cn:'婴儿'}]},
+        {name:'我的家',words:[{en:'home',cn:'家'},{en:'bedroom',cn:'卧室'},{en:'kitchen',cn:'厨房'},{en:'bathroom',cn:'卫生间'},{en:'study',cn:'书房'},{en:'sofa',cn:'沙发'},{en:'fridge',cn:'冰箱'},{en:'phone',cn:'电话'},{en:'table',cn:'桌子'},{en:'room',cn:'房间'}]},
+        {name:'晚餐时光',words:[{en:'beef',cn:'牛肉'},{en:'chicken',cn:'鸡肉'},{en:'vegetable',cn:'蔬菜'},{en:'soup',cn:'汤'},{en:'knife',cn:'刀'},{en:'fork',cn:'叉子'},{en:'spoon',cn:'勺子'},{en:'chopsticks',cn:'筷子'},{en:'bowl',cn:'碗'},{en:'dinner',cn:'晚餐'}]},
+        {name:'职业梦想',words:[{en:'teacher',cn:'老师'},{en:'student',cn:'学生'},{en:'doctor',cn:'医生'},{en:'nurse',cn:'护士'},{en:'driver',cn:'司机'},{en:'farmer',cn:'农民'},{en:'cook',cn:'厨师'},{en:'worker',cn:'工人'},{en:'police',cn:'警察'},{en:'singer',cn:'歌手'}]}
+    ]},
+    g5:{name:'五年级',icon:'🌳',levels:[
+        {name:'一周七天',words:[{en:'monday',cn:'星期一'},{en:'tuesday',cn:'星期二'},{en:'wednesday',cn:'星期三'},{en:'thursday',cn:'星期四'},{en:'friday',cn:'星期五'},{en:'saturday',cn:'星期六'},{en:'sunday',cn:'星期日'},{en:'week',cn:'星期'},{en:'weekend',cn:'周末'},{en:'today',cn:'今天'}]},
+        {name:'课程活动',words:[{en:'music',cn:'音乐'},{en:'art',cn:'美术'},{en:'science',cn:'科学'},{en:'swimming',cn:'游泳'},{en:'dancing',cn:'跳舞'},{en:'singing',cn:'唱歌'},{en:'drawing',cn:'画画'},{en:'reading',cn:'阅读'},{en:'writing',cn:'书写'},{en:'playing',cn:'玩耍'}]},
+        {name:'美丽自然',words:[{en:'river',cn:'河流'},{en:'lake',cn:'湖泊'},{en:'mountain',cn:'高山'},{en:'tree',cn:'树'},{en:'flower',cn:'花'},{en:'grass',cn:'草'},{en:'cloud',cn:'云朵'},{en:'sky',cn:'天空'},{en:'forest',cn:'森林'},{en:'park',cn:'公园'}]},
+        {name:'四季天气',words:[{en:'spring',cn:'春天'},{en:'summer',cn:'夏天'},{en:'autumn',cn:'秋天'},{en:'winter',cn:'冬天'},{en:'hot',cn:'炎热的'},{en:'cold',cn:'寒冷的'},{en:'warm',cn:'温暖的'},{en:'cool',cn:'凉爽的'},{en:'sunny',cn:'晴朗的'},{en:'rainy',cn:'下雨的'}]},
+        {name:'衣物穿搭',words:[{en:'shirt',cn:'衬衫'},{en:'skirt',cn:'短裙'},{en:'dress',cn:'连衣裙'},{en:'coat',cn:'外套'},{en:'sweater',cn:'毛衣'},{en:'socks',cn:'袜子'},{en:'shoes',cn:'鞋子'},{en:'hat',cn:'帽子'},{en:'shorts',cn:'短裤'},{en:'scarf',cn:'围巾'}]},
+        {name:'快乐运动',words:[{en:'running',cn:'跑步'},{en:'jumping',cn:'跳跃'},{en:'football',cn:'足球'},{en:'basketball',cn:'篮球'},{en:'tennis',cn:'网球'},{en:'volleyball',cn:'排球'},{en:'skiing',cn:'滑雪'},{en:'riding',cn:'骑行'},{en:'skating',cn:'滑冰'},{en:'sports',cn:'运动'}]}
+    ]}
+};
+let touchState={mode:null,items:[],index:0,score:0,total:0,correct:0,typed:'',shiftOn:false,wordGrade:'g3',wordLevel:1};
 
 function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 
@@ -1216,8 +1242,7 @@ function startTouchPractice(mode){
         document.getElementById('touch-pinyin-area').style.display='none';
         document.getElementById('touch-word-area').style.display='none';
     }else if(mode==='word'){
-        buildWordLevelGrid();
-        document.getElementById('word-level-modal').classList.add('active');
+        document.getElementById('word-grade-modal').classList.add('active');
         return;
     }else{
         touchState.items=shuffleArray([...pinyinWords]);
@@ -1231,19 +1256,28 @@ function startTouchPractice(mode){
     showTouchTarget();
     try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('landscape').catch(function(){});}catch(e){}
 }
+function chooseWordGrade(grade){
+    touchState.wordGrade=grade;
+    document.getElementById('word-grade-modal').classList.remove('active');
+    buildWordLevelGrid();
+    document.getElementById('word-level-title').textContent=englishWordGrades[grade].icon+' '+englishWordGrades[grade].name+' · 选择关卡';
+    document.getElementById('word-level-modal').classList.add('active');
+}
 function buildWordLevelGrid(){
     const grid=document.getElementById('word-level-grid');
-    grid.innerHTML=englishWordLevels.map((lv,i)=>{
+    const grade=englishWordGrades[touchState.wordGrade];
+    grid.innerHTML=grade.levels.map((lv,i)=>{
         return '<button class="level-btn" onclick="chooseWordLevel('+(i+1)+')">第 '+(i+1)+' 关<span class="level-name">'+lv.name+'</span></button>';
     }).join('');
 }
 function chooseWordLevel(level){
     document.getElementById('word-level-modal').classList.remove('active');
-    const lv=englishWordLevels[level-1];
+    const grade=englishWordGrades[touchState.wordGrade];
+    const lv=grade.levels[level-1];
     touchState.wordLevel=level;
     touchState.items=shuffleArray([...lv.words]);
     touchState.index=0;touchState.score=0;touchState.total=0;touchState.correct=0;touchState.typed='';touchState.shiftOn=false;
-    document.getElementById('touch-mode-title').textContent='🔤 英文单词 · 第'+level+'关';
+    document.getElementById('touch-mode-title').textContent=grade.icon+' 英文单词 · '+grade.name+'第'+level+'关';
     document.getElementById('touch-letter-area').style.display='none';
     document.getElementById('touch-pinyin-area').style.display='none';
     document.getElementById('touch-word-area').style.display='block';
@@ -1254,19 +1288,24 @@ function chooseWordLevel(level){
 }
 
 function showTouchTarget(){
-    if(touchState.index>=touchState.items.length){showTouchResult();return;}
+    if(touchState.index>=touchState.items.length){stopTouchSpeech();showTouchResult();return;}
     touchState.typed='';
     if(touchState.mode==='letter'){
+        stopTouchSpeech();
         const letter=touchState.items[touchState.index];
         document.getElementById('touch-target').textContent=letter.toUpperCase();
         document.getElementById('touch-progress').textContent='第 '+(touchState.index+1)+' / '+touchState.items.length+' 个字母';
     }else if(touchState.mode==='word'){
+        const grade=englishWordGrades[touchState.wordGrade];
         const word=touchState.items[touchState.index];
-        document.getElementById('touch-word-level').textContent='第 '+touchState.wordLevel+' 关 · '+englishWordLevels[touchState.wordLevel-1].name;
-        document.getElementById('touch-word-target').textContent=word;
+        document.getElementById('touch-word-level').textContent=grade.name+' · 第'+touchState.wordLevel+'关「'+grade.levels[touchState.wordLevel-1].name+'」';
+        document.getElementById('touch-word-target').textContent=word.en;
+        document.getElementById('touch-word-cn').textContent='中文意思：'+word.cn;
         document.getElementById('touch-word-typed').textContent='';
         document.getElementById('touch-word-progress').textContent='第 '+(touchState.index+1)+' / '+touchState.items.length+' 个单词';
+        startTouchSpeech();
     }else{
+        stopTouchSpeech();
         const word=touchState.items[touchState.index];
         document.getElementById('touch-target-char').textContent=word.char;
         document.getElementById('touch-pinyin-guide').textContent='拼音：'+word.pinyin;
@@ -1275,6 +1314,31 @@ function showTouchTarget(){
     }
     document.getElementById('touch-score').textContent=touchState.score+'分';
     resetTouchKeys();
+}
+let touchSpeechTimer=null;
+function stopTouchSpeech(){
+    clearInterval(touchSpeechTimer);touchSpeechTimer=null;
+    try{if(typeof speechSynthesis!=='undefined')speechSynthesis.cancel();}catch(e){}
+}
+function speakTouchWord(force){
+    if(touchState.mode!=='word'||GS.currentScreen!=='touch-play-screen'){stopTouchSpeech();return;}
+    const w=touchState.items[touchState.index];
+    if(!w||!w.en)return;
+    if(!force&&touchState.typed===w.en)return;
+    try{
+        if(typeof speechSynthesis==='undefined')return;
+        speechSynthesis.cancel();
+        const u=new SpeechSynthesisUtterance(w.en);
+        u.lang='en-GB';
+        u.rate=0.8;
+        u.pitch=1;
+        speechSynthesis.speak(u);
+    }catch(e){}
+}
+function startTouchSpeech(){
+    stopTouchSpeech();
+    speakTouchWord(true);
+    touchSpeechTimer=setInterval(()=>speakTouchWord(),2000);
 }
 
 function resetTouchKeys(){
@@ -1297,15 +1361,16 @@ function touchKeyTap(key){
         }
     }else if(touchState.mode==='word'){
         const word=touchState.items[touchState.index];
-        const expectedLetter=word[touchState.typed.length];
+        const expectedLetter=word.en[touchState.typed.length];
         const btn=document.querySelector('.tk-key[data-key="'+key+'"]');
         if(key===expectedLetter){
             touchState.correct++;touchState.typed+=key;playSound('correct');
             if(btn){btn.className='tk-key tk-correct';setTimeout(()=>btn.className='tk-key',150);}
             document.getElementById('touch-word-typed').textContent=touchState.typed;
-            if(touchState.typed===word){
+            if(touchState.typed===word.en){
                 touchState.score+=20;
                 document.getElementById('touch-score').textContent=touchState.score+'分';
+                stopTouchSpeech();
                 setTimeout(()=>{touchState.index++;showTouchTarget();},400);
             }
         }else{
@@ -1358,8 +1423,9 @@ function touchSpaceTap(){
         }
     }else if(touchState.mode==='word'){
         const word=touchState.items[touchState.index];
-        if(touchState.typed===word){
+        if(touchState.typed===word.en){
             touchState.score+=20;
+            stopTouchSpeech();
             touchState.index++;showTouchTarget();
         }else{
             showToast('单词没输完，继续输入','error');
@@ -1372,17 +1438,18 @@ function showTouchResult(){
     const stars=acc>=95?3:acc>=80?2:1;
     const isWord=touchState.mode==='word';
     if(isWord){
-        const levelName=englishWordLevels[touchState.wordLevel-1].name;
+        const grade=englishWordGrades[touchState.wordGrade];
+        const levelName=grade.levels[touchState.wordLevel-1].name;
         document.getElementById('touch-result-icon').textContent=stars===3?'🎉':stars===2?'👏':'💪';
-        document.getElementById('touch-result-title').textContent='第'+touchState.wordLevel+'关「'+levelName+'」完成！';
+        document.getElementById('touch-result-title').textContent=grade.name+'第'+touchState.wordLevel+'关「'+levelName+'」完成！';
         const nextBtn=document.getElementById('touch-next-level-btn');
-        if(touchState.wordLevel<englishWordLevels.length){
+        if(touchState.wordLevel<grade.levels.length){
             nextBtn.style.display='block';
             nextBtn.textContent='▶ 第'+(touchState.wordLevel+1)+'关';
         }else{
             nextBtn.style.display='none';
             document.getElementById('touch-result-icon').textContent='🏆';
-            document.getElementById('touch-result-title').textContent='恭喜通关全部10关！';
+            document.getElementById('touch-result-title').textContent='恭喜通关'+grade.name+'全部关卡！';
         }
     }else{
         const msgs=['继续加油！','很棒！','太厉害了！'];
@@ -1399,11 +1466,13 @@ function showTouchResult(){
 function nextTouchLevel(){
     if(touchState.mode!=='word')return;
     document.getElementById('touch-result-modal').classList.remove('active');
-    const next=Math.min(touchState.wordLevel+1,englishWordLevels.length);
+    const grade=englishWordGrades[touchState.wordGrade];
+    const next=Math.min(touchState.wordLevel+1,grade.levels.length);
     chooseWordLevel(next);
 }
 
 function restartTouchPractice(){
+    stopTouchSpeech();
     document.getElementById('touch-result-modal').classList.remove('active');
     if(touchState.mode==='word'){
         chooseWordLevel(touchState.wordLevel);
@@ -1413,11 +1482,13 @@ function restartTouchPractice(){
 }
 
 function closeTouchResult(){
+    stopTouchSpeech();
     document.getElementById('touch-result-modal').classList.remove('active');
     showScreen('touch-screen');
 }
 
 function exitTouchPractice(){
+    stopTouchSpeech();
     document.getElementById('touch-result-modal').classList.remove('active');
     showScreen('touch-screen');
 }

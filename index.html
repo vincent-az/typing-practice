@@ -77,6 +77,7 @@
                 <span id="student-bar-info">👤 <span id="student-bar-name"></span> - <span id="student-bar-class"></span></span>
                 <div class="student-bar-actions">
                     <button class="bar-btn" onclick="showScreen('student-profile-screen')">修改密码</button>
+                    <button class="bar-btn" onclick="showScreen('feedback-screen')">💬 意见反馈</button>
                     <button class="bar-btn bar-logout" onclick="logout()">退出登录</button>
                 </div>
             </div>
@@ -629,8 +630,12 @@
                 <div id="touch-pinyin-progress" class="touch-progress">第 1 / 20 个汉字</div>
             </div>
             <div id="touch-word-area" class="touch-target-area" style="display:none">
-                <div id="touch-word-level" class="touch-word-level">第 1 关 · 动物世界</div>
-                <div id="touch-word-target" class="touch-target-letter">cat</div>
+                <div id="touch-word-level" class="touch-word-level">三年级 · 第1关「文具与问候」</div>
+                <div class="touch-word-row">
+                    <div id="touch-word-target" class="touch-target-letter">cat</div>
+                    <button class="touch-sound-btn" onclick="speakTouchWord(true)" title="点击朗读">🔊</button>
+                </div>
+                <div id="touch-word-cn" class="touch-word-cn">中文意思：猫</div>
                 <div id="touch-word-typed" class="touch-word-typed"></div>
                 <div id="touch-word-progress" class="touch-progress">第 1 / 10 个单词</div>
             </div>
@@ -691,9 +696,22 @@
         </div>
     </div>
 
-    <div id="word-level-modal" class="modal">
+    <div id="word-grade-modal" class="modal">
         <div class="modal-content">
             <h2>🔤 英文单词练习</h2>
+            <p class="pause-box-p" style="color:#6b7280;margin:10px 0 20px">请选择对应年级（小学人教版教材），每关 10 个单词</p>
+            <div class="grade-grid">
+                <button class="grade-btn grade-g3" onclick="chooseWordGrade('g3')">🌱<span class="grade-name">三年级</span><span class="grade-desc">基础单词</span></button>
+                <button class="grade-btn grade-g4" onclick="chooseWordGrade('g4')">🌿<span class="grade-name">四年级</span><span class="grade-desc">进阶单词</span></button>
+                <button class="grade-btn grade-g5" onclick="chooseWordGrade('g5')">🌳<span class="grade-name">五年级</span><span class="grade-desc">提高单词</span></button>
+            </div>
+            <button class="modal-btn secondary" onclick="document.getElementById('word-grade-modal').classList.remove('active')">取消</button>
+        </div>
+    </div>
+
+    <div id="word-level-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="word-level-title">🔤 选择关卡</h2>
             <p class="pause-box-p" style="color:#6b7280;margin:10px 0 20px">选择关卡，每关 10 个单词</p>
             <div class="level-grid" id="word-level-grid"></div>
             <button class="modal-btn secondary" onclick="document.getElementById('word-level-modal').classList.remove('active')">取消</button>
