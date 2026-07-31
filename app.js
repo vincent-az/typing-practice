@@ -112,6 +112,7 @@ async function loadSystemData(){
             if (articlesData.length===0 && backupArticles.length>0) articlesData=backupArticles;
             if (Object.keys(studentGrades).length===0 && Object.keys(backupGrades).length>0) studentGrades=backupGrades;
             saveSystemData();
+            syncPendingGrades();
             return;
         }
         studentsData=backupStudents; articlesData=backupArticles; studentGrades=backupGrades;
@@ -178,6 +179,8 @@ function teacherLogin(){
         msg.textContent='';
         refreshStudentTable();
         refreshArticleTable();
+        refreshGradeTable();
+        refreshGradeRecords();
         refreshClassDropdowns();
         showScreen('teacher-panel-screen');
     },500);
@@ -196,6 +199,8 @@ function checkAutoLogin(){
     }else if(currentUser&&currentUser.type==='teacher'){
         refreshStudentTable();
         refreshArticleTable();
+        refreshGradeTable();
+        refreshGradeRecords();
         refreshClassDropdowns();
         showScreen('teacher-panel-screen');
     }
@@ -336,12 +341,16 @@ function refreshGradeTable(){
         const avgWpm=grades.length>0?Math.round(grades.reduce((s,g)=>s+g.wpm,0)/grades.length):0;
         const avgAcc=grades.length>0?Math.round(grades.reduce((s,g)=>s+g.accuracy,0)/grades.length):0;
         const maxWpm=grades.length>0?Math.max(...grades.map(g=>g.wpm)):0;
-        rows.push({class:stu.class,name:stu.name,count:grades.length,avgWpm,avgAcc,maxWpm});
+        let lastDate=null;
+        if(grades.length>0){
+            lastDate=grades.reduce((mx,g)=>!mx||new Date(g.date)>mx?new Date(g.date):mx,null);
+        }
+        rows.push({class:stu.class,name:stu.name,count:grades.length,avgWpm,avgAcc,maxWpm,lastDate});
     });
-    rows.sort((a,b)=>a.class.localeCompare(b.class)||a.name.localeCompare(b.name));
+    rows.sort((a,b)=>((b.lastDate||0)-(a.lastDate||0))||a.class.localeCompare(b.class)||a.name.localeCompare(b.name));
     count.textContent=rows.length+'人';
     if(rows.length===0){
-        tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:#9ca3af;padding:30px">暂无成绩数据</td></tr>';
+        tbody.innerHTML='<tr><td colspan="8" style="text-align:center;color:#9ca3af;padding:30px">暂无成绩数据</td></tr>';
         return;
     }
     tbody.innerHTML=rows.map(r=>`
@@ -352,31 +361,124 @@ function refreshGradeTable(){
             <td class="grade-wpm">${r.avgWpm} WPM</td>
             <td class="grade-acc">${r.avgAcc}%</td>
             <td>${r.maxWpm} WPM</td>
+            <td>${r.lastDate?formatDateTime(r.lastDate):'<span style="color:#9ca3af">—</span>'}</td>
             <td><button class="table-btn view" onclick="showGradeDetail('${r.class.replace(/'/g,"\\'")}','${r.name.replace(/'/g,"\\'")}')">详情</button></td>
         </tr>
     `).join('');
 }
+function formatDateTime(d){
+    const pad=n=>String(n).padStart(2,'0');
+    return (d.getMonth()+1)+'/'+d.getDate()+' '+pad(d.getHours())+':'+pad(d.getMinutes());
+}
 const gradeTypeNames={'letters-home':'基准键','letters-all':'全字母','numbers':'数字键','punctuation-basic':'基础标点','punctuation-quotes':'引号练习','punctuation-cn':'中文标点','sentences':'句子练习','articles':'短文练习'};
+let currentGradeDetail={cls:null,name:null};
 function showGradeDetail(cls,name){
-    const key=cls+'-'+name;
-    const grades=studentGrades[key]||[];
-    document.getElementById('grade-detail-title').textContent=name+' 的成绩详情 ('+cls+')';
+    if(typeof cls!=='undefined'&&cls!==null){currentGradeDetail={cls:cls,name:name};}
+    if(!currentGradeDetail.cls||!currentGradeDetail.name)return;
+    const key=currentGradeDetail.cls+'-'+currentGradeDetail.name;
+    const grades=(studentGrades[key]||[]).slice();
+    document.getElementById('grade-detail-title').textContent=currentGradeDetail.name+' 的成绩详情 ('+currentGradeDetail.cls+')';
+    const start=document.getElementById('grade-detail-start').value;
+    const end=document.getElementById('grade-detail-end').value;
+    const type=document.getElementById('grade-detail-type').value;
+    let list=grades;
+    if(start)list=list.filter(g=>new Date(g.date)>=new Date(start+'T00:00:00'));
+    if(end)list=list.filter(g=>new Date(g.date)<=new Date(end+'T23:59:59'));
+    if(type)list=list.filter(g=>g.type===type);
+    list.sort((a,b)=>new Date(b.date)-new Date(a.date));
     const tbody=document.getElementById('grade-detail-tbody');
-    if(grades.length===0){
-        tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:#9ca3af;padding:20px">暂无练习记录</td></tr>';
+    if(list.length===0){
+        tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:#9ca3af;padding:20px">暂无符合条件的练习记录</td></tr>';
     }else{
-        tbody.innerHTML=grades.slice().reverse().map(g=>{
+        tbody.innerHTML=list.map(g=>{
             const d=new Date(g.date);
-            const dateStr=(d.getMonth()+1)+'/'+d.getDate()+' '+d.getHours()+':'+String(d.getMinutes()).padStart(2,'0');
-            return `<tr><td>${dateStr}</td><td>${gradeTypeNames[g.type]||g.type}</td><td class="grade-wpm">${g.wpm} WPM</td><td class="grade-acc">${g.accuracy}%</td><td>${'⭐'.repeat(g.stars)}</td></tr>`;
+            return `<tr><td>${formatDateTime(d)}</td><td>${gradeTypeNames[g.type]||g.type}</td><td class="grade-wpm">${g.wpm} WPM</td><td class="grade-acc">${g.accuracy}%</td><td>${'⭐'.repeat(g.stars)}</td></tr>`;
         }).join('');
     }
     document.getElementById('grade-list-view').style.display='none';
+    document.getElementById('grade-records-view').style.display='none';
     document.getElementById('grade-detail-view').style.display='block';
 }
 function closeGradeDetail(){
     document.getElementById('grade-list-view').style.display='block';
+    document.getElementById('grade-records-view').style.display='none';
     document.getElementById('grade-detail-view').style.display='none';
+}
+function switchGradeView(view){
+    document.getElementById('grade-list-view').style.display=view==='summary'?'block':'none';
+    document.getElementById('grade-records-view').style.display=view==='records'?'block':'none';
+    document.getElementById('grade-detail-view').style.display=view==='detail'?'block':'none';
+    if(view==='summary'){refreshGradeTable();}
+    if(view==='records'){refreshGradeRecords();}
+    if(view==='detail'){showGradeDetail();}
+}
+function refreshGradeRecords(){
+    const tbody=document.getElementById('grade-records-tbody');
+    const count=document.getElementById('grade-records-count');
+    const filterClass=document.getElementById('grade-records-class').value;
+    const searchName=(document.getElementById('grade-records-search').value||'').trim();
+    const start=document.getElementById('grade-records-start').value;
+    const end=document.getElementById('grade-records-end').value;
+    const type=document.getElementById('grade-records-type').value;
+    let all=[];
+    studentsData.forEach(stu=>{
+        if(filterClass&&stu.class!==filterClass)return;
+        if(searchName&&!stu.name.includes(searchName))return;
+        const grades=studentGrades[stu.class+'-'+stu.name]||[];
+        grades.forEach(g=>{all.push({class:stu.class,name:stu.name,date:g.date,type:g.type,wpm:g.wpm,accuracy:g.accuracy,stars:g.stars});});
+    });
+    if(start)all=all.filter(g=>new Date(g.date)>=new Date(start+'T00:00:00'));
+    if(end)all=all.filter(g=>new Date(g.date)<=new Date(end+'T23:59:59'));
+    if(type)all=all.filter(g=>g.type===type);
+    all.sort((a,b)=>new Date(b.date)-new Date(a.date));
+    count.textContent=all.length+'条';
+    if(all.length===0){
+        tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:#9ca3af;padding:30px">暂无符合条件的练习记录</td></tr>';
+        return;
+    }
+    tbody.innerHTML=all.map(g=>{
+        const d=new Date(g.date);
+        return `<tr><td>${formatDateTime(d)}</td><td>${g.class}</td><td>${g.name}</td><td>${gradeTypeNames[g.type]||g.type}</td><td class="grade-wpm">${g.wpm} WPM</td><td class="grade-acc">${g.accuracy}%</td><td>${'⭐'.repeat(g.stars)}</td></tr>`;
+    }).join('');
+}
+function downloadRecordsCSV(){
+    const filterClass=document.getElementById('grade-records-class').value;
+    const searchName=(document.getElementById('grade-records-search').value||'').trim();
+    const start=document.getElementById('grade-records-start').value;
+    const end=document.getElementById('grade-records-end').value;
+    const type=document.getElementById('grade-records-type').value;
+    let all=[];
+    studentsData.forEach(stu=>{
+        if(filterClass&&stu.class!==filterClass)return;
+        if(searchName&&!stu.name.includes(searchName))return;
+        const grades=studentGrades[stu.class+'-'+stu.name]||[];
+        grades.forEach(g=>{all.push({class:stu.class,name:stu.name,date:g.date,type:g.type,wpm:g.wpm,accuracy:g.accuracy,stars:g.stars});});
+    });
+    if(start)all=all.filter(g=>new Date(g.date)>=new Date(start+'T00:00:00'));
+    if(end)all=all.filter(g=>new Date(g.date)<=new Date(end+'T23:59:59'));
+    if(type)all=all.filter(g=>g.type===type);
+    all.sort((a,b)=>new Date(b.date)-new Date(a.date));
+    if(all.length===0){showToast('没有符合条件的练习记录','error');return;}
+    let csv='\uFEFF日期时间,班级,姓名,练习类型,速度(WPM),正确率(%),星级\n';
+    all.forEach(g=>{
+        const d=new Date(g.date);
+        const pad=n=>String(n).padStart(2,'0');
+        const dateStr=(d.getMonth()+1)+'/'+d.getDate()+' '+pad(d.getHours())+':'+pad(d.getMinutes());
+        csv+=dateStr+','+g.class+','+g.name+','+(gradeTypeNames[g.type]||g.type)+','+g.wpm+','+g.accuracy+','+g.stars+'\n';
+    });
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='练习记录_'+(filterClass||'全部班级')+'_'+new Date().toISOString().slice(0,10)+'.csv';
+    a.click();
+    showToast('已下载 '+all.length+' 条练习记录');
+}
+async function refreshGradesFromCloud(){
+    if(!supabaseClient){showToast('Supabase未连接，无法刷新','error');return;}
+    showToast('正在从云端刷新数据...');
+    const ok=await supabaseLoadGrades();
+    if(ok){saveSystemData();refreshGradeTable();refreshGradeRecords();showToast('成绩数据已刷新');}
+    else{showToast('刷新失败，请检查网络','error');}
 }
 function downloadGradesCSV(){
     const filterClass=document.getElementById('grade-class-filter').value;
@@ -567,6 +669,25 @@ async function importData(){
     input.click();
 }
 
+/* ====== 成绩自动上传（含离线补传） ====== */
+function loadPendingGrades(){
+    const p=localStorage.getItem('tpPendingGrades');
+    if(p)try{return JSON.parse(p);}catch(e){}
+    return [];
+}
+function savePendingGrades(arr){
+    localStorage.setItem('tpPendingGrades',JSON.stringify(arr));
+}
+async function syncPendingGrades(){
+    if(!supabaseClient)return;
+    const pending=loadPendingGrades();
+    if(pending.length===0)return;
+    const {error}=await supabaseClient.from('grades').insert(pending);
+    if(error){console.error('补传离线成绩失败:',error);return;}
+    savePendingGrades([]);
+    if(pending.length>0)showToast('已自动补传 '+pending.length+' 条离线成绩');
+}
+
 async function syncToSupabase(){
     if(!supabaseClient){showToast('Supabase未连接','error');return;}
     if(!confirm('确定要将所有本地数据同步到云端吗？将覆盖云端现有数据。'))return;
@@ -624,11 +745,11 @@ async function changeStudentPassword(){
 function refreshClassDropdowns(){
     const studentClasses=[...new Set(studentsData.map(s=>s.class))];
     const allClasses=[...new Set([...defaultClasses,...studentClasses])];
-    ['stu-class','login-class','bulk-class','stu-filter-class','grade-class-filter'].forEach(id=>{
+    ['stu-class','login-class','bulk-class','stu-filter-class','grade-class-filter','grade-records-class'].forEach(id=>{
         const sel=document.getElementById(id);
         if(!sel)return;
         const current=sel.value;
-        const firstOption=id.includes('filter')?'<option value="">全部班级</option>':'<option value="">选择班级</option>';
+        const firstOption=id.includes('filter')||id.includes('records-class')?'<option value="">全部班级</option>':'<option value="">选择班级</option>';
         sel.innerHTML=firstOption+allClasses.map(c=>'<option value="'+c+'">'+c+'</option>').join('');
         if(current)sel.value=current;
     });
@@ -653,7 +774,7 @@ function switchTab(tab){
     document.getElementById('tab-'+tab).classList.add('active');
     if(tab==='students'){refreshStudentTable();refreshClassDropdowns();}
     if(tab==='articles')refreshArticleTable();
-    if(tab==='grades'){refreshGradeTable();closeGradeDetail();}
+    if(tab==='grades'){refreshGradeTable();refreshGradeRecords();switchGradeView('summary');refreshClassDropdowns();}
 }
 
 /* ====== 现有打字练习功能（保持不变） ====== */
@@ -733,7 +854,17 @@ async function finishPractice(completed){
         const grade={date:new Date().toISOString(),type:GS.currentPractice,wpm,accuracy:acc,stars,xp};
         studentGrades[key].push(grade);
         saveSystemData();
-        if(supabaseClient){const {error}=await supabaseClient.from('grades').insert({class:currentUser.class,name:currentUser.name,date:grade.date,type:grade.type,wpm:grade.wpm,accuracy:grade.accuracy,stars:grade.stars,xp:grade.xp});if(error)console.error('Supabase保存成绩失败:',error);}
+        const gRow={class:currentUser.class,name:currentUser.name,date:grade.date,type:grade.type,wpm:grade.wpm,accuracy:grade.accuracy,stars:grade.stars,xp:grade.xp};
+        if(supabaseClient){
+            const {error}=await supabaseClient.from('grades').insert(gRow);
+            if(error){
+                console.error('Supabase保存成绩失败，已加入待同步队列:',error);
+                const pending=loadPendingGrades();pending.push(gRow);savePendingGrades(pending);
+                showToast('网络异常，成绩已保存，联网后自动上传','error');
+            }
+        }else{
+            const pending=loadPendingGrades();pending.push(gRow);savePendingGrades(pending);
+        }
     }
 }
 function updatePracticeStats(){const p=GS.currentPractice;if(p.includes('letter'))GS.practiceStats.letters++;else if(p.includes('number'))GS.practiceStats.numbers++;else if(p.includes('punctuation'))GS.practiceStats.punctuation++;else GS.practiceStats.mixed++;}
@@ -789,6 +920,25 @@ function updateScoreDisplay(){
     document.getElementById('stat-numbers-count').textContent=GS.practiceStats.numbers+'次';
     document.getElementById('stat-punctuation-count').textContent=GS.practiceStats.punctuation+'次';
     document.getElementById('stat-mixed-count').textContent=GS.practiceStats.mixed+'次';
+    updateMyRecent();
+}
+function updateMyRecent(){
+    const tbody=document.getElementById('my-recent-tbody');
+    if(!tbody)return;
+    if(!currentUser||currentUser.type!=='student'){
+        tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:#9ca3af;padding:20px">请先登录后再查看</td></tr>';
+        return;
+    }
+    const key=currentUser.class+'-'+currentUser.name;
+    const grades=(studentGrades[key]||[]).slice().sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,10);
+    if(grades.length===0){
+        tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:#9ca3af;padding:20px">还没有练习记录，快去练习吧！</td></tr>';
+        return;
+    }
+    tbody.innerHTML=grades.map(g=>{
+        const d=new Date(g.date);
+        return `<tr><td>${formatDateTime(d)}</td><td>${gradeTypeNames[g.type]||g.type}</td><td class="grade-wpm">${g.wpm} WPM</td><td class="grade-acc">${g.accuracy}%</td><td>${'⭐'.repeat(g.stars)}</td></tr>`;
+    }).join('');
 }
 function getLevelTitle(){const t=['打字新手','键盘学徒','打字达人','速度之星','打字高手','键盘大师','打字专家','打字王者','键盘传说','打字之神'];return t[Math.min(GS.level-1,t.length-1)];}
 function updateBadges(){Object.keys(GS.achievements).forEach(k=>{const b=document.getElementById('badge-'+k);if(b){b.classList.toggle('unlocked',GS.achievements[k]);b.classList.toggle('locked',!GS.achievements[k]);}});}

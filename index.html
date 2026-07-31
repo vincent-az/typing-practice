@@ -218,6 +218,11 @@
             </div>
 
             <div id="tab-grades" class="tab-content">
+                <div class="filter-row">
+                    <button class="action-btn primary" onclick="refreshGradesFromCloud()">🔄 刷新云端数据</button>
+                    <button class="action-btn" onclick="switchGradeView('summary')">📊 成绩汇总</button>
+                    <button class="action-btn" onclick="switchGradeView('records')">📝 练习记录</button>
+                </div>
                 <div id="grade-list-view">
                     <div class="tab-section">
                         <h3>学生成绩 <span id="grade-count" class="count-badge">0人</span></h3>
@@ -228,7 +233,7 @@
                         </div>
                         <div class="table-wrap">
                             <table>
-                                <thead><tr><th>班级</th><th>姓名</th><th>练习次数</th><th>平均速度</th><th>平均正确率</th><th>最高速度</th><th>操作</th></tr></thead>
+                                <thead><tr><th>班级</th><th>姓名</th><th>练习次数</th><th>平均速度</th><th>平均正确率</th><th>最高速度</th><th>最近练习</th><th>操作</th></tr></thead>
                                 <tbody id="grade-tbody"></tbody>
                             </table>
                         </div>
@@ -237,6 +242,22 @@
                 <div id="grade-detail-view" style="display:none">
                     <div class="tab-section">
                         <h3 id="grade-detail-title">学生成绩详情</h3>
+                        <div class="filter-row">
+                            <input type="date" id="grade-detail-start" onchange="showGradeDetail()">
+                            <span style="align-self:center">至</span>
+                            <input type="date" id="grade-detail-end" onchange="showGradeDetail()">
+                            <select id="grade-detail-type" onchange="showGradeDetail()">
+                                <option value="">全部类型</option>
+                                <option value="letters-home">基准键</option>
+                                <option value="letters-all">全字母</option>
+                                <option value="numbers">数字键</option>
+                                <option value="punctuation-basic">基础标点</option>
+                                <option value="punctuation-quotes">引号练习</option>
+                                <option value="punctuation-cn">中文标点</option>
+                                <option value="sentences">句子练习</option>
+                                <option value="articles">短文练习</option>
+                            </select>
+                        </div>
                         <div class="table-wrap">
                             <table>
                                 <thead><tr><th>日期</th><th>练习类型</th><th>速度(WPM)</th><th>正确率</th><th>星级</th></tr></thead>
@@ -244,6 +265,36 @@
                             </table>
                         </div>
                         <button class="action-btn" onclick="closeGradeDetail()" style="margin-top:12px">← 返回列表</button>
+                    </div>
+                </div>
+                <div id="grade-records-view" style="display:none">
+                    <div class="tab-section">
+                        <h3>全部练习记录 <span id="grade-records-count" class="count-badge">0条</span></h3>
+                        <div class="filter-row">
+                            <select id="grade-records-class" onchange="refreshGradeRecords()"><option value="">全部班级</option></select>
+                            <input type="text" id="grade-records-search" placeholder="搜索学生姓名..." oninput="refreshGradeRecords()">
+                            <input type="date" id="grade-records-start" onchange="refreshGradeRecords()">
+                            <span style="align-self:center">至</span>
+                            <input type="date" id="grade-records-end" onchange="refreshGradeRecords()">
+                            <select id="grade-records-type" onchange="refreshGradeRecords()">
+                                <option value="">全部类型</option>
+                                <option value="letters-home">基准键</option>
+                                <option value="letters-all">全字母</option>
+                                <option value="numbers">数字键</option>
+                                <option value="punctuation-basic">基础标点</option>
+                                <option value="punctuation-quotes">引号练习</option>
+                                <option value="punctuation-cn">中文标点</option>
+                                <option value="sentences">句子练习</option>
+                                <option value="articles">短文练习</option>
+                            </select>
+                            <button class="action-btn primary" onclick="downloadRecordsCSV()">📥 下载记录</button>
+                        </div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead><tr><th>日期时间</th><th>班级</th><th>姓名</th><th>练习类型</th><th>速度(WPM)</th><th>正确率</th><th>星级</th></tr></thead>
+                                <tbody id="grade-records-tbody"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -433,6 +484,15 @@
                     <div class="badge locked" id="badge-punctuation"><span class="badge-icon">✨</span><span class="badge-name">标点大师</span></div>
                     <div class="badge locked" id="badge-streak"><span class="badge-icon">🔥</span><span class="badge-name">连续练习</span></div>
                     <div class="badge locked" id="badge-all"><span class="badge-icon">👑</span><span class="badge-name">全能选手</span></div>
+                </div>
+            </div>
+            <div class="stats-section">
+                <h3>🕐 最近练习记录</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>日期</th><th>练习类型</th><th>速度(WPM)</th><th>正确率</th><th>星级</th></tr></thead>
+                        <tbody id="my-recent-tbody"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
