@@ -32,6 +32,8 @@ body{font-family:'Microsoft YaHei','PingFang SC',-apple-system,sans-serif;backgr
 .form-group input,.form-group select{width:100%;padding:13px 16px;border:2px solid #e5e7eb;border-radius:14px;font-size:1em;transition:all 0.3s;background:#f9fafb}
 .form-group input:focus,.form-group select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(99,102,241,0.12)}
 .login-btn{width:100%;padding:15px;background:linear-gradient(135deg,#6366f1,#818cf8);color:white;border:none;border-radius:14px;font-size:1.1em;font-weight:700;cursor:pointer;transition:all 0.3s;letter-spacing:6px}
+.feedback-box textarea{width:100%;padding:13px 16px;border:2px solid #e5e7eb;border-radius:14px;font-size:1em;transition:all 0.3s;background:#f9fafb;font-family:inherit;box-sizing:border-box;resize:vertical}
+.feedback-box textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(99,102,241,0.12)}
 .login-btn:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(99,102,241,0.35)}
 .form-msg{font-size:0.85em;min-height:1.2em;text-align:center}
 .form-msg.error{color:var(--danger)}
@@ -131,6 +133,7 @@ tr:hover td{background:#f9fafb}
 .card-score{background:linear-gradient(135deg,#10b981,#06b6d4)}
 .card-touch{background:linear-gradient(135deg,#06b6d4,#22d3ee)}
 .card-settings{background:linear-gradient(135deg,#8b5cf6,#a855f7)}
+.card-feedback{background:linear-gradient(135deg,#ef4444,#f97316)}
 .menu-icon{margin-bottom:8px;display:flex;align-items:center;justify-content:center;width:40px;height:40px}
 .menu-text{text-align:center}
 .menu-text h3{font-size:0.92em;margin:0;font-weight:700;letter-spacing:1px}

@@ -6,7 +6,8 @@ const practiceData={
 'punctuation-basic':{easy:['hello, world. how are you? i am fine!','the cat is big. the dog is small. do you like cats?','my name is tom. i am ten years old. i like apples.','what is your name? my name is sam. nice to meet you!','i have a pen. it is blue. do you have a pen?'],medium:['The teacher said, "Good morning!" We replied, "Good morning!"','What is your name? My name is Lily. Nice to meet you!','I like to play football. Do you? Yes, I do!','My mother is kind. She makes dinner for us every day.','Can you help me? Sure! What do you need? I need a book.'],hard:['Although it was raining, we still went to the park. The children were excited!','"Who wants ice cream?" asked Mom. Everyone shouted, "I do!"','My favorite season is summer. I can swim, eat ice cream, and play outside!','"Please pass me the book," said Tom. "Here you are," replied Mary. "Thank you!"','The sun is shining brightly. The birds are singing in the trees. What a lovely day!']},
 'punctuation-quotes':{easy:['"hello" and \'world\'','She said "hi" and he said \'hello\'','"open the door" she said','"come here" he called','Mom said "eat your lunch"'],medium:['The teacher said, "Please open your books." We all said, "Okay!"','Mom asked, "What do you want for dinner?" I said, "Pizza, please!"','"Don\'t forget your homework," said my friend. "I won\'t!" I replied.','Dad said, "Let\'s go to the park." "Great idea!" we shouted.','"Where is my bag?" asked Tom. "It is under the desk," said Anna.'],hard:['The book said, "Knowledge is power." I think that\'s true!','"Where are you going?" asked Mom. "To the library," I answered.','"I can\'t believe it\'s already Friday!" she exclaimed.','My teacher said, "Practice makes perfect." So I practice every day.','"What time is it?" he asked. "It\'s three o\'clock," she replied. "Thank you!"']},
 'punctuation-cn':{easy:['春天来了。花儿开了。小鸟在唱歌。','你好吗？我很好。谢谢！','我喜欢吃苹果，你喜欢吃什么呢？','今天是星期一。明天是星期二。','小明、小红和小李是好朋友。','我家有一只小猫，它很可爱。'],medium:['图书馆里有很多书：故事书、科学书、漫画书。你最喜欢哪种？','今天天气真好！我们去公园玩吧。好不好？好！','老师说："明天要带课本。"同学们都记住了。','中国的首都是北京；那里有很多名胜古迹。','这是谁的书？是我的。真的吗？真的！','妈妈问："你作业写完了吗？"我回答："写完了。"'],hard:['中国的首都是北京。那里有很多名胜古迹：故宫、长城、天坛……','"你长大了想做什么？"妈妈问。"我想当科学家！"我坚定地回答。','科技改变了我们的生活；互联网让我们可以学习更多知识。同学们，加油！','小明说："我今天很开心！"小红问："为什么？"小明回答："因为我学会了打字！"','春天的花开了：桃花、杏花、梨花……五颜六色，美丽极了！','老师对我们说："一寸光阴一寸金，寸金难买寸光阴。要珍惜时间！"']},
-'sentences':{easy:'I like to read books. The sun is warm today. My cat is very cute. I go to school by bus. We have fun at the park. The bird can fly high in the sky.',medium:'My favorite subject is science. We learned about plants yesterday. I like to draw pictures after school. My best friend is very kind and helpful. Every weekend I play basketball with my brother.',hard:'Although it was raining, we still went to the park. The children were excited to play in the rain! My mother says that reading is the key to knowledge. I practice typing every day to become faster and more accurate. The more you practice, the better you will become at typing.'},
+'sentences':{easy:['Hello! I\'m Miss White. What\'s your name? My name\'s Mike.','Good morning! How are you? I\'m fine, thank you.','Nice to meet you. Nice to meet you, too.','This is my friend, Amy. She is a girl.','I have a ruler. I have an eraser, too.','Look at me! This is my face. This is my nose.','What\'s this? It\'s a duck. What\'s that? It\'s a bear.','I\'d like some juice, please. Here you are. Thanks!','Can I have some bread, please? Sure, here you are.','How old are you? I\'m six years old. Happy birthday!','How many plates? Five plates. Here you are.','Stand up, please. Sit down, please. Let\'s go to school!'],medium:['We have a new classroom. Let\'s go and see.','Let\'s clean the classroom. Let me clean the windows.','Where is my seat? It\'s near the door. It\'s near the window.','What\'s in your schoolbag? An English book, a maths book and three storybooks.','I have a new schoolbag. It\'s black and white. It\'s very nice.','My friend is tall and strong. He has a green bag.','Who is he? He\'s my brother. He is a good boy.','I have long hair. My friend has short hair. She is quiet.','Where are my keys? They\'re on the table. They\'re near the phone.','Is she in the living room? Yes, she is. No, she isn\'t.','What would you like for dinner? I\'d like some beef and vegetables.','Dinner\'s ready! Help yourself. Thanks, Mum. I can use chopsticks.','How many people are there in your family? Five. My family has six people.','Is this your uncle? Yes, it is. What\'s your aunt\'s job? She\'s a nurse.','My mother is a teacher. My father is a driver. They are nice.'],hard:['It\'s time for lunch. Let\'s have some chicken and rice.','What time is it? It\'s six o\'clock. It\'s time to get up.','What\'s the weather like in Beijing? It\'s rainy. It\'s cloudy and cold.','Can I go outside now? Yes, you can. It\'s warm and sunny.','Look at the vegetables! They\'re so big and fresh.','Are these tomatoes? Yes, they are. What are those? They\'re horses.','Whose coat is this? It\'s mine. Are these yours? No, they aren\'t.','Can I help you? Yes. These shoes are nice. Can I try them on?','How much is this skirt? It\'s ninety yuan. It\'s very pretty.','I like that red dress. It\'s beautiful and cheap.','Is it cold today? Yes, it is. It\'s snowy outside. Put on your hat.','What\'s your favourite food? I like noodles. They\'re delicious.']},
+
 'articles':{easy:'春天来了。花儿开了。小鸟在树上唱歌。小朋友们在公园里玩耍。春天真美丽！我喜欢春天。春天里有很多花朵，有红色的、黄色的、粉色的。蝴蝶在花丛中飞来飞去。',medium:'图书馆里有很多书。我最喜欢看故事书。每天放学后，我都会去图书馆看书。读书可以学到很多知识。高尔基说过："书籍是人类进步的阶梯。"我们要多读书、读好书。',hard:'科技改变了我们的生活。通过互联网，我们可以学习到很多知识。同学们要好好学习，将来为祖国做贡献。打字是一项非常重要的技能。在信息时代，学会快速准确地打字，可以帮助我们更好地学习和工作。坚持练习，你一定能成为打字高手！'}
 };
 
@@ -21,6 +22,7 @@ let articlesData=[];
 let settingsData={defaultPassword:'pzxx',teacherPassword:'pzxxzzw'};
 let currentUser=null;
 let studentGrades={};
+let feedbacksData=[];
 
 /* ====== Supabase 云存储配置 ====== */
 const SUPABASE_URL = 'https://ezbsuywvaimjgbuhrubj.supabase.co';
@@ -72,6 +74,16 @@ async function supabaseLoadGrades() {
     });
     return true;
 }
+async function supabaseLoadFeedbacks() {
+    if (!supabaseClient) return true;
+    const { data, error } = await supabaseClient.from('feedbacks').select('*').order('created_at',{ascending:false});
+    if (error) {
+        console.error('Supabase加载反馈失败（教师端可能看不到云端反馈）:',error);
+        return true;
+    }
+    feedbacksData = (data || []).map(f => ({ id: f.id, date: f.created_at, class: f.class, name: f.name, category: f.category, content: f.content, status: f.status||'pending' }));
+    return true;
+}
 async function supabaseUpsertSetting(key, value) {
     if (!supabaseClient) return;
     const {error}=await supabaseClient.from('settings').upsert({ key, value }, { onConflict: 'key' });
@@ -87,6 +99,7 @@ function saveSystemData(){
     localStorage.setItem('tpArticles',JSON.stringify(articlesData));
     localStorage.setItem('tpSettings',JSON.stringify(settingsData));
     localStorage.setItem('tpGrades',JSON.stringify(studentGrades));
+    localStorage.setItem('tpFeedbacks',JSON.stringify(feedbacksData));
 }
 
 async function loadSystemData(){
@@ -98,24 +111,27 @@ async function loadSystemData(){
     if(t)try{const d=JSON.parse(t);Object.assign(settingsData,d);}catch(e){}
     const g=localStorage.getItem('tpGrades');
     if(g)try{studentGrades=JSON.parse(g);}catch(e){}
+    const f=localStorage.getItem('tpFeedbacks');
+    if(f)try{feedbacksData=JSON.parse(f);}catch(e){}
     const u=localStorage.getItem('tpCurrentUser');
     if(u)try{currentUser=JSON.parse(u);}catch(e){}
 
     const sbOk = initSupabase();
     if (sbOk) {
-        const backupStudents=[...studentsData], backupArticles=[...articlesData], backupGrades={...studentGrades};
+        const backupStudents=[...studentsData], backupArticles=[...articlesData], backupGrades={...studentGrades}, backupFeedbacks=[...feedbacksData];
         const results = await Promise.all([
-            supabaseLoadStudents(), supabaseLoadArticles(), supabaseLoadSettings(), supabaseLoadGrades()
+            supabaseLoadStudents(), supabaseLoadArticles(), supabaseLoadSettings(), supabaseLoadGrades(), supabaseLoadFeedbacks()
         ]);
         if (results.every(r => r)) {
             if (studentsData.length===0 && backupStudents.length>0) studentsData=backupStudents;
             if (articlesData.length===0 && backupArticles.length>0) articlesData=backupArticles;
             if (Object.keys(studentGrades).length===0 && Object.keys(backupGrades).length>0) studentGrades=backupGrades;
+            if (feedbacksData.length===0 && backupFeedbacks.length>0) feedbacksData=backupFeedbacks;
             saveSystemData();
             syncPendingGrades();
             return;
         }
-        studentsData=backupStudents; articlesData=backupArticles; studentGrades=backupGrades;
+        studentsData=backupStudents; articlesData=backupArticles; studentGrades=backupGrades; feedbacksData=backupFeedbacks;
     }
 }
 function saveCurrentUser(){
@@ -182,6 +198,7 @@ function teacherLogin(){
         refreshGradeTable();
         refreshGradeRecords();
         refreshClassDropdowns();
+        refreshFeedbackTable();
         showScreen('teacher-panel-screen');
     },500);
 }
@@ -202,6 +219,7 @@ function checkAutoLogin(){
         refreshGradeTable();
         refreshGradeRecords();
         refreshClassDropdowns();
+        refreshFeedbackTable();
         showScreen('teacher-panel-screen');
     }
 }
@@ -741,6 +759,62 @@ async function changeStudentPassword(){
     setTimeout(()=>{msg.textContent='';showScreen('home-screen');},1000);
 }
 
+/* ====== 问题反馈与意见 ====== */
+async function submitFeedback(){
+    if(!currentUser||currentUser.type!=='student'){showToast('请先登录后再反馈','error');return;}
+    const category=document.getElementById('feedback-category').value;
+    const content=document.getElementById('feedback-content').value.trim();
+    const msg=document.getElementById('feedback-msg');
+    if(!category){msg.className='form-msg error';msg.textContent='请选择反馈类型';return;}
+    if(content.length<5){msg.className='form-msg error';msg.textContent='请至少输入5个字的内容';return;}
+    const fb={date:new Date().toISOString(),class:currentUser.class,name:currentUser.name,category,content,status:'pending'};
+    feedbacksData.unshift(fb);
+    saveSystemData();
+    if(supabaseClient){
+        const {data,error}=await supabaseClient.from('feedbacks').insert({class:fb.class,name:fb.name,category:fb.category,content:fb.content,status:'pending'}).select();
+        if(error){console.error('Supabase保存反馈失败:',error);showToast('已保存到本机，云端同步失败（教师端可能看不到）','error');}
+        else if(data&&data[0]&&data[0].id){fb.id=data[0].id;saveSystemData();}
+    }
+    document.getElementById('feedback-content').value='';
+    msg.className='form-msg success';
+    msg.textContent='感谢你的反馈！老师会尽快处理～';
+    setTimeout(()=>{msg.textContent='';},3000);
+}
+function refreshFeedbackTable(){
+    const tbody=document.getElementById('feedback-tbody');
+    if(!tbody)return;
+    const cnt=document.getElementById('feedback-count');
+    if(cnt)cnt.textContent=feedbacksData.length+'条';
+    if(feedbacksData.length===0){
+        tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:#9ca3af;padding:20px">暂无学生反馈</td></tr>';
+        return;
+    }
+    const catNames={'bug':'🐞 遇到问题','suggestion':'💡 修改意见','feature':'🚀 新功能建议','other':'📝 其他'};
+    tbody.innerHTML=feedbacksData.map((fb,i)=>{
+        const d=new Date(fb.date);
+        const time=isNaN(d.getTime())?fb.date:(d.getMonth()+1)+'月'+d.getDate()+'日 '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+        const st=fb.status==='done'?'<span style="color:#10b981;font-weight:600">✔ 已处理</span>':'<span style="color:#f59e0b;font-weight:600">⏳ 待处理</span>';
+        return `<tr>
+            <td>${time}</td>
+            <td>${fb.class}</td>
+            <td>${fb.name}</td>
+            <td>${catNames[fb.category]||fb.category}</td>
+            <td style="max-width:280px">${fb.content}</td>
+            <td>${st} ${fb.status!=='done'?'<button class="action-btn" style="padding:4px 10px;font-size:0.8em" onclick="markFeedbackDone('+i+')">标记已处理</button>':''}</td>
+        </tr>`;
+    }).join('');
+}
+function markFeedbackDone(i){
+    if(!feedbacksData[i])return;
+    feedbacksData[i].status='done';
+    saveSystemData();
+    if(supabaseClient&&feedbacksData[i].id){
+        supabaseClient.from('feedbacks').update({status:'done'}).eq('id',feedbacksData[i].id).then(r=>{if(r.error)console.error('Supabase更新反馈状态失败:',r.error);});
+    }
+    refreshFeedbackTable();
+    showToast('已标记为已处理');
+}
+
 /* ====== 下拉框刷新 ====== */
 function refreshClassDropdowns(){
     const studentClasses=[...new Set(studentsData.map(s=>s.class))];
@@ -762,6 +836,12 @@ function showScreen(id){
     GS.currentScreen=id;
     if(id==='score-screen'){updateScoreDisplay();updateBadges();}
     if(id==='home-screen'){updatePetMessage();}
+    if(id==='feedback-screen'){
+        const info=document.getElementById('feedback-info');
+        if(info)info.value=currentUser&&currentUser.type==='student'?(currentUser.class+' · '+currentUser.name):'未登录';
+        const msg=document.getElementById('feedback-msg');
+        if(msg)msg.textContent='';
+    }
     if(id==='login-screen'){document.getElementById('student-login-msg').textContent='';document.getElementById('teacher-login-msg').textContent='';}
     if(id==='student-profile-screen'){document.getElementById('profile-msg').textContent='';document.getElementById('profile-old-pwd').value='';document.getElementById('profile-new-pwd').value='';document.getElementById('profile-confirm-pwd').value='';}
 }
@@ -775,6 +855,7 @@ function switchTab(tab){
     if(tab==='students'){refreshStudentTable();refreshClassDropdowns();}
     if(tab==='articles')refreshArticleTable();
     if(tab==='grades'){refreshGradeTable();refreshGradeRecords();switchGradeView('summary');refreshClassDropdowns();}
+    if(tab==='feedbacks')refreshFeedbackTable();
 }
 
 /* ====== 现有打字练习功能（保持不变） ====== */
@@ -798,6 +879,12 @@ function displayText(){
 function updateHint(){
     if(GS.currentIndex>=GS.currentText.length)return;
     const c=GS.currentText[GS.currentIndex];
+    if(isCJKChar(c)){
+        document.getElementById('hint-key').textContent=c;
+        document.getElementById('hint-finger').textContent='用拼音输入此汉字';
+        document.querySelectorAll('.key').forEach(k=>k.classList.remove('active'));
+        return;
+    }
     document.getElementById('hint-key').textContent=c===' '?'空格':c.toUpperCase();
     const f=fingerMap[c.toLowerCase()];
     document.getElementById('hint-finger').textContent=f&&fingerNames[f]?fingerNames[f]:'';
@@ -805,11 +892,15 @@ function updateHint(){
     let sel=c===' '?'.key[data-key=" "]':c==='\''?'.key[data-key="\']"':'.key[data-key="'+c+'"]';
     const ke=document.querySelector(sel);if(ke)ke.classList.add('active');
 }
+function isCJKChar(c){return /[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\u3000-\u303f\uff00-\uffef]/.test(c);}
 document.addEventListener('keydown',function(e){
     if(GS.currentScreen!=='typing-screen'||GS.isPaused||GS.isFinished)return;
-    e.preventDefault();
+    if(e.isComposing||e.key==='Process'||e.keyCode===229)return;
+    const currentChar=GS.currentText[GS.currentIndex];
+    if(currentChar&&isCJKChar(currentChar))return;
+    e.preventDefault();e.stopPropagation();
     if(!GS.startTime){GS.startTime=Date.now();startTimer();}
-    const key=e.key,currentChar=GS.currentText[GS.currentIndex];
+    const key=e.key;
     if(key==='Backspace'){if(GS.currentIndex>0){GS.currentIndex--;const ch=document.querySelector('.char[data-index="'+GS.currentIndex+'"]');if(ch){ch.classList.remove('correct','error');ch.classList.add('current');}updateHint();}return;}
     if(key==='Shift'||key==='CapsLock'||key==='Tab'||key==='Control'||key==='Alt'||key==='Meta')return;
     GS.totalChars++;
@@ -817,6 +908,35 @@ document.addEventListener('keydown',function(e){
     if(ok){GS.correctChars++;markCorrect(GS.currentIndex);GS.currentIndex++;if(document.getElementById('setting-sound').checked)playSound('correct');if(GS.currentIndex>=GS.currentText.length){finishPractice(true);return;}
     }else{markError(GS.currentIndex);if(document.getElementById('setting-sound').checked)playSound('error');}
     updateStats();updateHint();
+});
+document.addEventListener('compositionend',function(e){
+    if(GS.currentScreen!=='typing-screen'||GS.isPaused||GS.isFinished)return;
+    const data=(e.data||'').trim();
+    if(!data||!isCJKChar(data))return;
+    if(!GS.startTime){GS.startTime=Date.now();startTimer();}
+    const expected=GS.currentText.substring(GS.currentIndex,GS.currentIndex+data.length);
+    GS.totalChars+=data.length;
+    if(data===expected){
+        for(let i=0;i<data.length;i++){markCorrect(GS.currentIndex+i);}
+        GS.correctChars+=data.length;
+        GS.currentIndex+=data.length;
+        if(document.getElementById('setting-sound').checked)playSound('correct');
+        if(GS.currentIndex>=GS.currentText.length){finishPractice(true);return;}
+    }else{
+        markError(GS.currentIndex);
+        if(document.getElementById('setting-sound').checked)playSound('error');
+    }
+    updateStats();updateHint();
+});
+document.addEventListener('keydown',function(e){
+    if(GS.currentScreen!=='touch-play-screen')return;
+    if(e.isComposing||e.key==='Process'||e.keyCode===229)return;
+    const key=e.key;
+    if(key==='Shift'||key==='CapsLock'||key==='Tab'||key==='Control'||key==='Alt'||key==='Meta')return;
+    e.preventDefault();e.stopPropagation();
+    if(key==='Backspace'){touchBackspace();return;}
+    if(key==='Enter'||key===' '){touchSpaceTap();return;}
+    if(key.length===1&&/[a-zA-Z0-9]/.test(key)){touchKeyTap(key.toLowerCase());return;}
 });
 function playSound(t){try{const a=new(window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=t==='correct'?800:300;g.gain.value=t==='correct'?0.1:0.15;o.start();o.stop(a.currentTime+0.1);}catch(e){}}
 function markCorrect(i){const c=document.querySelector('.char[data-index="'+i+'"]');if(c){c.classList.remove('current','pending');c.classList.add('correct');}}

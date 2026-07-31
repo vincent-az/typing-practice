@@ -114,6 +114,12 @@
                     </div>
                     <div class="menu-text"><h3>设置</h3></div>
                 </div>
+                <div class="menu-card card-feedback" onclick="showScreen('feedback-screen')">
+                    <div class="menu-icon">
+                        <svg viewBox="0 0 48 48" width="40" height="40"><path d="M24 8 C15 8 8 14 8 22 C8 28 12 33 18 35 L18 42 L24 37 C32 37 40 30 40 22 C40 14 33 8 24 8 Z" fill="none" stroke="white" stroke-width="2.5" stroke-linejoin="round"/><circle cx="17" cy="22" r="2.5" fill="white"/><circle cx="24" cy="22" r="2.5" fill="white"/><circle cx="31" cy="22" r="2.5" fill="white"/></svg>
+                    </div>
+                    <div class="menu-text"><h3>意见反馈</h3></div>
+                </div>
             </div>
             <div class="daily-tip">
                 <div class="tip-icon">💡</div>
@@ -158,6 +164,7 @@
                 <button class="tab-btn active" onclick="switchTab('students')">👥 学生管理</button>
                 <button class="tab-btn" onclick="switchTab('articles')">📄 文章管理</button>
                 <button class="tab-btn" onclick="switchTab('grades')">📊 成绩管理</button>
+                <button class="tab-btn" onclick="switchTab('feedbacks')">💬 意见反馈</button>
                 <button class="tab-btn" onclick="switchTab('t-settings')">⚙️ 系统设置</button>
             </div>
 
@@ -295,6 +302,21 @@
                                 <tbody id="grade-records-tbody"></tbody>
                             </table>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-feedbacks" class="tab-content">
+                <div class="tab-section">
+                    <h3>学生反馈与意见 <span id="feedback-count" class="count-badge">0条</span>
+                        <button class="action-btn" style="margin-left:10px" onclick="refreshFeedbackTable()">🔄 刷新</button>
+                    </h3>
+                    <p style="color:#6b7280;font-size:0.85em;margin:4px 0 12px">学生在「意见反馈」中提交的问题与建议，可标记为已处理</p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>时间</th><th>班级</th><th>姓名</th><th>类型</th><th>内容</th><th>状态</th></tr></thead>
+                            <tbody id="feedback-tbody"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -520,6 +542,36 @@
                 <div class="setting-row"><label>音效反馈</label><label class="switch"><input type="checkbox" id="setting-sound" checked><span class="slider"></span></label></div>
                 <div class="setting-row"><label>按键提示</label><label class="switch"><input type="checkbox" id="setting-guide" checked><span class="slider"></span></label></div>
                 <div class="setting-row"><label>虚拟键盘</label><label class="switch"><input type="checkbox" id="setting-keyboard" checked><span class="slider"></span></label></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="feedback-screen" class="screen">
+        <div class="login-form-container" style="max-width:480px">
+            <button class="back-btn" onclick="showScreen('home-screen')">← 返回</button>
+            <h2>💬 意见反馈</h2>
+            <p style="color:#6b7280;font-size:0.9em;margin:-10px 0 22px">告诉老师你遇到的问题，或者希望增加什么功能！</p>
+            <div class="feedback-box">
+                <div class="form-group" style="margin-bottom:16px">
+                    <label>反馈类型</label>
+                    <select id="feedback-category">
+                        <option value="">请选择类型</option>
+                        <option value="bug">🐞 我遇到了问题</option>
+                        <option value="suggestion">💡 我有修改意见</option>
+                        <option value="feature">🚀 希望增加新功能</option>
+                        <option value="other">📝 其他</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom:16px">
+                    <label>我的信息</label>
+                    <input type="text" id="feedback-info" disabled>
+                </div>
+                <div class="form-group" style="margin-bottom:18px">
+                    <label>反馈内容</label>
+                    <textarea id="feedback-content" rows="6" placeholder="请详细描述你遇到的问题或你的想法，至少输入5个字..."></textarea>
+                </div>
+                <button class="login-btn" onclick="submitFeedback()">提 交 反 馈</button>
+                <p id="feedback-msg" class="form-msg"></p>
             </div>
         </div>
     </div>
