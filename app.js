@@ -949,7 +949,7 @@ document.addEventListener('keydown',function(e){
     e.preventDefault();e.stopPropagation();
     if(key==='Backspace'){touchBackspace();return;}
     if(key==='Enter'||key===' '){touchSpaceTap();return;}
-    if(key.length===1&&/[a-zA-Z0-9]/.test(key)){touchKeyTap(key.toLowerCase());return;}
+    if(key.length===1&&/[a-zA-Z0-9]/.test(key)){touchKeyTap(key);return;}
     if(key.length===1&&/[,\.\?!]/.test(key)&&touchState.mode==='sentence'){touchKeyTap(key);return;}
 });
 function playSound(t){try{const a=new(window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=t==='correct'?800:300;g.gain.value=t==='correct'?0.1:0.15;o.start();o.stop(a.currentTime+0.1);}catch(e){}}
@@ -1231,7 +1231,7 @@ const englishWordGrades={
         {name:'快乐运动',words:[{en:'running',cn:'跑步'},{en:'jumping',cn:'跳跃'},{en:'football',cn:'足球'},{en:'basketball',cn:'篮球'},{en:'tennis',cn:'网球'},{en:'volleyball',cn:'排球'},{en:'skiing',cn:'滑雪'},{en:'riding',cn:'骑行'},{en:'skating',cn:'滑冰'},{en:'sports',cn:'运动'}]}
     ]}
 };
-let touchState={mode:null,items:[],index:0,score:0,total:0,correct:0,typed:'',shiftOn:false,wordGrade:'g3',wordLevel:1};
+let touchState={mode:null,items:[],index:0,score:0,total:0,correct:0,typed:'',shiftOn:false,capsOn:false,wordGrade:'g3',wordLevel:1};
 
 const englishSentenceGrades={
     g3:{name:'三年级',icon:'🌱',sentences:[
@@ -1275,7 +1275,7 @@ const englishSentenceGrades={
 function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 
 function startTouchPractice(mode){
-    touchState.mode=mode;touchState.score=0;touchState.total=0;touchState.correct=0;touchState.typed='';touchState.shiftOn=false;
+    touchState.mode=mode;touchState.score=0;touchState.total=0;touchState.correct=0;touchState.typed='';touchState.shiftOn=false;touchState.capsOn=false;updateKeyboardCase();
     if(mode==='letter'){
         touchState.items=shuffleArray([...'abcdefghijklmnopqrstuvwxyz']);
         document.getElementById('touch-mode-title').textContent='🔤 字母定位';
@@ -1320,7 +1320,7 @@ function chooseWordLevel(level){
     const lv=grade.levels[level-1];
     touchState.wordLevel=level;
     touchState.items=shuffleArray([...lv.words]);
-    touchState.index=0;touchState.score=0;touchState.total=0;touchState.correct=0;touchState.typed='';touchState.shiftOn=false;
+    touchState.index=0;touchState.score=0;touchState.total=0;touchState.correct=0;touchState.typed='';touchState.shiftOn=false;touchState.capsOn=false;updateKeyboardCase();
     document.getElementById('touch-mode-title').textContent=grade.icon+' 英文单词 · '+grade.name+'第'+level+'关';
     document.getElementById('touch-letter-area').style.display='none';
     document.getElementById('touch-pinyin-area').style.display='none';
@@ -1335,7 +1335,7 @@ function chooseSentenceGrade(grade){
     document.getElementById('sentence-grade-modal').classList.remove('active');
     const g=englishSentenceGrades[grade];
     touchState.items=shuffleArray([...g.sentences]);
-    touchState.index=0;touchState.score=0;touchState.total=0;touchState.correct=0;touchState.typed='';touchState.shiftOn=false;
+    touchState.index=0;touchState.score=0;touchState.total=0;touchState.correct=0;touchState.typed='';touchState.shiftOn=false;touchState.capsOn=false;updateKeyboardCase();
     document.getElementById('touch-mode-title').textContent=g.icon+' 英文短句 · '+g.name;
     document.getElementById('touch-letter-area').style.display='none';
     document.getElementById('touch-pinyin-area').style.display='none';
@@ -1384,6 +1384,7 @@ function showTouchTarget(){
     if(touchState.mode==='sentence'){wt.classList.add('touch-sentence-target');}else{wt.classList.remove('touch-sentence-target');}
     document.getElementById('touch-score').textContent=touchState.score+'分';
     resetTouchKeys();
+    updateKeyboardCase();
 }
 let touchSpeechTimer=null;
 let touchSpeechOn=false;
@@ -1446,7 +1447,8 @@ function startTouchSpeech(){
     stopTouchSpeech();
     touchSpeechOn=true;
     speakTouchWord(true);
-    touchSpeechTimer=setInterval(()=>speakTouchWord(),2000);
+    const gap=touchState.mode==='sentence'?3000:2000;
+    touchSpeechTimer=setInterval(()=>speakTouchWord(),gap);
 }
 function replayTouchWord(){
     if((touchState.mode!=='word'&&touchState.mode!=='sentence')||GS.currentScreen!=='touch-play-screen')return;
@@ -1508,10 +1510,17 @@ window.addEventListener('resize',function(){if(landscapeOn)applyLandscapeCSS();}
 function touchKeyTap(key){
     if(touchState.index>=touchState.items.length)return;
     touchState.total++;
+    let letter=key;
+    if(/^[a-zA-Z]$/.test(key)){
+        const physicalUpper=/[A-Z]/.test(key);
+        const wantUpper=physicalUpper||touchState.capsOn||touchState.shiftOn;
+        letter=wantUpper?key.toUpperCase():key.toLowerCase();
+        if(touchState.shiftOn&&!touchState.capsOn&&!physicalUpper){touchState.shiftOn=false;updateKeyboardCase();}
+    }
     if(touchState.mode==='letter'){
         const target=touchState.items[touchState.index];
-        const btn=document.querySelector('.tk-key[data-key="'+key+'"]');
-        if(key===target){
+        const btn=document.querySelector('.tk-key[data-key="'+key.toLowerCase()+'"]');
+        if(letter.toLowerCase()===target){
             touchState.correct++;touchState.score+=10;playSound('correct');
             if(btn){btn.className='tk-key tk-correct';}
             setTimeout(()=>{touchState.index++;showTouchTarget();},300);
@@ -1522,9 +1531,9 @@ function touchKeyTap(key){
     }else if(touchState.mode==='word'||touchState.mode==='sentence'){
         const word=touchState.items[touchState.index];
         const expectedLetter=word.en[touchState.typed.length];
-        const btn=document.querySelector('.tk-key[data-key="'+key+'"]');
-        if(key===expectedLetter){
-            touchState.correct++;touchState.typed+=key;playSound('correct');
+        const btn=document.querySelector('.tk-key[data-key="'+key.toLowerCase()+'"]');
+        if(letter===expectedLetter){
+            touchState.correct++;touchState.typed+=letter;playSound('correct');
             if(btn){btn.className='tk-key tk-correct';setTimeout(()=>btn.className='tk-key',150);}
             document.getElementById('touch-word-typed').textContent=touchState.typed;
             if(touchState.typed===word.en){
@@ -1540,9 +1549,9 @@ function touchKeyTap(key){
     }else{
         const word=touchState.items[touchState.index];
         const expectedLetter=word.pinyin[touchState.typed.length];
-        const btn=document.querySelector('.tk-key[data-key="'+key+'"]');
-        if(key===expectedLetter){
-            touchState.correct++;touchState.typed+=key;playSound('correct');
+        const btn=document.querySelector('.tk-key[data-key="'+key.toLowerCase()+'"]');
+        if(letter.toLowerCase()===expectedLetter){
+            touchState.correct++;touchState.typed+=expectedLetter;playSound('correct');
             if(btn){btn.className='tk-key tk-correct';setTimeout(()=>btn.className='tk-key',150);}
             document.getElementById('touch-pinyin-typed').textContent=touchState.typed;
             if(touchState.typed===word.pinyin){
@@ -1572,9 +1581,22 @@ function touchPunctTap(p){
 
 function touchShiftTap(){
     touchState.shiftOn=!touchState.shiftOn;
-    const btn=document.getElementById('touch-shift-btn');
-    btn.style.background=touchState.shiftOn?'#6366f1':'white';
-    btn.style.color=touchState.shiftOn?'white':'#1f2937';
+    updateKeyboardCase();
+}
+function touchCapslockTap(){
+    touchState.capsOn=!touchState.capsOn;
+    updateKeyboardCase();
+}
+function updateKeyboardCase(){
+    const up=touchState.capsOn||touchState.shiftOn;
+    document.querySelectorAll('.tk-key[data-key]').forEach(k=>{
+        const d=k.dataset.key;
+        if(/^[a-zA-Z]$/.test(d)){k.textContent=up?d.toUpperCase():d.toLowerCase();}
+    });
+    const cb=document.getElementById('touch-capslock-btn');
+    if(cb){cb.style.background=touchState.capsOn?'#6366f1':'white';cb.style.color=touchState.capsOn?'white':'#1f2937';}
+    const sb=document.getElementById('touch-shift-btn');
+    if(sb){sb.style.background=touchState.shiftOn?'#6366f1':'white';sb.style.color=touchState.shiftOn?'white':'#1f2937';}
 }
 
 function touchSpaceTap(){

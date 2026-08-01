@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>潘庄小学打字练习乐园</title>
-    <link rel="stylesheet" href="style.css?v=20260801">
+    <link rel="stylesheet" href="style.css?v=20260802">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -678,6 +678,7 @@
                     <button class="tk-key tk-key-wide" onclick="touchBackspace()">⌫</button>
                 </div>
                 <div class="tk-row tk-row-punc">
+                    <button class="tk-key tk-key-punc tk-capslock" id="touch-capslock-btn" onclick="touchCapslockTap()" title="大小写切换">大写</button>
                     <button class="tk-key tk-key-punc" data-key="," onclick="touchPunctTap(',')">,</button>
                     <button class="tk-key tk-key-punc" data-key="." onclick="touchPunctTap('.')">.</button>
                     <button class="tk-key tk-key-punc" data-key="?" onclick="touchPunctTap('?')">?</button>
@@ -780,6 +781,6 @@
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
-    <script src="app.js?v=20260801"></script>
+    <script src="app.js?v=20260802"></script>
 </body>
 </html>
