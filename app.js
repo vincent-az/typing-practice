@@ -1447,7 +1447,7 @@ function startTouchSpeech(){
     stopTouchSpeech();
     touchSpeechOn=true;
     speakTouchWord(true);
-    const gap=touchState.mode==='sentence'?3000:2000;
+    const gap=touchState.mode==='sentence'?5000:2000;
     touchSpeechTimer=setInterval(()=>speakTouchWord(),gap);
 }
 function replayTouchWord(){
