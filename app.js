@@ -950,6 +950,7 @@ document.addEventListener('keydown',function(e){
     if(key==='Backspace'){touchBackspace();return;}
     if(key==='Enter'||key===' '){touchSpaceTap();return;}
     if(key.length===1&&/[a-zA-Z0-9]/.test(key)){touchKeyTap(key.toLowerCase());return;}
+    if(key.length===1&&/[,\.\?!]/.test(key)&&touchState.mode==='sentence'){touchKeyTap(key);return;}
 });
 function playSound(t){try{const a=new(window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=t==='correct'?800:300;g.gain.value=t==='correct'?0.1:0.15;o.start();o.stop(a.currentTime+0.1);}catch(e){}}
 function markCorrect(i){const c=document.querySelector('.char[data-index="'+i+'"]');if(c){c.classList.remove('current','pending');c.classList.add('correct');}}
@@ -1232,6 +1233,45 @@ const englishWordGrades={
 };
 let touchState={mode:null,items:[],index:0,score:0,total:0,correct:0,typed:'',shiftOn:false,wordGrade:'g3',wordLevel:1};
 
+const englishSentenceGrades={
+    g3:{name:'三年级',icon:'🌱',sentences:[
+        {en:'Hello, I am Mike.',cn:'你好，我是迈克。'},
+        {en:'What is your name?',cn:'你叫什么名字？'},
+        {en:'Nice to meet you.',cn:'很高兴见到你。'},
+        {en:'I have a red pen.',cn:'我有一支红色的钢笔。'},
+        {en:'How old are you?',cn:'你多大了？'},
+        {en:'I like apples.',cn:'我喜欢苹果。'},
+        {en:'Look at my cat.',cn:'看看我的猫。'},
+        {en:'Good morning, Miss White.',cn:'早上好，怀特老师。'},
+        {en:'Let us go to school.',cn:'让我们去上学吧。'},
+        {en:'This is my bag.',cn:'这是我的书包。'}
+    ]},
+    g4:{name:'四年级',icon:'🌿',sentences:[
+        {en:'My schoolbag is heavy.',cn:'我的书包很重。'},
+        {en:'She is my best friend.',cn:'她是我最好的朋友。'},
+        {en:'Welcome to my home.',cn:'欢迎来我家。'},
+        {en:'Dinner is ready.',cn:'晚饭准备好了。'},
+        {en:'What colour is your desk?',cn:'你的桌子是什么颜色？'},
+        {en:'Let me clean the room.',cn:'让我来打扫房间。'},
+        {en:'My uncle is a doctor.',cn:'我叔叔是一名医生。'},
+        {en:'I like milk and eggs.',cn:'我喜欢牛奶和鸡蛋。'},
+        {en:'Where is the classroom?',cn:'教室在哪里？'},
+        {en:'This is a big picture.',cn:'这是一幅很大的图画。'}
+    ]},
+    g5:{name:'五年级',icon:'🌳',sentences:[
+        {en:'I have English class today.',cn:'我今天有英语课。'},
+        {en:'What day is it today?',cn:'今天是星期几？'},
+        {en:'We play sports after school.',cn:'放学后我们做运动。'},
+        {en:'The weather is sunny today.',cn:'今天天气晴朗。'},
+        {en:'There is a big tree in the park.',cn:'公园里有一棵大树。'},
+        {en:'Do you like fish?',cn:'你喜欢鱼吗？'},
+        {en:'My brother likes drawing.',cn:'我哥哥喜欢画画。'},
+        {en:'It is spring now.',cn:'现在是春天。'},
+        {en:'What do you do on Sundays?',cn:'你星期天做什么？'},
+        {en:'I am reading a story book.',cn:'我正在读一本故事书。'}
+    ]}
+};
+
 function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 
 function startTouchPractice(mode){
@@ -1244,6 +1284,9 @@ function startTouchPractice(mode){
         document.getElementById('touch-word-area').style.display='none';
     }else if(mode==='word'){
         document.getElementById('word-grade-modal').classList.add('active');
+        return;
+    }else if(mode==='sentence'){
+        document.getElementById('sentence-grade-modal').classList.add('active');
         return;
     }else{
         touchState.items=shuffleArray([...pinyinWords]);
@@ -1287,6 +1330,21 @@ function chooseWordLevel(level){
     showTouchTarget();
     try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('landscape').catch(function(){});}catch(e){}
 }
+function chooseSentenceGrade(grade){
+    touchState.wordGrade=grade;
+    document.getElementById('sentence-grade-modal').classList.remove('active');
+    const g=englishSentenceGrades[grade];
+    touchState.items=shuffleArray([...g.sentences]);
+    touchState.index=0;touchState.score=0;touchState.total=0;touchState.correct=0;touchState.typed='';touchState.shiftOn=false;
+    document.getElementById('touch-mode-title').textContent=g.icon+' 英文短句 · '+g.name;
+    document.getElementById('touch-letter-area').style.display='none';
+    document.getElementById('touch-pinyin-area').style.display='none';
+    document.getElementById('touch-word-area').style.display='block';
+    document.getElementById('touch-next-level-btn').style.display='none';
+    showScreen('touch-play-screen');
+    showTouchTarget();
+    try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('landscape').catch(function(){});}catch(e){}
+}
 
 function showTouchTarget(){
     if(touchState.index>=touchState.items.length){stopTouchSpeech();showTouchResult();return;}
@@ -1305,6 +1363,15 @@ function showTouchTarget(){
         document.getElementById('touch-word-typed').textContent='';
         document.getElementById('touch-word-progress').textContent='第 '+(touchState.index+1)+' / '+touchState.items.length+' 个单词';
         startTouchSpeech();
+    }else if(touchState.mode==='sentence'){
+        const grade=englishSentenceGrades[touchState.wordGrade];
+        const s=touchState.items[touchState.index];
+        document.getElementById('touch-word-level').textContent=grade.icon+' '+grade.name+' · 英文短句';
+        document.getElementById('touch-word-target').textContent=s.en;
+        document.getElementById('touch-word-cn').textContent='中文意思：'+s.cn;
+        document.getElementById('touch-word-typed').textContent='';
+        document.getElementById('touch-word-progress').textContent='第 '+(touchState.index+1)+' / '+touchState.items.length+' 个句子';
+        startTouchSpeech();
     }else{
         stopTouchSpeech();
         const word=touchState.items[touchState.index];
@@ -1313,6 +1380,8 @@ function showTouchTarget(){
         document.getElementById('touch-pinyin-typed').textContent='';
         document.getElementById('touch-pinyin-progress').textContent='第 '+(touchState.index+1)+' / '+touchState.items.length+' 个汉字';
     }
+    const wt=document.getElementById('touch-word-target');
+    if(touchState.mode==='sentence'){wt.classList.add('touch-sentence-target');}else{wt.classList.remove('touch-sentence-target');}
     document.getElementById('touch-score').textContent=touchState.score+'分';
     resetTouchKeys();
 }
@@ -1350,7 +1419,7 @@ function buildTouchUtterance(text){
     return u;
 }
 function speakTouchWord(force){
-    if(touchState.mode!=='word'||GS.currentScreen!=='touch-play-screen'){stopTouchSpeech();return;}
+    if((touchState.mode!=='word'&&touchState.mode!=='sentence')||GS.currentScreen!=='touch-play-screen'){stopTouchSpeech();return;}
     const w=touchState.items[touchState.index];
     if(!w||!w.en)return;
     if(!force&&touchState.typed===w.en)return;
@@ -1380,7 +1449,7 @@ function startTouchSpeech(){
     touchSpeechTimer=setInterval(()=>speakTouchWord(),2000);
 }
 function replayTouchWord(){
-    if(touchState.mode!=='word'||GS.currentScreen!=='touch-play-screen')return;
+    if((touchState.mode!=='word'&&touchState.mode!=='sentence')||GS.currentScreen!=='touch-play-screen')return;
     try{
         const a=getTouchAudio();
         a.src='https://dict.youdao.com/dictvoice?audio='+encodeURIComponent(touchState.items[touchState.index].en)+'&type=1';
@@ -1450,7 +1519,7 @@ function touchKeyTap(key){
             touchState.score=Math.max(0,touchState.score-2);playSound('error');
             if(btn){btn.className='tk-key tk-error';setTimeout(()=>btn.className='tk-key',300);}
         }
-    }else if(touchState.mode==='word'){
+    }else if(touchState.mode==='word'||touchState.mode==='sentence'){
         const word=touchState.items[touchState.index];
         const expectedLetter=word.en[touchState.typed.length];
         const btn=document.querySelector('.tk-key[data-key="'+key+'"]');
@@ -1490,10 +1559,15 @@ function touchKeyTap(key){
 }
 
 function touchBackspace(){
-    if((touchState.mode!=='pinyin'&&touchState.mode!=='word')||touchState.typed.length===0)return;
+    if((touchState.mode!=='pinyin'&&touchState.mode!=='word'&&touchState.mode!=='sentence')||touchState.typed.length===0)return;
     touchState.typed=touchState.typed.slice(0,-1);
-    const el=touchState.mode==='word'?document.getElementById('touch-word-typed'):document.getElementById('touch-pinyin-typed');
+    const el=(touchState.mode==='word'||touchState.mode==='sentence')?document.getElementById('touch-word-typed'):document.getElementById('touch-pinyin-typed');
     el.textContent=touchState.typed;
+}
+
+function touchPunctTap(p){
+    if(touchState.mode!=='sentence')return;
+    touchKeyTap(p);
 }
 
 function touchShiftTap(){
@@ -1504,6 +1578,10 @@ function touchShiftTap(){
 }
 
 function touchSpaceTap(){
+    if(touchState.mode==='sentence'){
+        touchKeyTap(' ');
+        return;
+    }
     if(touchState.mode==='pinyin'){
         const word=touchState.items[touchState.index];
         if(touchState.typed===word.pinyin){
@@ -1525,9 +1603,11 @@ function touchSpaceTap(){
 }
 
 function showTouchResult(){
+    exitLandscape();
     const acc=touchState.total>0?Math.round((touchState.correct/touchState.total)*100):0;
     const stars=acc>=95?3:acc>=80?2:1;
     const isWord=touchState.mode==='word';
+    const isSentence=touchState.mode==='sentence';
     if(isWord){
         const grade=englishWordGrades[touchState.wordGrade];
         const levelName=grade.levels[touchState.wordLevel-1].name;
@@ -1542,6 +1622,11 @@ function showTouchResult(){
             document.getElementById('touch-result-icon').textContent='🏆';
             document.getElementById('touch-result-title').textContent='恭喜通关'+grade.name+'全部关卡！';
         }
+    }else if(isSentence){
+        const grade=englishSentenceGrades[touchState.wordGrade];
+        document.getElementById('touch-result-icon').textContent=stars===3?'🎉':stars===2?'👏':'💪';
+        document.getElementById('touch-result-title').textContent=grade.name+' 英文短句练习完成！';
+        document.getElementById('touch-next-level-btn').style.display='none';
     }else{
         const msgs=['继续加油！','很棒！','太厉害了！'];
         document.getElementById('touch-result-icon').textContent=stars===3?'🎉':stars===2?'👏':'💪';
@@ -1567,6 +1652,8 @@ function restartTouchPractice(){
     document.getElementById('touch-result-modal').classList.remove('active');
     if(touchState.mode==='word'){
         chooseWordLevel(touchState.wordLevel);
+    }else if(touchState.mode==='sentence'){
+        chooseSentenceGrade(touchState.wordGrade);
     }else{
         startTouchPractice(touchState.mode);
     }

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>潘庄小学打字练习乐园</title>
-    <link rel="stylesheet" href="style.css?v=20260731">
+    <link rel="stylesheet" href="style.css?v=20260801">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -584,7 +584,7 @@
                 <h2>📱 触屏练习</h2>
                 <div class="header-space"></div>
             </div>
-            <p class="touch-mode-desc">专为手机和平板设计，提供字母与英文单词练习，进入练习后自动切换横屏显示</p>
+            <p class="touch-mode-desc">专为手机和平板设计，提供字母、英文单词与英文短句练习，进入练习后自动切换横屏显示</p>
             <div class="touch-orientation-tip">🔄 进入练习后自动横屏，可按顶部的「📱 竖屏」按钮随时切回竖屏</div>
             <div class="touch-mode-grid">
                 <div class="touch-mode-card" onclick="startTouchPractice('letter')">
@@ -599,7 +599,14 @@
                         <svg viewBox="0 0 80 80" width="70" height="70"><rect x="5" y="20" width="70" height="50" rx="6" fill="#dcfce7"/><rect x="10" y="25" width="60" height="35" rx="3" fill="white"/><text x="40" y="48" text-anchor="middle" font-size="18" fill="#166534" font-weight="bold">ABC</text></svg>
                     </div>
                     <h3>英文单词</h3>
-                    <p>10关×10个单词<br>小学三年级水平</p>
+                    <p>10关×10个单词<br>三/四/五年级可选</p>
+                </div>
+                <div class="touch-mode-card" onclick="startTouchPractice('sentence')">
+                    <div class="touch-mode-icon-big">
+                        <svg viewBox="0 0 80 80" width="70" height="70"><rect x="8" y="14" width="64" height="46" rx="12" fill="#e0f2fe"/><text x="40" y="46" text-anchor="middle" font-size="18" fill="#0369a1" font-weight="bold">EN</text><path d="M20 60 l8 10 12-10" fill="#e0f2fe"/></svg>
+                    </div>
+                    <h3>英文短句</h3>
+                    <p>一句话练习·有中文意思<br>自动朗读·分年级</p>
                 </div>
             </div>
         </div>
@@ -670,6 +677,12 @@
                     <button class="tk-key" data-key="m" onclick="touchKeyTap('m')">M</button>
                     <button class="tk-key tk-key-wide" onclick="touchBackspace()">⌫</button>
                 </div>
+                <div class="tk-row tk-row-punc">
+                    <button class="tk-key tk-key-punc" data-key="," onclick="touchPunctTap(',')">,</button>
+                    <button class="tk-key tk-key-punc" data-key="." onclick="touchPunctTap('.')">.</button>
+                    <button class="tk-key tk-key-punc" data-key="?" onclick="touchPunctTap('?')">?</button>
+                    <button class="tk-key tk-key-punc" data-key="!" onclick="touchPunctTap('!')">!</button>
+                </div>
                 <div class="tk-row">
                     <button class="tk-key tk-key-space" onclick="touchSpaceTap()">空格</button>
                 </div>
@@ -714,6 +727,19 @@
         </div>
     </div>
 
+    <div id="sentence-grade-modal" class="modal">
+        <div class="modal-content">
+            <h2>💬 英文短句练习</h2>
+            <p class="pause-box-p" style="color:#6b7280;margin:10px 0 20px">请选择年级（小学人教版教材），每轮练习 10 个短句，自动朗读并显示中文意思</p>
+            <div class="grade-grid">
+                <button class="grade-btn grade-g3" onclick="chooseSentenceGrade('g3')">🌱<span class="grade-name">三年级</span><span class="grade-desc">简单短句</span></button>
+                <button class="grade-btn grade-g4" onclick="chooseSentenceGrade('g4')">🌿<span class="grade-name">四年级</span><span class="grade-desc">日常短句</span></button>
+                <button class="grade-btn grade-g5" onclick="chooseSentenceGrade('g5')">🌳<span class="grade-name">五年级</span><span class="grade-desc">进阶短句</span></button>
+            </div>
+            <button class="modal-btn secondary" onclick="document.getElementById('sentence-grade-modal').classList.remove('active')">取消</button>
+        </div>
+    </div>
+
     <div id="pause-modal" class="modal">
         <div class="modal-content pause-box">
             <h2>⏸ 练习已暂停</h2>
@@ -754,6 +780,6 @@
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
-    <script src="app.js?v=20260731"></script>
+    <script src="app.js?v=20260801"></script>
 </body>
 </html>

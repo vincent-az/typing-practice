@@ -316,6 +316,9 @@ input:checked+.slider:before{transform:translateX(22px)}
 .tk-key.tk-error{background:#ef4444;color:white;animation:shake 0.3s ease}
 .tk-key-wide{max-width:65px;font-size:0.95em}
 .tk-key-space{max-width:220px;font-size:0.88em;color:#6b7280}
+.tk-row-punc{gap:6px;margin-bottom:5px}
+.tk-key-punc{height:36px;max-width:52px;font-size:0.95em}
+.touch-sentence-target{font-size:2em !important;line-height:1.3;letter-spacing:1px;word-break:break-word;padding:0 4px}
 
 /* ====== 模态框 ====== */
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;z-index:1000;backdrop-filter:blur(4px)}
@@ -458,4 +461,7 @@ body.landscape-rotated .tk-key{
 }
 body.landscape-rotated .tk-key-wide{max-width:min(11vh,80px);font-size:0.9em}
 body.landscape-rotated .tk-key-space{max-width:min(34vh,240px);font-size:0.9em}
+body.landscape-rotated .tk-row-punc{flex:0 0 auto;margin-bottom:3px}
+body.landscape-rotated .tk-key-punc{height:min(7vw,34px);max-width:min(9vh,64px);font-size:min(2.8vh,1em)}
+body.landscape-rotated .touch-sentence-target{font-size:min(5vh,2.2em) !important;line-height:1.3}
 @media(min-width:1024px){.touch-landscape-btn{display:none}}
