@@ -57,6 +57,18 @@ CREATE TABLE settings (
   key TEXT PRIMARY KEY,
   value TEXT NOT NULL
 );
+-- 点赞表（学生/教师给完成的练习点赞）
+CREATE TABLE likes (
+  id SERIAL PRIMARY KEY,
+  grade_class TEXT NOT NULL,
+  grade_name TEXT NOT NULL,
+  grade_date TEXT NOT NULL,
+  type TEXT NOT NULL,
+  liker_class TEXT NOT NULL,
+  liker_name TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE (grade_class, grade_name, grade_date, type, liker_class, liker_name)
+);
 -- 初始设置
 INSERT INTO settings (key, value) VALUES ('teacherPassword', 'pzxxzzw'), ('defaultPassword', 'pzxx');
 -- 行级安全
@@ -68,9 +80,11 @@ ALTER TABLE grades ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "anon_all" ON grades FOR ALL USING (true) WITH CHECK (true);
 ALTER TABLE settings ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "anon_all" ON settings FOR ALL USING (true) WITH CHECK (true);
+ALTER TABLE likes ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "anon_all" ON likes FOR ALL USING (true) WITH CHECK (true);
 ```
 
-4. 执行成功后，左侧菜单点 **Table Editor** 应能看到 4 张表
+4. 执行成功后，左侧菜单点 **Table Editor** 应能看到 5 张表
 
 ## 第三步：验证
 

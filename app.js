@@ -8,8 +8,16 @@ const practiceData={
 'punctuation-cn':{easy:['春天来了。花儿开了。小鸟在唱歌。','你好吗？我很好。谢谢！','我喜欢吃苹果，你喜欢吃什么呢？','今天是星期一。明天是星期二。','小明、小红和小李是好朋友。','我家有一只小猫，它很可爱。'],medium:['图书馆里有很多书：故事书、科学书、漫画书。你最喜欢哪种？','今天天气真好！我们去公园玩吧。好不好？好！','老师说："明天要带课本。"同学们都记住了。','中国的首都是北京；那里有很多名胜古迹。','这是谁的书？是我的。真的吗？真的！','妈妈问："你作业写完了吗？"我回答："写完了。"'],hard:['中国的首都是北京。那里有很多名胜古迹：故宫、长城、天坛……','"你长大了想做什么？"妈妈问。"我想当科学家！"我坚定地回答。','科技改变了我们的生活；互联网让我们可以学习更多知识。同学们，加油！','小明说："我今天很开心！"小红问："为什么？"小明回答："因为我学会了打字！"','春天的花开了：桃花、杏花、梨花……五颜六色，美丽极了！','老师对我们说："一寸光阴一寸金，寸金难买寸光阴。要珍惜时间！"']},
 'sentences':{easy:['Hello! I\'m Miss White. What\'s your name? My name\'s Mike.','Good morning! How are you? I\'m fine, thank you.','Nice to meet you. Nice to meet you, too.','This is my friend, Amy. She is a girl.','I have a ruler. I have an eraser, too.','Look at me! This is my face. This is my nose.','What\'s this? It\'s a duck. What\'s that? It\'s a bear.','I\'d like some juice, please. Here you are. Thanks!','Can I have some bread, please? Sure, here you are.','How old are you? I\'m six years old. Happy birthday!','How many plates? Five plates. Here you are.','Stand up, please. Sit down, please. Let\'s go to school!'],medium:['We have a new classroom. Let\'s go and see.','Let\'s clean the classroom. Let me clean the windows.','Where is my seat? It\'s near the door. It\'s near the window.','What\'s in your schoolbag? An English book, a maths book and three storybooks.','I have a new schoolbag. It\'s black and white. It\'s very nice.','My friend is tall and strong. He has a green bag.','Who is he? He\'s my brother. He is a good boy.','I have long hair. My friend has short hair. She is quiet.','Where are my keys? They\'re on the table. They\'re near the phone.','Is she in the living room? Yes, she is. No, she isn\'t.','What would you like for dinner? I\'d like some beef and vegetables.','Dinner\'s ready! Help yourself. Thanks, Mum. I can use chopsticks.','How many people are there in your family? Five. My family has six people.','Is this your uncle? Yes, it is. What\'s your aunt\'s job? She\'s a nurse.','My mother is a teacher. My father is a driver. They are nice.'],hard:['It\'s time for lunch. Let\'s have some chicken and rice.','What time is it? It\'s six o\'clock. It\'s time to get up.','What\'s the weather like in Beijing? It\'s rainy. It\'s cloudy and cold.','Can I go outside now? Yes, you can. It\'s warm and sunny.','Look at the vegetables! They\'re so big and fresh.','Are these tomatoes? Yes, they are. What are those? They\'re horses.','Whose coat is this? It\'s mine. Are these yours? No, they aren\'t.','Can I help you? Yes. These shoes are nice. Can I try them on?','How much is this skirt? It\'s ninety yuan. It\'s very pretty.','I like that red dress. It\'s beautiful and cheap.','Is it cold today? Yes, it is. It\'s snowy outside. Put on your hat.','What\'s your favourite food? I like noodles. They\'re delicious.']},
 
-'articles':{easy:'春天来了。花儿开了。小鸟在树上唱歌。小朋友们在公园里玩耍。春天真美丽！我喜欢春天。春天里有很多花朵，有红色的、黄色的、粉色的。蝴蝶在花丛中飞来飞去。',medium:'图书馆里有很多书。我最喜欢看故事书。每天放学后，我都会去图书馆看书。读书可以学到很多知识。高尔基说过："书籍是人类进步的阶梯。"我们要多读书、读好书。',hard:'科技改变了我们的生活。通过互联网，我们可以学习到很多知识。同学们要好好学习，将来为祖国做贡献。打字是一项非常重要的技能。在信息时代，学会快速准确地打字，可以帮助我们更好地学习和工作。坚持练习，你一定能成为打字高手！'}
 };
+
+/* 人教版小学三年级语文课文节选 · 5篇中文短文（每篇约300字） */
+const articleList=[
+    {title:'《秋天的雨》节选',icon:'🍂',content:'秋天的雨，是一把钥匙。它带着清凉和温柔，趁你没留意，把秋天的大门打开了。秋天的雨，有一盒五彩缤纷的颜料。你看，它把黄色给了银杏树，黄黄的叶子像一把把小扇子，扇哪扇哪，扇走了夏天的炎热。它把红色给了枫树，红红的枫叶像一枚枚邮票，飘哇飘哇，邮来了秋天的凉爽。金黄色是给田野的，田野像金色的海洋。橙红色是给果树的，橘子、柿子你挤我碰，争着要人们去摘呢！菊花仙子得到的颜色就更多了，紫红的、淡黄的、雪白的……美丽的菊花在秋雨里频频点头。秋天的雨，藏着非常好闻的气味。梨香香的，菠萝甜甜的，还有苹果、橘子，好多好多香甜的气味，都躲在小雨滴里呢！小朋友的脚，常被那香味勾住。秋天的雨，还吹起了金色的小喇叭，告诉大家：冬天快要来了。'},
+    {title:'《美丽的小兴安岭》节选',icon:'🌲',content:'我国东北的小兴安岭，有数不清的红松、白桦、栎树……几百里连成一片，就像绿色的海洋。春天，树木抽出新的枝条，长出嫩绿的叶子。山上的积雪融化了，雪水汇成小溪，淙淙地流着。溪边的小草长得绿油油的，山上的野花也开了，红的、白的、黄的、紫的，真像个美丽的大花坛。夏天，树木长得葱葱茏茏，密密层层的枝叶把森林封得严严实实的，挡住了人们的视线，遮住了蓝蓝的天空。早晨，雾从山谷里升起来，整个森林浸在乳白色的浓雾里。秋天，白桦和栎树的叶子变黄了，松柏显得更苍翠了。秋风吹来，落叶在林间飞舞。冬天，雪花在空中飞舞，树上积满了白雪。小兴安岭一年四季景色诱人，是一座美丽的大花园，也是一座巨大的宝库。'},
+    {title:'《金色的草地》节选',icon:'🌼',content:'我们住在乡下，窗前是一大片草地。草地上长满了蒲公英。当蒲公英盛开的时候，这片草地就变成金色的了。我和弟弟常常在草地上玩耍。有一天，我起得很早去钓鱼，发现草地并不是金色的，而是绿色的。中午回家的时候，我看见草地是金色的。傍晚的时候，草地又变绿了。这是为什么呢？我来到草地上，仔细观察，发现蒲公英的花瓣是合拢的。原来，蒲公英的花就像我们的手掌，可以张开、合上。花朵张开时，它是金色的，草地也是金色的；花朵合拢时，金色的花瓣被包住了，草地就变成绿色的了。有一天，弟弟也发现了这个秘密。我们并排坐在草地上，注视着蒲公英，一起看它一张一合，有趣极了。从那时起，蒲公英成了我们最喜爱的一种花。'},
+    {title:'《富饶的西沙群岛》节选',icon:'🏝️',content:'西沙群岛位于南海的西北部，是我国海南省三沙市的一部分。那里风景优美，物产丰富，是个可爱的地方。西沙群岛一带海水五光十色，瑰丽无比：有深蓝的、淡青的、浅绿的、杏黄的。一块块，一条条，相互交错着。海底的岩石上长着各种各样的珊瑚，有的像绽开的花朵，有的像分枝的鹿角。海参到处都是，在海底懒洋洋地蠕动。大龙虾全身披甲，划过来，划过去，样子挺威武。鱼成群结队地在珊瑚丛中穿来穿去，好看极了。看，那里的鱼多得数不清：有的全身布满彩色的条纹，有的头上长着一簇红缨，还有的游动的时候像羽毛一样轻。西沙群岛也是鸟的天下。岛上有一片片茂密的树林，树林里栖息着各种海鸟。富饶的西沙群岛，是我们祖祖辈辈生活的地方。'},
+    {title:'《大自然的声音》节选',icon:'🎶',content:'大自然有许多美妙的声音。风，是大自然的音乐家。他会在森林里演奏他的手风琴。当微风拂过，那声音轻轻柔柔的，好像呢喃细语，让人感受到大自然的温柔；当狂风吹起，整座森林都激动起来，合奏出一首雄伟的乐曲。水，也是大自然的音乐家。下雨的时候，他喜欢玩打击乐器。小雨滴敲敲打打，一场热闹的音乐会便开始了。滴滴答答……叮叮咚咚……所有的树林，树林里的每片树叶；所有的房子，房子的屋顶和窗户，都发出不同的声音。动物是大自然的歌手。走在公园里，听听树上叽叽喳喳的鸟叫；坐在树下，听听唧哩哩唧哩哩的虫鸣。大自然的声音多么美妙呀！是啊，只要用心去听，清晨的鸟鸣、夜晚的虫唱、雨后的蛙声，大自然处处都有美妙的声音，等着我们去发现呢！'}
+];
 
 const fingerMap={'q':'left-pinky','a':'left-pinky','z':'left-pinky','1':'left-pinky','`':'left-pinky','w':'left-ring','s':'left-ring','x':'left-ring','2':'left-ring','e':'left-middle','d':'left-middle','c':'left-middle','3':'left-middle','r':'left-index','f':'left-index','v':'left-index','4':'left-index','t':'left-index','g':'left-index','b':'left-index','5':'left-index','y':'right-index','h':'right-index','n':'right-index','6':'right-index','u':'right-index','j':'right-index','m':'right-index','7':'right-index','i':'right-middle','k':'right-middle',',':'right-middle','8':'right-middle','o':'right-ring','l':'right-ring','.':'right-ring','9':'right-ring','p':'right-pinky',';':'right-pinky','/':'right-pinky','0':'right-pinky',"'":'right-pinky','[':'right-pinky',']':'right-pinky','-':'right-pinky','=':'right-pinky',' ':'thumb'};
 const fingerNames={'left-pinky':'左手小指','left-ring':'左手无名指','left-middle':'左手中指','left-index':'左手食指','right-index':'右手食指','right-middle':'右手中指','right-ring':'右手无名指','right-pinky':'右手小指','thumb':'拇指'};
@@ -23,6 +31,7 @@ let settingsData={defaultPassword:'pzxx',teacherPassword:'pzxxzzw'};
 let currentUser=null;
 let studentGrades={};
 let feedbacksData=[];
+let likesData={};
 
 /* ====== Supabase 云存储配置 ====== */
 const SUPABASE_URL = 'https://ezbsuywvaimjgbuhrubj.supabase.co';
@@ -84,10 +93,81 @@ async function supabaseLoadFeedbacks() {
     feedbacksData = (data || []).map(f => ({ id: f.id, date: f.created_at, class: f.class, name: f.name, category: f.category, content: f.content, status: f.status||'pending' }));
     return true;
 }
+async function supabaseLoadLikes() {
+    if (!supabaseClient) return true;
+    const { data, error } = await supabaseClient.from('likes').select('*');
+    if (error) {
+        console.error('Supabase加载点赞失败（本地点赞仍可用）:',error);
+        return true;
+    }
+    likesData = {};
+    (data || []).forEach(l => {
+        const k = likeKey(l.grade_class, l.grade_name, l.grade_date, l.type);
+        if (!likesData[k]) likesData[k] = [];
+        likesData[k].push({ class: l.liker_class, name: l.liker_name });
+    });
+    return true;
+}
 async function supabaseUpsertSetting(key, value) {
     if (!supabaseClient) return;
     const {error}=await supabaseClient.from('settings').upsert({ key, value }, { onConflict: 'key' });
     if(error)console.error('Supabase保存设置失败:',key,error);
+}
+
+/* ====== 点赞 ====== */
+function likeKey(cls,name,date,type){return cls+'|'+name+'|'+date+'|'+type;}
+function currentLikerId(){
+    if(currentUser&&currentUser.type==='teacher')return '教师|教师';
+    return currentUser?currentUser.class+'|'+currentUser.name:'';
+}
+function likeCount(cls,name,date,type){
+    const k=likeKey(cls,name,date,type);
+    return (likesData[k]||[]).length;
+}
+function hasLiked(cls,name,date,type){
+    const me=currentLikerId();
+    if(!me)return false;
+    const k=likeKey(cls,name,date,type);
+    return (likesData[k]||[]).some(l=>l.class+'|'+l.name===me);
+}
+function likeButtonHtml(cls,name,date,type){
+    const count=likeCount(cls,name,date,type);
+    const active=hasLiked(cls,name,date,type);
+    const me=currentLikerId();
+    const self=(cls+'|'+name)===me;
+    if(self){
+        return '<span class="like-count" title="自己的练习不可点赞">👍 '+count+'</span>';
+    }
+    return '<button class="like-btn'+(active?' liked':'')+'" onclick="toggleLike(\''+cls.replace(/'/g,"\\'")+'\',\''+name.replace(/'/g,"\\'")+'\',\''+date.replace(/'/g,"\\'")+'\',\''+type.replace(/'/g,"\\'")+'\')" title="'+(active?'取消点赞':'点赞')+'">👍 '+count+'</button>';
+}
+async function toggleLike(cls,name,date,type){
+    if(!currentUser){showToast('请先登录','error');return;}
+    const me=currentUser.type==='teacher'?{class:'教师',name:'教师'}:{class:currentUser.class,name:currentUser.name};
+    const k=likeKey(cls,name,date,type);
+    if(!likesData[k])likesData[k]=[];
+    const idx=likesData[k].findIndex(l=>l.class===me.class&&l.name===me.name);
+    const liked=idx<0;
+    if(liked){likesData[k].push(me);}else{likesData[k].splice(idx,1);}
+    saveSystemData();
+    if(supabaseClient){
+        try{
+            if(liked){
+                const {error}=await supabaseClient.from('likes').insert({grade_class:cls,grade_name:name,grade_date:date,type:type,liker_class:me.class,liker_name:me.name});
+                if(error)console.error('Supabase点赞失败:',error);
+            }else{
+                const {error}=await supabaseClient.from('likes').delete().eq('grade_class',cls).eq('grade_name',name).eq('grade_date',date).eq('type',type).eq('liker_class',me.class).eq('liker_name',me.name);
+                if(error)console.error('Supabase取消点赞失败:',error);
+            }
+        }catch(e){console.error('Supabase点赞同步异常:',e);}
+    }
+    refreshLikeViews();
+}
+function refreshLikeViews(){
+    const dv=document.getElementById('grade-detail-view');
+    const rv=document.getElementById('grade-records-view');
+    if(dv&&dv.style.display==='block')showGradeDetail();
+    if(rv&&rv.style.display==='block')refreshGradeRecords();
+    if(typeof updateClassActivity==='function')updateClassActivity();
 }
 
 let GS={currentScreen:'login-screen',currentPractice:null,currentText:'',currentIndex:0,correctChars:0,totalChars:0,startTime:null,timerInterval:null,timeLimit:180,isPaused:false,isFinished:false,xp:0,level:1,bestWpm:0,practiceCount:0,practiceStats:{letters:0,numbers:0,punctuation:0,mixed:0},achievements:{first:false,speed:false,accuracy:false,punctuation:false,streak:false,all:false},streakCount:0,lastPracticeDate:null};
@@ -100,6 +180,7 @@ function saveSystemData(){
     localStorage.setItem('tpSettings',JSON.stringify(settingsData));
     localStorage.setItem('tpGrades',JSON.stringify(studentGrades));
     localStorage.setItem('tpFeedbacks',JSON.stringify(feedbacksData));
+    localStorage.setItem('tpLikes',JSON.stringify(likesData));
 }
 
 async function loadSystemData(){
@@ -113,6 +194,8 @@ async function loadSystemData(){
     if(g)try{studentGrades=JSON.parse(g);}catch(e){}
     const f=localStorage.getItem('tpFeedbacks');
     if(f)try{feedbacksData=JSON.parse(f);}catch(e){}
+    const l=localStorage.getItem('tpLikes');
+    if(l)try{likesData=JSON.parse(l);}catch(e){}
     const u=localStorage.getItem('tpCurrentUser');
     if(u)try{currentUser=JSON.parse(u);}catch(e){}
 
@@ -120,7 +203,7 @@ async function loadSystemData(){
     if (sbOk) {
         const backupStudents=[...studentsData], backupArticles=[...articlesData], backupGrades={...studentGrades}, backupFeedbacks=[...feedbacksData];
         const results = await Promise.all([
-            supabaseLoadStudents(), supabaseLoadArticles(), supabaseLoadSettings(), supabaseLoadGrades(), supabaseLoadFeedbacks()
+            supabaseLoadStudents(), supabaseLoadArticles(), supabaseLoadSettings(), supabaseLoadGrades(), supabaseLoadFeedbacks(), supabaseLoadLikes()
         ]);
         if (results.every(r => r)) {
             if (studentsData.length===0 && backupStudents.length>0) studentsData=backupStudents;
@@ -153,6 +236,75 @@ function showToast(msg,type){
 }
 
 /* ====== 登录/注销 ====== */
+let pendingForcePwd=null;
+function validatePasswordStrength(pwd){
+    if(!pwd||pwd.length<6)return {ok:false,msg:'密码长度至少6位'};
+    let kinds=0;
+    if(/[a-z]/.test(pwd))kinds++;
+    if(/[A-Z]/.test(pwd))kinds++;
+    if(/[0-9]/.test(pwd))kinds++;
+    if(/[^a-zA-Z0-9]/.test(pwd))kinds++;
+    if(kinds<2)return {ok:false,msg:'需包含字母、数字等至少2种组合'};
+    return {ok:true,msg:''};
+}
+function openForcePwdModal(){
+    document.getElementById('force-new-pwd').value='';
+    document.getElementById('force-confirm-pwd').value='';
+    document.getElementById('force-pwd-strength').className='pwd-strength-hint';
+    document.getElementById('force-pwd-strength').textContent='';
+    document.getElementById('force-pwd-msg').className='form-msg';
+    document.getElementById('force-pwd-msg').textContent='';
+    document.getElementById('force-pwd-modal').classList.add('active');
+}
+function checkForcePwdStrength(){
+    const pwd=document.getElementById('force-new-pwd').value;
+    const el=document.getElementById('force-pwd-strength');
+    if(!pwd){el.className='pwd-strength-hint';el.textContent='';return;}
+    const r=validatePasswordStrength(pwd);
+    el.className='pwd-strength-hint '+(r.ok?'ok':'bad');
+    el.textContent=r.ok?'✓ 密码强度符合要求':r.msg;
+}
+async function submitForcePwd(){
+    if(!pendingForcePwd)return;
+    const nw=document.getElementById('force-new-pwd').value;
+    const cf=document.getElementById('force-confirm-pwd').value;
+    const msg=document.getElementById('force-pwd-msg');
+    const r=validatePasswordStrength(nw);
+    if(!r.ok){msg.className='form-msg error';msg.textContent=r.msg;return;}
+    if(nw!==cf){msg.className='form-msg error';msg.textContent='两次密码不一致';return;}
+    if(nw===settingsData.defaultPassword){msg.className='form-msg error';msg.textContent='新密码不能与初始默认密码相同';return;}
+    const stu=pendingForcePwd.stu;
+    stu.password=nw;
+    stu.isDefault=false;
+    saveSystemData();
+    if(supabaseClient){
+        const {error}=await supabaseClient.from('students').update({password:nw,is_default:false}).eq('id',stu.id);
+        if(error)console.error('Supabase强制改密失败:',error);
+    }
+    document.getElementById('force-pwd-modal').classList.remove('active');
+    pendingForcePwd=null;
+    completeStudentLogin(stu);
+}
+function cancelForcePwd(){
+    pendingForcePwd=null;
+    document.getElementById('force-pwd-modal').classList.remove('active');
+    showScreen('login-screen');
+}
+function completeStudentLogin(stu){
+    currentUser={type:'student',class:stu.class,name:stu.name};
+    saveCurrentUser();
+    document.getElementById('student-bar-name').textContent=stu.name;
+    document.getElementById('student-bar-class').textContent=stu.class;
+    const msg=document.getElementById('student-login-msg');
+    msg.className='form-msg success';
+    msg.textContent='登录成功！';
+    document.getElementById('login-class').value='';
+    document.getElementById('login-name').value='';
+    document.getElementById('login-password').value='';
+    startEyeCare();
+    showScreen('home-screen');
+    setTimeout(()=>{msg.textContent='';checkLikeNotifications();},300);
+}
 function studentLogin(){
     const cls=document.getElementById('login-class').value;
     const name=document.getElementById('login-name').value.trim();
@@ -160,22 +312,17 @@ function studentLogin(){
     const msg=document.getElementById('student-login-msg');
     if(!cls||!name){msg.className='form-msg error';msg.textContent='请选择班级并输入姓名';return;}
     if(!pwd){msg.className='form-msg error';msg.textContent='请输入密码';return;}
+    const lock=checkEyeLockout();
+    if(lock.blocked){msg.className='form-msg error';msg.textContent=lock.msg;return;}
     const stu=studentsData.find(s=>s.class===cls&&s.name===name);
     if(!stu){msg.className='form-msg error';msg.textContent='未找到该学生信息，请联系老师添加';return;}
     if(stu.password!==pwd){msg.className='form-msg error';msg.textContent='密码错误';return;}
-    currentUser={type:'student',class:cls,name:name};
-    saveCurrentUser();
-    document.getElementById('student-bar-name').textContent=name;
-    document.getElementById('student-bar-class').textContent=cls;
-    msg.className='form-msg success';
-    msg.textContent='登录成功！';
-    document.getElementById('login-class').value='';
-    document.getElementById('login-name').value='';
-    document.getElementById('login-password').value='';
-    setTimeout(()=>{
-        msg.textContent='';
-        showScreen('home-screen');
-    },500);
+    if(stu.isDefault===true||stu.password===settingsData.defaultPassword){
+        pendingForcePwd={cls:cls,name:name,stu:stu};
+        openForcePwdModal();
+        return;
+    }
+    completeStudentLogin(stu);
 }
 function teacherLogin(){
     const user=document.getElementById('teacher-login-user').value.trim();
@@ -204,15 +351,139 @@ function teacherLogin(){
 }
 function logout(){
     if(currentUser&&currentUser.type==='teacher'&&!confirm('确定要退出登录吗？'))return;
+    stopEyeCare();
+    localStorage.removeItem('tpEyeSessionStart');
     currentUser=null;
     saveCurrentUser();
     showScreen('login-screen');
 }
+
+/* ====== 护眼休息（10分钟提醒 / 15分钟强制退出 / 休息15分钟后才能再登录） ====== */
+let eyeCareTimer=null;
+let eyeRestShown=false;
+let eyeForceShown=false;
+const EYE_REST_MIN=10;
+const EYE_FORCE_MIN=15;
+const EYE_LOCKOUT_MIN=15;
+function startEyeCare(){
+    stopEyeCare();
+    if(!currentUser||currentUser.type!=='student')return;
+    if(!localStorage.getItem('tpEyeSessionStart'))localStorage.setItem('tpEyeSessionStart',String(Date.now()));
+    eyeRestShown=false;
+    eyeForceShown=false;
+    eyeCareTimer=setInterval(checkEyeCare,30000);
+    checkEyeCare();
+}
+function stopEyeCare(){
+    if(eyeCareTimer){clearInterval(eyeCareTimer);eyeCareTimer=null;}
+}
+function getSessionElapsedMin(){
+    const raw=localStorage.getItem('tpEyeSessionStart');
+    if(!raw)return 0;
+    return (Date.now()-parseInt(raw,10))/60000;
+}
+function checkEyeCare(){
+    if(!currentUser||currentUser.type!=='student'){stopEyeCare();return;}
+    const min=getSessionElapsedMin();
+    if(min>=EYE_REST_MIN&&!eyeRestShown){
+        eyeRestShown=true;
+        document.getElementById('eye-rest-modal').classList.add('active');
+    }
+    if(min>=EYE_FORCE_MIN&&!eyeForceShown){
+        eyeForceShown=true;
+        stopEyeCare();
+        startEyeForceCountdown();
+    }
+}
+function closeEyeRest(){
+    document.getElementById('eye-rest-modal').classList.remove('active');
+}
+let eyeForceTimer=null;
+let eyeForceCount=10;
+function startEyeForceCountdown(){
+    localStorage.setItem('tpEyeLockout',String(Date.now()+EYE_LOCKOUT_MIN*60*1000));
+    document.getElementById('eye-force-count').textContent='10';
+    document.getElementById('eye-force-modal').classList.add('active');
+    eyeForceCount=10;
+    eyeForceTimer=setInterval(()=>{
+        eyeForceCount--;
+        if(eyeForceCount<=0){clearInterval(eyeForceTimer);forceEyeLogoutWithLockout();return;}
+        document.getElementById('eye-force-count').textContent=String(eyeForceCount);
+    },1000);
+}
+function forceEyeLogoutNow(){
+    if(eyeForceTimer){clearInterval(eyeForceTimer);eyeForceTimer=null;}
+    document.getElementById('eye-force-modal').classList.remove('active');
+    forceEyeLogoutWithLockout();
+}
+function forceEyeLogoutWithLockout(){
+    localStorage.setItem('tpEyeLockout',String(Date.now()+EYE_LOCKOUT_MIN*60*1000));
+    localStorage.removeItem('tpEyeSessionStart');
+    stopEyeCare();
+    currentUser=null;
+    saveCurrentUser();
+    document.getElementById('eye-rest-modal').classList.remove('active');
+    document.getElementById('eye-force-modal').classList.remove('active');
+    showScreen('login-screen');
+    showToast('为了保护视力，请休息15分钟后再来练习','error');
+}
+function checkEyeLockout(){
+    const raw=localStorage.getItem('tpEyeLockout');
+    if(raw){
+        const until=parseInt(raw,10);
+        if(Date.now()<until){
+            const mins=Math.max(1,Math.ceil((until-Date.now())/60000));
+            return {blocked:true,msg:'为了保护视力，请休息约 '+mins+' 分钟后再登录练习'};
+        }
+        localStorage.removeItem('tpEyeLockout');
+    }
+    return {blocked:false,msg:''};
+}
+
+/* ====== 点赞通知（登录后提示练习被点赞） ====== */
+function checkLikeNotifications(){
+    if(!currentUser||currentUser.type!=='student')return;
+    const ownerKey=currentUser.class+'|'+currentUser.name;
+    let seen={};
+    try{seen=JSON.parse(localStorage.getItem('tpLikesSeen')||'{}');}catch(e){}
+    const ownerSeen=seen[ownerKey]||{};
+    const grades=studentGrades[currentUser.class+'-'+currentUser.name]||[];
+    let newLikes=0;
+    const newSeen={};
+    grades.forEach(g=>{
+        const k=likeKey(currentUser.class,currentUser.name,g.date,g.type);
+        const cur=likeCount(currentUser.class,currentUser.name,g.date,g.type);
+        const prev=ownerSeen[k]||0;
+        if(cur>prev)newLikes+=(cur-prev);
+        newSeen[k]=cur;
+    });
+    seen[ownerKey]=newSeen;
+    localStorage.setItem('tpLikesSeen',JSON.stringify(seen));
+    if(newLikes>0){
+        document.getElementById('like-notify-msg').innerHTML='你最近有 <b style="color:#f59e0b;font-size:1.3em">'+newLikes+'</b> 个练习获得了老师或同学的点赞！<br>你的努力大家看得见，继续加油，你会越来越棒！';
+        document.getElementById('like-notify-modal').classList.add('active');
+    }
+}
+function closeLikeNotify(){
+    document.getElementById('like-notify-modal').classList.remove('active');
+}
+
 function checkAutoLogin(){
     if(currentUser&&currentUser.type==='student'){
+        const lock=checkEyeLockout();
+        if(lock.blocked){
+            currentUser=null;
+            saveCurrentUser();
+            const msg=document.getElementById('student-login-msg');
+            if(msg){msg.className='form-msg error';msg.textContent=lock.msg;}
+            showScreen('login-screen');
+            return;
+        }
         document.getElementById('student-bar-name').textContent=currentUser.name;
         document.getElementById('student-bar-class').textContent=currentUser.class;
         showScreen('home-screen');
+        startEyeCare();
+        setTimeout(checkLikeNotifications,400);
     }else if(currentUser&&currentUser.type==='teacher'){
         refreshStudentTable();
         refreshArticleTable();
@@ -356,9 +627,10 @@ function refreshGradeTable(){
         if(searchName&&!stu.name.includes(searchName))return;
         const key=stu.class+'-'+stu.name;
         const grades=studentGrades[key]||[];
-        const avgWpm=grades.length>0?Math.round(grades.reduce((s,g)=>s+g.wpm,0)/grades.length):0;
+        const wpmGrades=grades.filter(g=>g.wpm>0);
+        const avgWpm=wpmGrades.length>0?Math.round(wpmGrades.reduce((s,g)=>s+g.wpm,0)/wpmGrades.length):0;
         const avgAcc=grades.length>0?Math.round(grades.reduce((s,g)=>s+g.accuracy,0)/grades.length):0;
-        const maxWpm=grades.length>0?Math.max(...grades.map(g=>g.wpm)):0;
+        const maxWpm=wpmGrades.length>0?Math.max(...wpmGrades.map(g=>g.wpm)):0;
         let lastDate=null;
         if(grades.length>0){
             lastDate=grades.reduce((mx,g)=>!mx||new Date(g.date)>mx?new Date(g.date):mx,null);
@@ -388,7 +660,7 @@ function formatDateTime(d){
     const pad=n=>String(n).padStart(2,'0');
     return (d.getMonth()+1)+'/'+d.getDate()+' '+pad(d.getHours())+':'+pad(d.getMinutes());
 }
-const gradeTypeNames={'letters-home':'基准键','letters-all':'全字母','numbers':'数字键','punctuation-basic':'基础标点','punctuation-quotes':'引号练习','punctuation-cn':'中文标点','sentences':'句子练习','articles':'短文练习'};
+const gradeTypeNames={'letters-home':'基准键','letters-all':'全字母','numbers':'数字键','punctuation-basic':'基础标点','punctuation-quotes':'引号练习','punctuation-cn':'中文标点','sentences':'句子练习','articles':'短文练习','touch-letter':'触屏字母','touch-word':'触屏单词','touch-sentence':'触屏短句'};
 let currentGradeDetail={cls:null,name:null};
 function showGradeDetail(cls,name){
     if(typeof cls!=='undefined'&&cls!==null){currentGradeDetail={cls:cls,name:name};}
@@ -406,11 +678,11 @@ function showGradeDetail(cls,name){
     list.sort((a,b)=>new Date(b.date)-new Date(a.date));
     const tbody=document.getElementById('grade-detail-tbody');
     if(list.length===0){
-        tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:#9ca3af;padding:20px">暂无符合条件的练习记录</td></tr>';
+        tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:#9ca3af;padding:20px">暂无符合条件的练习记录</td></tr>';
     }else{
         tbody.innerHTML=list.map(g=>{
             const d=new Date(g.date);
-            return `<tr><td>${formatDateTime(d)}</td><td>${gradeTypeNames[g.type]||g.type}</td><td class="grade-wpm">${g.wpm} WPM</td><td class="grade-acc">${g.accuracy}%</td><td>${'⭐'.repeat(g.stars)}</td></tr>`;
+            return `<tr><td>${formatDateTime(d)}</td><td>${gradeTypeNames[g.type]||g.type}</td><td class="grade-wpm">${g.wpm>0?g.wpm+' WPM':'—'}</td><td class="grade-acc">${g.accuracy}%</td><td>${'⭐'.repeat(g.stars)}</td><td>${likeButtonHtml(currentGradeDetail.cls,currentGradeDetail.name,g.date,g.type)}</td></tr>`;
         }).join('');
     }
     document.getElementById('grade-list-view').style.display='none';
@@ -451,12 +723,12 @@ function refreshGradeRecords(){
     all.sort((a,b)=>new Date(b.date)-new Date(a.date));
     count.textContent=all.length+'条';
     if(all.length===0){
-        tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:#9ca3af;padding:30px">暂无符合条件的练习记录</td></tr>';
+        tbody.innerHTML='<tr><td colspan="8" style="text-align:center;color:#9ca3af;padding:30px">暂无符合条件的练习记录</td></tr>';
         return;
     }
     tbody.innerHTML=all.map(g=>{
         const d=new Date(g.date);
-        return `<tr><td>${formatDateTime(d)}</td><td>${g.class}</td><td>${g.name}</td><td>${gradeTypeNames[g.type]||g.type}</td><td class="grade-wpm">${g.wpm} WPM</td><td class="grade-acc">${g.accuracy}%</td><td>${'⭐'.repeat(g.stars)}</td></tr>`;
+        return `<tr><td>${formatDateTime(d)}</td><td>${g.class}</td><td>${g.name}</td><td>${gradeTypeNames[g.type]||g.type}</td><td class="grade-wpm">${g.wpm>0?g.wpm+' WPM':'—'}</td><td class="grade-acc">${g.accuracy}%</td><td>${'⭐'.repeat(g.stars)}</td><td>${likeButtonHtml(g.class,g.name,g.date,g.type)}</td></tr>`;
     }).join('');
 }
 function downloadRecordsCSV(){
@@ -495,7 +767,8 @@ async function refreshGradesFromCloud(){
     if(!supabaseClient){showToast('Supabase未连接，无法刷新','error');return;}
     showToast('正在从云端刷新数据...');
     const ok=await supabaseLoadGrades();
-    if(ok){saveSystemData();refreshGradeTable();refreshGradeRecords();showToast('成绩数据已刷新');}
+    const okLikes=await supabaseLoadLikes();
+    if(ok){saveSystemData();refreshGradeTable();refreshGradeRecords();refreshLikeViews();showToast('成绩数据已刷新');}
     else{showToast('刷新失败，请检查网络','error');}
 }
 function downloadGradesCSV(){
@@ -508,9 +781,10 @@ function downloadGradesCSV(){
         if(searchName&&!stu.name.includes(searchName))return;
         const key=stu.class+'-'+stu.name;
         const grades=studentGrades[key]||[];
-        const avgWpm=grades.length>0?Math.round(grades.reduce((s,g)=>s+g.wpm,0)/grades.length):0;
+        const wpmGrades=grades.filter(g=>g.wpm>0);
+        const avgWpm=wpmGrades.length>0?Math.round(wpmGrades.reduce((s,g)=>s+g.wpm,0)/wpmGrades.length):0;
         const avgAcc=grades.length>0?Math.round(grades.reduce((s,g)=>s+g.accuracy,0)/grades.length):0;
-        const maxWpm=grades.length>0?Math.max(...grades.map(g=>g.wpm)):0;
+        const maxWpm=wpmGrades.length>0?Math.max(...wpmGrades.map(g=>g.wpm)):0;
         csv+=stu.class+','+stu.name+','+grades.length+','+avgWpm+','+avgAcc+','+maxWpm+'\n';
         count++;
     });
@@ -635,7 +909,7 @@ async function changeTeacherPwd(){
     setTimeout(()=>msg.textContent='',2000);
 }
 function exportData(){
-    const data={students:studentsData,articles:articlesData,settings:settingsData,grades:studentGrades};
+    const data={students:studentsData,articles:articlesData,settings:settingsData,grades:studentGrades,likes:likesData};
     const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
     const a=document.createElement('a');
     a.href=URL.createObjectURL(blob);
@@ -659,6 +933,7 @@ async function importData(){
                 if(data.articles)articlesData=data.articles;
                 if(data.settings)Object.assign(settingsData,data.settings);
                 if(data.grades)studentGrades=data.grades;
+                if(data.likes)likesData=data.likes;
                 saveSystemData();
                 if(supabaseClient){
                     let {error:e1}=await supabaseClient.from('students').delete().neq('id',0);if(e1)console.error('导入-清空students失败:',e1);
@@ -675,6 +950,16 @@ async function importData(){
                         studentGrades[key].forEach(g=>{gradesToInsert.push({class:cls,name,date:g.date,type:g.type,wpm:g.wpm,accuracy:g.accuracy,stars:g.stars,xp:g.xp});});
                     });
                     if(gradesToInsert.length>0){let {error:e7}=await supabaseClient.from('grades').insert(gradesToInsert);if(e7)console.error('导入-写入grades失败:',e7);}
+                    if(likesData&&Object.keys(likesData).length>0){
+                        const likeRows=[];
+                        Object.keys(likesData).forEach(lk=>{
+                            const parts=lk.split('|');
+                            if(parts.length<4)return;
+                            const [lcls,lname,ldate,ltype]=parts;
+                            likesData[lk].forEach(l=>{likeRows.push({grade_class:lcls,grade_name:lname,grade_date:ldate,type:ltype,liker_class:l.class,liker_name:l.name});});
+                        });
+                        if(likeRows.length>0){let {error:e8}=await supabaseClient.from('likes').insert(likeRows);if(e8)console.error('导入-写入likes失败:',e8);}
+                    }
                 }
                 refreshStudentTable();
                 refreshArticleTable();
@@ -729,6 +1014,16 @@ async function syncToSupabase(){
             studentGrades[key].forEach(g=>{gradesToInsert.push({class:cls,name,date:g.date,type:g.type,wpm:g.wpm,accuracy:g.accuracy,stars:g.stars,xp:g.xp});});
         });
         if(gradesToInsert.length>0){let {error:e7}=await supabaseClient.from('grades').insert(gradesToInsert);if(e7){showToast('同步成绩失败','error');console.error(e7);return;}}
+        let {error:e8}=await supabaseClient.from('likes').delete().neq('id',0);
+        if(e8){showToast('清空云端点赞失败','error');console.error(e8);return;}
+        const likesToInsert=[];
+        Object.keys(likesData).forEach(k=>{
+            const parts=k.split('|');
+            if(parts.length<4)return;
+            const [cls,name,date,type]=parts;
+            likesData[k].forEach(l=>{likesToInsert.push({grade_class:cls,grade_name:name,grade_date:date,type:type,liker_class:l.class,liker_name:l.name});});
+        });
+        if(likesToInsert.length>0){let {error:e9}=await supabaseClient.from('likes').insert(likesToInsert);if(e9){showToast('同步点赞失败','error');console.error(e9);return;}}
         showToast('所有数据已同步到云端！');
     }catch(e){showToast('同步失败：'+e.message,'error');console.error(e);}
 }
@@ -744,7 +1039,8 @@ async function changeStudentPassword(){
     if(!stu){msg.className='form-msg error';msg.textContent='用户信息异常';return;}
     if(!old||!nw||!cf){msg.className='form-msg error';msg.textContent='请填写所有字段';return;}
     if(old!==stu.password){msg.className='form-msg error';msg.textContent='当前密码错误';return;}
-    if(nw.length<3){msg.className='form-msg error';msg.textContent='新密码长度至少3位';return;}
+    const pwdCheck=validatePasswordStrength(nw);
+    if(!pwdCheck.ok){msg.className='form-msg error';msg.textContent=pwdCheck.msg;return;}
     if(nw!==cf){msg.className='form-msg error';msg.textContent='两次密码不一致';return;}
     if(old===nw){msg.className='form-msg error';msg.textContent='新密码与当前密码相同';return;}
     stu.password=nw;
@@ -861,14 +1157,52 @@ function switchTab(tab){
 
 /* ====== 现有打字练习功能（保持不变） ====== */
 function startPractice(type){
+    if(type==='articles'){openArticleSelect();return;}
     const diff=document.getElementById('setting-difficulty').value;
     const dur=parseInt(document.getElementById('setting-duration').value);
     GS.currentPractice=type;GS.timeLimit=dur;GS.currentIndex=0;GS.correctChars=0;GS.totalChars=0;GS.isPaused=false;GS.isFinished=false;GS.startTime=null;
+    const pt=document.getElementById('article-practice-title');
+    if(pt)pt.style.display='none';
     let texts=practiceData[type][diff];
     GS.currentText=Array.isArray(texts)?texts[Math.floor(Math.random()*texts.length)]:texts;
     showScreen('typing-screen');displayText();updateHint();
     clearInterval(GS.timerInterval);document.getElementById('timer').textContent='0:00';document.getElementById('progress-percent').textContent='0%';
     document.getElementById('virtual-keyboard').style.display=document.getElementById('setting-guide').checked?'block':'none';
+}
+
+/* ====== 中文短文练习（人教版三年级5篇，电脑键盘输入，支持单字或词语） ====== */
+function openArticleSelect(){
+    const list=document.getElementById('article-select-list');
+    if(list){
+        list.innerHTML=articleList.map((a,i)=>`
+            <div class="article-select-item" onclick="startArticlePractice(${i})">
+                <span class="article-select-icon">${a.icon}</span>
+                <div class="article-select-info">
+                    <div class="article-select-title">${a.title}</div>
+                    <div class="article-select-preview">${a.content.slice(0,45)}……</div>
+                </div>
+                <span class="article-select-go">开始 ▶</span>
+            </div>`).join('');
+    }
+    document.getElementById('article-select-modal').classList.add('active');
+}
+function closeArticleSelect(){
+    document.getElementById('article-select-modal').classList.remove('active');
+    showScreen('practice-screen');
+}
+function startArticlePractice(i){
+    const art=articleList[i];
+    if(!art)return;
+    document.getElementById('article-select-modal').classList.remove('active');
+    const dur=parseInt(document.getElementById('setting-duration').value);
+    GS.currentPractice='articles';GS.timeLimit=dur;GS.articleIdx=i;
+    GS.currentIndex=0;GS.correctChars=0;GS.totalChars=0;GS.isPaused=false;GS.isFinished=false;GS.startTime=null;
+    GS.currentText=art.content;
+    const pt=document.getElementById('article-practice-title');
+    if(pt){pt.style.display='block';pt.textContent=art.icon+' '+art.title+'　·　请用拼音输入法逐字或整词输入';}
+    showScreen('typing-screen');displayText();updateHint();
+    clearInterval(GS.timerInterval);document.getElementById('timer').textContent='0:00';document.getElementById('progress-percent').textContent='0%';
+    document.getElementById('virtual-keyboard').style.display='none';
 }
 function displayText(){
     const el=document.getElementById('text-content');el.innerHTML='';
@@ -882,7 +1216,7 @@ function updateHint(){
     const c=GS.currentText[GS.currentIndex];
     if(isCJKChar(c)){
         document.getElementById('hint-key').textContent=c;
-        document.getElementById('hint-finger').textContent='用拼音输入此汉字';
+        document.getElementById('hint-finger').textContent='用拼音输入，可单字或整词';
         document.querySelectorAll('.key').forEach(k=>k.classList.remove('active'));
         return;
     }
@@ -908,18 +1242,52 @@ document.addEventListener('compositionupdate',function(e){imeBuffer=e.data||'';}
 document.addEventListener('keydown',function(e){
     if(GS.currentScreen!=='typing-screen'||GS.isPaused||GS.isFinished)return;
     if(e.isComposing||e.key==='Process'||e.keyCode===229)return;
+    const key=e.key;
     const currentChar=GS.currentText[GS.currentIndex];
-    if(currentChar&&isCJKChar(currentChar))return;
+    if(!currentChar)return;
+    if(key==='Backspace'){
+        e.preventDefault();e.stopPropagation();
+        if(GS.currentIndex>0){
+            GS.currentIndex--;
+            const ch=document.querySelector('.char[data-index="'+GS.currentIndex+'"]');
+            if(ch){ch.classList.remove('correct','error','shake');ch.classList.add('current');}
+            updateHint();
+        }
+        return;
+    }
+    if(isCJKChar(currentChar)){
+        if(!(key&&key.length===1&&isCJKChar(key)))return;
+        e.preventDefault();e.stopPropagation();
+        if(!GS.startTime){GS.startTime=Date.now();startTimer();}
+        GS.totalChars++;
+        if(key===currentChar){
+            GS.correctChars++;markCorrect(GS.currentIndex);GS.currentIndex++;
+            if(document.getElementById('setting-sound').checked)playSound('correct');
+        }else{
+            markError(GS.currentIndex);flashKeyError(key);
+            if(document.getElementById('setting-sound').checked)playSound('error');
+            GS.currentIndex++;
+        }
+        updateStats();updateHint();
+        if(GS.currentIndex>=GS.currentText.length)finishPractice(true);
+        return;
+    }
+    if(key==='Shift'||key==='CapsLock'||key==='Tab'||key==='Control'||key==='Alt'||key==='Meta'||key==='Enter')return;
+    if(!key||key.length>1)return;
     e.preventDefault();e.stopPropagation();
     if(!GS.startTime){GS.startTime=Date.now();startTimer();}
-    const key=e.key;
-    if(key==='Backspace'){if(GS.currentIndex>0){GS.currentIndex--;const ch=document.querySelector('.char[data-index="'+GS.currentIndex+'"]');if(ch){ch.classList.remove('correct','error');ch.classList.add('current');}updateHint();}return;}
-    if(key==='Shift'||key==='CapsLock'||key==='Tab'||key==='Control'||key==='Alt'||key==='Meta')return;
     GS.totalChars++;
     let ok=key===currentChar||(currentChar===' '&&key===' ')||(key.length===1&&currentChar.length===1&&key.toLowerCase()===currentChar.toLowerCase());
-    if(ok){GS.correctChars++;markCorrect(GS.currentIndex);GS.currentIndex++;if(document.getElementById('setting-sound').checked)playSound('correct');if(GS.currentIndex>=GS.currentText.length){finishPractice(true);return;}
-    }else{markError(GS.currentIndex);if(document.getElementById('setting-sound').checked)playSound('error');}
+    if(ok){
+        GS.correctChars++;markCorrect(GS.currentIndex);GS.currentIndex++;
+        if(document.getElementById('setting-sound').checked)playSound('correct');
+    }else{
+        markError(GS.currentIndex);flashKeyError(key);
+        if(document.getElementById('setting-sound').checked)playSound('error');
+        GS.currentIndex++;
+    }
     updateStats();updateHint();
+    if(GS.currentIndex>=GS.currentText.length)finishPractice(true);
 });
 document.addEventListener('compositionend',function(e){
     if(GS.currentScreen!=='typing-screen'||GS.isPaused||GS.isFinished)return;
@@ -934,12 +1302,17 @@ document.addEventListener('compositionend',function(e){
         GS.correctChars+=data.length;
         GS.currentIndex+=data.length;
         if(document.getElementById('setting-sound').checked)playSound('correct');
-        if(GS.currentIndex>=GS.currentText.length){finishPractice(true);return;}
     }else{
-        markError(GS.currentIndex);
+        const n=Math.min(data.length,GS.currentText.length-GS.currentIndex);
+        for(let i=0;i<n;i++){
+            if(data[i]===GS.currentText[GS.currentIndex+i]){markCorrect(GS.currentIndex+i);GS.correctChars++;}
+            else markError(GS.currentIndex+i);
+        }
+        GS.currentIndex+=n;
         if(document.getElementById('setting-sound').checked)playSound('error');
     }
     updateStats();updateHint();
+    if(GS.currentIndex>=GS.currentText.length)finishPractice(true);
 });
 document.addEventListener('keydown',function(e){
     if(GS.currentScreen!=='touch-play-screen')return;
@@ -953,8 +1326,13 @@ document.addEventListener('keydown',function(e){
     if(key.length===1&&/[,\.\?!]/.test(key)&&touchState.mode==='sentence'){touchKeyTap(key);return;}
 });
 function playSound(t){try{const a=new(window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=t==='correct'?800:300;g.gain.value=t==='correct'?0.1:0.15;o.start();o.stop(a.currentTime+0.1);}catch(e){}}
-function markCorrect(i){const c=document.querySelector('.char[data-index="'+i+'"]');if(c){c.classList.remove('current','pending');c.classList.add('correct');}}
-function markError(i){const c=document.querySelector('.char[data-index="'+i+'"]');if(c){c.classList.add('error');setTimeout(()=>c.classList.remove('error'),500);}}
+function markCorrect(i){const c=document.querySelector('.char[data-index="'+i+'"]');if(c){c.classList.remove('current','pending','error','shake');c.classList.add('correct');}}
+function markError(i){const c=document.querySelector('.char[data-index="'+i+'"]');if(c){c.classList.remove('current','shake');c.classList.add('error');void c.offsetWidth;c.classList.add('shake');}}
+function flashKeyError(key){
+    const sel=key===' '?'.key[data-key=" "]':'.key[data-key="'+key+'"]';
+    const ke=document.querySelector(sel);
+    if(ke){ke.classList.add('error');setTimeout(()=>ke.classList.remove('error'),450);}
+}
 function updateStats(){
     if(!GS.startTime)return;
     const t=(Date.now()-GS.startTime)/1000/60;
@@ -1003,12 +1381,22 @@ async function finishPractice(completed){
 }
 function updatePracticeStats(){const p=GS.currentPractice;if(p.includes('letter'))GS.practiceStats.letters++;else if(p.includes('number'))GS.practiceStats.numbers++;else if(p.includes('punctuation'))GS.practiceStats.punctuation++;else GS.practiceStats.mixed++;}
 function getTargetWpm(){const d=document.getElementById('setting-difficulty').value;return d==='easy'?15:d==='medium'?20:25;}
+function getEncouragingFeedback(acc,wpm,stars){
+    const praiseHigh=['太棒了！这个练习你掌握得很好，继续保持！','哇！这么高的正确率，老师都为你骄傲！','你真是打字小能手，进步看得见！','完美发挥！每一次练习都会让你更强！','太厉害了！大胆挑战更高难度吧！'];
+    const praiseMid=['做得很不错！再细心一点就能拿满星！','很棒！坚持练习，你会越来越熟练！','好样的！离三星就差一点点，继续加油！','手感越来越好了，真棒！','不错哦！保持这个状态，你会更优秀！'];
+    const praiseLow=['没关系，每一位打字高手都是慢慢练出来的！','今天又进步了一点点，坚持下去就会很棒！','别着急，保证正确最重要，你一定能行！','每一次练习都是成长，继续加油！','你已经很棒了，多练几次会更熟练！'];
+    let pool;
+    if(acc>=95||stars>=3)pool=praiseHigh;
+    else if(acc>=80||stars>=2)pool=praiseMid;
+    else pool=praiseLow;
+    return pool[Math.floor(Math.random()*pool.length)];
+}
 function showResult(stars,wpm,acc,xp,completed){
     const ic=document.getElementById('result-icon'),ti=document.getElementById('result-title'),msg=document.getElementById('result-message');
-    if(!completed){ic.textContent='😅';ti.textContent='继续努力！';msg.textContent='别灰心，多练习就会进步的！';}
-    else if(stars===3){ic.textContent='🎉';ti.textContent='太棒了！';msg.textContent='你真是太厉害了！继续保持！';}
-    else if(stars===2){ic.textContent='👏';ti.textContent='做得不错！';msg.textContent='再接再厉，争取三星！';}
-    else{ic.textContent='💪';ti.textContent='练习完成！';msg.textContent='继续加油，你会越来越好的！';}
+    if(!completed){ic.textContent='😊';ti.textContent='继续努力！';msg.textContent='别灰心，坚持练习就会越来越好的！';}
+    else if(stars===3){ic.textContent='🎉';ti.textContent='太棒了！';msg.textContent=getEncouragingFeedback(acc,wpm,stars);}
+    else if(stars===2){ic.textContent='👏';ti.textContent='做得不错！';msg.textContent=getEncouragingFeedback(acc,wpm,stars);}
+    else{ic.textContent='💪';ti.textContent='练习完成！';msg.textContent=getEncouragingFeedback(acc,wpm,stars);}
     document.getElementById('result-stars').textContent='⭐'.repeat(stars);
     document.getElementById('result-wpm').textContent=wpm+' WPM';document.getElementById('result-accuracy').textContent=acc+'%';
     document.getElementById('result-time').textContent=document.getElementById('timer').textContent;
@@ -1036,7 +1424,7 @@ function updateStreak(){
 }
 function pausePractice(){GS.isPaused=true;document.getElementById('pause-modal').classList.add('active');}
 function resumePractice(){GS.isPaused=false;document.getElementById('pause-modal').classList.remove('active');}
-function restartPractice(){document.getElementById('result-modal').classList.remove('active');startPractice(GS.currentPractice);}
+function restartPractice(){document.getElementById('result-modal').classList.remove('active');if(GS.currentPractice==='articles'){startArticlePractice(GS.articleIdx||0);return;}startPractice(GS.currentPractice);}
 function exitPractice(){clearInterval(GS.timerInterval);document.getElementById('result-modal').classList.remove('active');showScreen('practice-screen');}
 function closeResultAndGo(id){document.getElementById('result-modal').classList.remove('active');showScreen(id);}
 function updateScoreDisplay(){
@@ -1056,6 +1444,40 @@ function updateScoreDisplay(){
     document.getElementById('stat-mixed-count').textContent=GS.practiceStats.mixed+'次';
     updateMyRecent();
     updateClassRanking();
+    updateClassActivity();
+}
+function updateClassActivity(){
+    const box=document.getElementById('class-activity-list');
+    if(!box)return;
+    if(!currentUser||currentUser.type!=='student'){
+        box.innerHTML='<p class="activity-empty">请先登录后再查看</p>';
+        return;
+    }
+    const myClass=currentUser.class;
+    let items=[];
+    studentsData.forEach(stu=>{
+        if(stu.class!==myClass)return;
+        const grades=studentGrades[stu.class+'-'+stu.name]||[];
+        grades.forEach(g=>{items.push({class:stu.class,name:stu.name,date:g.date,type:g.type,wpm:g.wpm,accuracy:g.accuracy,stars:g.stars});});
+    });
+    items.sort((a,b)=>new Date(b.date)-new Date(a.date));
+    const recent=items.slice(0,10);
+    if(recent.length===0){
+        box.innerHTML='<p class="activity-empty">还没有同学的练习动态，快去完成一次练习吧！</p>';
+        return;
+    }
+    box.innerHTML=recent.map(g=>{
+        const d=new Date(g.date);
+        const me=(g.class+'|'+g.name)===currentLikerId();
+        return `<div class="activity-item">
+            <div class="activity-avatar">${g.name.charAt(0)}</div>
+            <div class="activity-main">
+                <div class="activity-top"><span class="activity-name">${g.name}${me?' <span class="activity-me">(我)</span>':''}</span><span class="activity-type">${gradeTypeNames[g.type]||g.type}</span></div>
+                <div class="activity-sub">${'⭐'.repeat(g.stars)} · 正确率${g.accuracy}%${g.wpm>0?' · '+g.wpm+' WPM':''} · ${formatDateTime(d)}</div>
+            </div>
+            <div class="activity-like">${likeButtonHtml(g.class,g.name,g.date,g.type)}</div>
+        </div>`;
+    }).join('');
 }
 function updateClassRanking(){
     const tbody=document.getElementById('class-rank-tbody');
@@ -1069,9 +1491,10 @@ function updateClassRanking(){
     studentsData.forEach(stu=>{
         if(stu.class!==myClass)return;
         const grades=studentGrades[stu.class+'-'+stu.name]||[];
-        const avgWpm=grades.length>0?Math.round(grades.reduce((s,g)=>s+g.wpm,0)/grades.length):0;
+        const wpmGrades=grades.filter(g=>g.wpm>0);
+        const avgWpm=wpmGrades.length>0?Math.round(wpmGrades.reduce((s,g)=>s+g.wpm,0)/wpmGrades.length):0;
         const avgAcc=grades.length>0?Math.round(grades.reduce((s,g)=>s+g.accuracy,0)/grades.length):0;
-        const maxWpm=grades.length>0?Math.max(...grades.map(g=>g.wpm)):0;
+        const maxWpm=wpmGrades.length>0?Math.max(...wpmGrades.map(g=>g.wpm)):0;
         rows.push({name:stu.name,count:grades.length,avgWpm,avgAcc,maxWpm,isMe:stu.name===currentUser.name});
     });
     rows.sort((a,b)=>b.avgWpm-a.avgWpm||b.maxWpm-a.maxWpm||b.count-a.count);
@@ -1106,7 +1529,7 @@ function updateMyRecent(){
     }
     tbody.innerHTML=grades.map(g=>{
         const d=new Date(g.date);
-        return `<tr><td>${formatDateTime(d)}</td><td>${gradeTypeNames[g.type]||g.type}</td><td class="grade-wpm">${g.wpm} WPM</td><td class="grade-acc">${g.accuracy}%</td><td>${'⭐'.repeat(g.stars)}</td></tr>`;
+        return `<tr><td>${formatDateTime(d)}</td><td>${gradeTypeNames[g.type]||g.type}</td><td class="grade-wpm">${g.wpm>0?g.wpm+' WPM':'—'}</td><td class="grade-acc">${g.accuracy}%</td><td>${'⭐'.repeat(g.stars)}</td></tr>`;
     }).join('');
 }
 function getLevelTitle(){const t=['打字新手','键盘学徒','打字达人','速度之星','打字高手','键盘大师','打字专家','打字王者','键盘传说','打字之神'];return t[Math.min(GS.level-1,t.length-1)];}
@@ -1167,7 +1590,10 @@ function handleGameKey(key){
         if(gameType==='race'){const player=document.getElementById('race-player');const cur=parseFloat(player.style.left)||10;player.style.left=Math.min(cur+8,75)+'%';document.querySelectorAll('.cpu-car').forEach(c=>{const cl=parseFloat(c.style.left)||10;c.style.left=Math.min(cl+Math.random()*5,75)+'%';});if(cur>=70){gameScore+=50;document.getElementById('game-score').textContent='得分: '+gameScore;player.style.left='10%';}nextRaceWord();
         }else if(gameType==='bubble'){const b=document.querySelector('.bubble');if(b){b.style.transform='scale(1.5)';b.style.opacity='0';setTimeout(()=>{b.remove();nextBubbleTarget();},300);}else{nextBubbleTarget();}
         }else if(gameType==='star'){const s=document.querySelector('.star-item');if(s){s.style.transform='scale(1.5)';s.style.opacity='0';setTimeout(()=>s.remove(),300);}nextStarTarget();}
-    }else{if(document.getElementById('setting-sound').checked)playSound('error');}
+    }else{if(document.getElementById('setting-sound').checked)playSound('error');
+        const t=document.getElementById(gameType==='race'?'race-target':gameType==='bubble'?'bubble-target':'star-target');
+        if(t){t.classList.add('target-flash');setTimeout(()=>t.classList.remove('target-flash'),400);}
+    }
 }
 document.addEventListener('keydown',function(e){
     if(GS.currentScreen!=='gameplay-screen')return;if(gameTimeLeft<=0)return;
@@ -1624,10 +2050,33 @@ function touchSpaceTap(){
     }
 }
 
+async function saveTouchGrade(acc,stars){
+    if(!currentUser||currentUser.type!=='student'||!touchState)return;
+    const type='touch-'+touchState.mode;
+    const key=currentUser.class+'-'+currentUser.name;
+    if(!studentGrades[key])studentGrades[key]=[];
+    const grade={date:new Date().toISOString(),type,wpm:0,accuracy:acc,stars,xp:touchState.score||0};
+    studentGrades[key].push(grade);
+    saveSystemData();
+    const gRow={class:currentUser.class,name:currentUser.name,date:grade.date,type:grade.type,wpm:grade.wpm,accuracy:grade.accuracy,stars:grade.stars,xp:grade.xp};
+    if(supabaseClient){
+        try{
+            const {error}=await supabaseClient.from('grades').insert(gRow);
+            if(error){
+                console.error('Supabase保存触屏成绩失败，已加入待同步队列:',error);
+                const pending=loadPendingGrades();pending.push(gRow);savePendingGrades(pending);
+            }
+        }catch(e){console.error('保存触屏成绩异常:',e);}
+    }else{
+        const pending=loadPendingGrades();pending.push(gRow);savePendingGrades(pending);
+    }
+}
+
 function showTouchResult(){
     exitLandscape();
     const acc=touchState.total>0?Math.round((touchState.correct/touchState.total)*100):0;
     const stars=acc>=95?3:acc>=80?2:1;
+    saveTouchGrade(acc,stars);
     const isWord=touchState.mode==='word';
     const isSentence=touchState.mode==='sentence';
     if(isWord){
@@ -1658,6 +2107,7 @@ function showTouchResult(){
     document.getElementById('touch-result-stars').textContent='⭐'.repeat(stars);
     document.getElementById('touch-result-score').textContent=touchState.score;
     document.getElementById('touch-result-acc').textContent=acc+'%';
+    document.getElementById('touch-result-message').textContent=getEncouragingFeedback(acc,0,stars);
     document.getElementById('touch-result-modal').classList.add('active');
 }
 
@@ -1723,7 +2173,7 @@ document.addEventListener('DOMContentLoaded',async function(){
         if(!GS.startTime){GS.startTime=Date.now();startTimer();}
         const e=new KeyboardEvent('keydown',{key:this.dataset.key});document.dispatchEvent(e);
     });});
-    document.getElementById('setting-guide').addEventListener('change',function(){
-        document.getElementById('virtual-keyboard').style.display=this.checked?'block':'none';
-    });
+document.getElementById('setting-guide').addEventListener('change',function(){
+    document.getElementById('virtual-keyboard').style.display=(this.checked&&GS.currentPractice!=='articles')?'block':'none';
+});
 });

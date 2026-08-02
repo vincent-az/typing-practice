@@ -72,6 +72,20 @@ SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'  ✅ 已填入
 | key | TEXT PRIMARY KEY | 设置键名 |
 | value | TEXT NOT NULL | 设置值 |
 
+### likes（点赞表）
+| 列名 | 类型 | 说明 |
+|------|------|------|
+| id | SERIAL PRIMARY KEY | 自动编号 |
+| grade_class | TEXT NOT NULL | 被点赞成绩的班级 |
+| grade_name | TEXT NOT NULL | 被点赞成绩的姓名 |
+| grade_date | TEXT NOT NULL | 被点赞成绩的练习时间（ISO） |
+| type | TEXT NOT NULL | 被点赞成绩的练习类型 |
+| liker_class | TEXT NOT NULL | 点赞者班级 |
+| liker_name | TEXT NOT NULL | 点赞者姓名 |
+| created_at | TIMESTAMPTZ DEFAULT NOW() | 点赞时间 |
+
+> 唯一约束建议：`grade_class, grade_name, grade_date, type, liker_class, liker_name` 不允许重复，防止同一人多次点赞。如不想加唯一约束，代码里也能自行判重（本地存储会判重）。
+
 ## 初始设置数据
 
 | key | value |

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>潘庄小学打字练习乐园</title>
-    <link rel="stylesheet" href="style.css?v=20260803">
+    <link rel="stylesheet" href="style.css?v=20260806">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -107,7 +107,7 @@
                     <div class="menu-icon">
                         <svg viewBox="0 0 48 48" width="40" height="40"><rect x="8" y="6" width="32" height="36" rx="6" fill="none" stroke="white" stroke-width="2.5"/><circle cx="24" cy="34" r="4" fill="rgba(255,255,255,0.5)"/><rect x="16" y="12" width="16" height="14" rx="2" fill="rgba(255,255,255,0.2)" stroke="white" stroke-width="1.5"/></svg>
                     </div>
-                    <div class="menu-text"><h3>触屏练习</h3></div>
+                    <div class="menu-text"><h3>触屏练习</h3><span class="menu-sub">（手机平板）</span></div>
                 </div>
                 <div class="menu-card card-settings" onclick="showScreen('settings-screen')">
                     <div class="menu-icon">
@@ -264,11 +264,14 @@
                                 <option value="punctuation-cn">中文标点</option>
                                 <option value="sentences">句子练习</option>
                                 <option value="articles">短文练习</option>
+                                <option value="touch-letter">触屏字母</option>
+                                <option value="touch-word">触屏单词</option>
+                                <option value="touch-sentence">触屏短句</option>
                             </select>
                         </div>
                         <div class="table-wrap">
                             <table>
-                                <thead><tr><th>日期</th><th>练习类型</th><th>速度(WPM)</th><th>正确率</th><th>星级</th></tr></thead>
+                                <thead><tr><th>日期</th><th>练习类型</th><th>速度(WPM)</th><th>正确率</th><th>星级</th><th>点赞</th></tr></thead>
                                 <tbody id="grade-detail-tbody"></tbody>
                             </table>
                         </div>
@@ -294,12 +297,15 @@
                                 <option value="punctuation-cn">中文标点</option>
                                 <option value="sentences">句子练习</option>
                                 <option value="articles">短文练习</option>
+                                <option value="touch-letter">触屏字母</option>
+                                <option value="touch-word">触屏单词</option>
+                                <option value="touch-sentence">触屏短句</option>
                             </select>
                             <button class="action-btn primary" onclick="downloadRecordsCSV()">📥 下载记录</button>
                         </div>
                         <div class="table-wrap">
                             <table>
-                                <thead><tr><th>日期时间</th><th>班级</th><th>姓名</th><th>练习类型</th><th>速度(WPM)</th><th>正确率</th><th>星级</th></tr></thead>
+                                <thead><tr><th>日期时间</th><th>班级</th><th>姓名</th><th>练习类型</th><th>速度(WPM)</th><th>正确率</th><th>星级</th><th>点赞</th></tr></thead>
                                 <tbody id="grade-records-tbody"></tbody>
                             </table>
                         </div>
@@ -381,7 +387,7 @@
                     <div class="card-emoji">📄</div><h3>句子练习</h3><p>完整句子</p><span class="tag-medium">进阶</span>
                 </div>
                 <div class="practice-card" onclick="startPractice('articles')">
-                    <div class="card-emoji">📚</div><h3>短文练习</h3><p>中文短文</p><span class="tag-hard">挑战</span>
+                    <div class="card-emoji">📚</div><h3>短文练习</h3><p>中文短文（人教版三年级）</p><span class="tag-hard">挑战</span>
                 </div>
             </div>
         </div>
@@ -445,6 +451,7 @@
                 <div class="stat stat-time"><span class="stat-label">时间</span><span id="timer" class="stat-value">0:00</span></div>
                 <div class="stat stat-prog"><span class="stat-label">进度</span><span id="progress-percent" class="stat-value">0%</span></div>
             </div>
+            <div id="article-practice-title" class="article-practice-title" style="display:none"></div>
             <div class="text-display"><div id="text-content"></div></div>
             <div class="current-key-hint">
                 <span>请按：</span>
@@ -526,6 +533,10 @@
                         <tbody id="class-rank-tbody"></tbody>
                     </table>
                 </div>
+            </div>
+            <div class="stats-section">
+                <h3>❤️ 班级练习动态 <span class="count-badge">给同学的练习点个赞吧</span></h3>
+                <div id="class-activity-list" class="class-activity-list"></div>
             </div>
         </div>
     </div>
@@ -700,6 +711,7 @@
                 <div class="result-stat"><span class="r-label">得分</span><span id="touch-result-score" class="r-value">0</span></div>
                 <div class="result-stat"><span class="r-label">正确率</span><span id="touch-result-acc" class="r-value">0%</span></div>
             </div>
+            <p id="touch-result-message" class="result-msg">继续加油！</p>
             <button class="modal-btn primary" onclick="restartTouchPractice()">🔄 再来一次</button>
             <button class="modal-btn primary" id="touch-next-level-btn" onclick="nextTouchLevel()" style="display:none">▶ 下一关</button>
             <button class="modal-btn secondary" onclick="closeTouchResult()">返回选择</button>
@@ -780,7 +792,60 @@
             <button class="modal-btn tertiary" onclick="closeGameOverAndGo('home-screen')">返回主页</button>
         </div>
     </div>
+    <div id="article-select-modal" class="modal">
+        <div class="modal-content pause-box" style="max-width:560px">
+            <h2>📚 选择一篇中文短文</h2>
+            <p style="color:#6b7280;margin:6px 0 14px;line-height:1.6">使用电脑键盘输入中文，可用拼音输入法<span style="font-weight:700;color:var(--primary)">逐字</span>或<span style="font-weight:700;color:var(--primary)">整词</span>输入。</p>
+            <div id="article-select-list" class="article-select-list"></div>
+            <button class="modal-btn secondary" onclick="closeArticleSelect()" style="margin-top:10px">← 返回</button>
+        </div>
+    </div>
+    <div id="force-pwd-modal" class="modal">
+        <div class="modal-content pause-box">
+            <h2>🔑 请先修改初始密码</h2>
+            <p style="color:#6b7280;margin:8px 0 14px;line-height:1.6">首次使用默认密码登录，为了保护账号安全，请设置一个新密码（至少6位，需包含字母、数字等至少2种组合）。</p>
+            <div class="login-form">
+                <div class="form-group">
+                    <label>新密码</label>
+                    <input type="password" id="force-new-pwd" placeholder="至少6位，字母+数字组合" oninput="checkForcePwdStrength()">
+                </div>
+                <div class="form-group">
+                    <label>确认新密码</label>
+                    <input type="password" id="force-confirm-pwd" placeholder="再次输入新密码">
+                </div>
+                <p id="force-pwd-strength" class="pwd-strength-hint"></p>
+                <p id="force-pwd-msg" class="form-msg"></p>
+                <button class="login-btn" onclick="submitForcePwd()">修改并进入</button>
+                <button class="modal-btn secondary" onclick="cancelForcePwd()" style="margin-top:8px">退出登录</button>
+            </div>
+        </div>
+    </div>
+    <div id="eye-rest-modal" class="modal">
+        <div class="modal-content pause-box">
+            <div class="result-big-icon">👀</div>
+            <h2>该休息一下啦！</h2>
+            <p style="color:#6b7280;margin:10px 0 20px;font-size:1.1em;font-weight:600">注意用眼卫生，预防近视</p>
+            <p style="color:#6b7280;margin:0 0 20px">已经连续使用 10 分钟了，请起身看看远方，让眼睛放松放松吧～</p>
+            <button class="modal-btn primary" onclick="closeEyeRest()">好的，我知道了</button>
+        </div>
+    </div>
+    <div id="eye-force-modal" class="modal">
+        <div class="modal-content pause-box">
+            <div class="result-big-icon">⏳</div>
+            <h2>用眼时间较长</h2>
+            <p style="color:#6b7280;margin:10px 0 16px">为了保护眼睛，将退出网站休息一下。<br><span style="font-size:2.2em;font-weight:800;color:#ef4444" id="eye-force-count">10</span> 秒后自动退出</p>
+            <button class="modal-btn" onclick="forceEyeLogoutNow()">立即退出</button>
+        </div>
+    </div>
+    <div id="like-notify-modal" class="modal">
+        <div class="modal-content pause-box">
+            <div class="result-big-icon">🎉</div>
+            <h2>你的练习被点赞啦！</h2>
+            <p id="like-notify-msg" style="color:#6b7280;margin:12px 0 20px;line-height:1.7"></p>
+            <button class="modal-btn primary" onclick="closeLikeNotify()">开心收下 👍</button>
+        </div>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
-    <script src="app.js?v=20260803"></script>
+    <script src="app.js?v=20260806"></script>
 </body>
 </html>
