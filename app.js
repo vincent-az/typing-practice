@@ -100,11 +100,11 @@ async function supabaseLoadLikes() {
         console.error('Supabase加载点赞失败（本地点赞仍可用）:',error);
         return true;
     }
-    likesData = {};
     (data || []).forEach(l => {
         const k = likeKey(l.grade_class, l.grade_name, l.grade_date, l.type);
         if (!likesData[k]) likesData[k] = [];
-        likesData[k].push({ class: l.liker_class, name: l.liker_name });
+        const rec={ class: l.liker_class, name: l.liker_name };
+        if(!likesData[k].some(x=>x.class===rec.class&&x.name===rec.name))likesData[k].push(rec);
     });
     return true;
 }
@@ -1130,6 +1130,7 @@ function showScreen(id){
     document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     GS.currentScreen=id;
+    if(id==='typing-screen')focusImeInput();
     if(id==='touch-play-screen'){enterLandscape();}else{exitLandscape();}
     if(id==='score-screen'){updateScoreDisplay();updateBadges();}
     if(id==='home-screen'){updatePetMessage();}
@@ -1161,13 +1162,14 @@ function startPractice(type){
     const diff=document.getElementById('setting-difficulty').value;
     const dur=parseInt(document.getElementById('setting-duration').value);
     GS.currentPractice=type;GS.timeLimit=dur;GS.currentIndex=0;GS.correctChars=0;GS.totalChars=0;GS.isPaused=false;GS.isFinished=false;GS.startTime=null;
+    GS.articlePages=null;GS.articlePage=0;GS.inputChars=[];
     const pt=document.getElementById('article-practice-title');
     if(pt)pt.style.display='none';
     let texts=practiceData[type][diff];
     GS.currentText=Array.isArray(texts)?texts[Math.floor(Math.random()*texts.length)]:texts;
     showScreen('typing-screen');displayText();updateHint();
     clearInterval(GS.timerInterval);document.getElementById('timer').textContent='0:00';document.getElementById('progress-percent').textContent='0%';
-    document.getElementById('virtual-keyboard').style.display=document.getElementById('setting-guide').checked?'block':'none';
+    applyVirtualKeyboardVisibility();updatePageIndicator();renderInputDisplay();focusImeInput();
 }
 
 /* ====== 中文短文练习（人教版三年级5篇，电脑键盘输入，支持单字或词语） ====== */
@@ -1197,12 +1199,82 @@ function startArticlePractice(i){
     const dur=parseInt(document.getElementById('setting-duration').value);
     GS.currentPractice='articles';GS.timeLimit=dur;GS.articleIdx=i;
     GS.currentIndex=0;GS.correctChars=0;GS.totalChars=0;GS.isPaused=false;GS.isFinished=false;GS.startTime=null;
-    GS.currentText=art.content;
+    GS.articlePages=splitArticle(art.content);GS.articlePage=0;GS.inputChars=[];
+    GS.currentText=GS.articlePages[0];
     const pt=document.getElementById('article-practice-title');
     if(pt){pt.style.display='block';pt.textContent=art.icon+' '+art.title+'　·　请用拼音输入法逐字或整词输入';}
-    showScreen('typing-screen');displayText();updateHint();
+    showScreen('typing-screen');displayText();updateHint();updatePageIndicator();renderInputDisplay();focusImeInput();
     clearInterval(GS.timerInterval);document.getElementById('timer').textContent='0:00';document.getElementById('progress-percent').textContent='0%';
     document.getElementById('virtual-keyboard').style.display='none';
+}
+function splitArticle(content){
+    const size=Math.max(1,Math.ceil(content.length/3));
+    const pages=[];
+    for(let i=0;i<content.length;i+=size)pages.push(content.slice(i,i+size));
+    return pages;
+}
+function articleDoneChars(){
+    if(!GS.articlePages)return 0;
+    let s=0;for(let i=0;i<GS.articlePage;i++)s+=GS.articlePages[i].length;
+    return s;
+}
+function articleTotalChars(){return GS.articlePages?GS.articlePages.reduce((s,p)=>s+p.length,0):GS.currentText.length;}
+function updatePageIndicator(){
+    const el=document.getElementById('article-page-indicator');
+    if(!el)return;
+    if(GS.currentPractice==='articles'&&GS.articlePages){
+        el.style.display='inline-block';
+        el.textContent='第 '+(GS.articlePage+1)+' / '+GS.articlePages.length+' 页';
+    }else{el.style.display='none';}
+}
+function onPageComplete(){
+    if(GS.currentPractice==='articles'&&GS.articlePages&&GS.articlePage<GS.articlePages.length-1){
+        GS.articlePage++;
+        GS.currentIndex=0;GS.currentText=GS.articlePages[GS.articlePage];
+        GS.inputChars=[];
+        displayText();updateHint();updatePageIndicator();renderInputDisplay();focusImeInput();
+        showToast('第 '+(GS.articlePage+1)+' 页，继续加油！','success');
+        return true;
+    }
+    finishPractice(true);
+    return false;
+}
+function shouldHideVirtualKeyboard(){
+    return ['punctuation-cn','sentences','articles'].indexOf(GS.currentPractice)>=0;
+}
+function applyVirtualKeyboardVisibility(){
+    const guide=document.getElementById('setting-guide');
+    document.getElementById('virtual-keyboard').style.display=(guide&&guide.checked&&!shouldHideVirtualKeyboard())?'block':'none';
+}
+function focusImeInput(){
+    const el=document.getElementById('ime-input');
+    if(!el)return;
+    try{if(document.hasFocus&&!document.hasFocus())window.focus();}catch(e){}
+    try{el.focus({preventScroll:true});}catch(e){el.focus();}
+}
+function recordTypedChar(idx,ch){
+    if(!GS.inputChars)GS.inputChars=[];
+    GS.inputChars[idx]=ch;
+    renderInputDisplay();
+}
+function renderInputDisplay(){
+    const el=document.getElementById('input-display');
+    if(!el)return;
+    const visible=GS.currentScreen==='typing-screen'&&['punctuation-cn','sentences','articles'].indexOf(GS.currentPractice)>=0;
+    el.style.display=visible?'block':'none';
+    if(!visible)return;
+    el.innerHTML='';
+    for(let i=0;i<GS.currentText.length;i++){
+        const s=document.createElement('span');s.className='input-char';
+        const typed=GS.inputChars?GS.inputChars[i]:undefined;
+        if(typed!==undefined){
+            s.textContent=typed;
+            if(typed!==GS.currentText[i])s.classList.add('error');
+        }else{
+            s.textContent='\u00A0';
+        }
+        el.appendChild(s);
+    }
 }
 function displayText(){
     const el=document.getElementById('text-content');el.innerHTML='';
@@ -1251,6 +1323,8 @@ document.addEventListener('keydown',function(e){
             GS.currentIndex--;
             const ch=document.querySelector('.char[data-index="'+GS.currentIndex+'"]');
             if(ch){ch.classList.remove('correct','error','shake');ch.classList.add('current');}
+            if(GS.inputChars)delete GS.inputChars[GS.currentIndex];
+            renderInputDisplay();
             updateHint();
         }
         return;
@@ -1260,6 +1334,7 @@ document.addEventListener('keydown',function(e){
         e.preventDefault();e.stopPropagation();
         if(!GS.startTime){GS.startTime=Date.now();startTimer();}
         GS.totalChars++;
+        recordTypedChar(GS.currentIndex,key);
         if(key===currentChar){
             GS.correctChars++;markCorrect(GS.currentIndex);GS.currentIndex++;
             if(document.getElementById('setting-sound').checked)playSound('correct');
@@ -1269,7 +1344,7 @@ document.addEventListener('keydown',function(e){
             GS.currentIndex++;
         }
         updateStats();updateHint();
-        if(GS.currentIndex>=GS.currentText.length)finishPractice(true);
+        if(GS.currentIndex>=GS.currentText.length){onPageComplete();return;}
         return;
     }
     if(key==='Shift'||key==='CapsLock'||key==='Tab'||key==='Control'||key==='Alt'||key==='Meta'||key==='Enter')return;
@@ -1277,6 +1352,7 @@ document.addEventListener('keydown',function(e){
     e.preventDefault();e.stopPropagation();
     if(!GS.startTime){GS.startTime=Date.now();startTimer();}
     GS.totalChars++;
+    recordTypedChar(GS.currentIndex,key);
     let ok=key===currentChar||(currentChar===' '&&key===' ')||(key.length===1&&currentChar.length===1&&key.toLowerCase()===currentChar.toLowerCase());
     if(ok){
         GS.correctChars++;markCorrect(GS.currentIndex);GS.currentIndex++;
@@ -1287,16 +1363,18 @@ document.addEventListener('keydown',function(e){
         GS.currentIndex++;
     }
     updateStats();updateHint();
-    if(GS.currentIndex>=GS.currentText.length)finishPractice(true);
+    if(GS.currentIndex>=GS.currentText.length){onPageComplete();return;}
 });
 document.addEventListener('compositionend',function(e){
     if(GS.currentScreen!=='typing-screen'||GS.isPaused||GS.isFinished)return;
     const data=(e.data||imeBuffer||'').trim();
     imeBuffer='';
+    const ie=document.getElementById('ime-input');if(ie)ie.value='';
     if(!data||!isCJKChar(data))return;
     if(!GS.startTime){GS.startTime=Date.now();startTimer();}
     const expected=GS.currentText.substring(GS.currentIndex,GS.currentIndex+data.length);
     GS.totalChars+=data.length;
+    for(let i=0;i<data.length;i++)recordTypedChar(GS.currentIndex+i,data[i]);
     if(data===expected){
         for(let i=0;i<data.length;i++){markCorrect(GS.currentIndex+i);}
         GS.correctChars+=data.length;
@@ -1312,7 +1390,7 @@ document.addEventListener('compositionend',function(e){
         if(document.getElementById('setting-sound').checked)playSound('error');
     }
     updateStats();updateHint();
-    if(GS.currentIndex>=GS.currentText.length)finishPractice(true);
+    if(GS.currentIndex>=GS.currentText.length){onPageComplete();return;}
 });
 document.addEventListener('keydown',function(e){
     if(GS.currentScreen!=='touch-play-screen')return;
@@ -1338,7 +1416,8 @@ function updateStats(){
     const t=(Date.now()-GS.startTime)/1000/60;
     const wpm=t>0?Math.round((GS.correctChars/5)/t):0;
     const acc=GS.totalChars>0?Math.round((GS.correctChars/GS.totalChars)*100):100;
-    const prog=Math.round((GS.currentIndex/GS.currentText.length)*100);
+    const total=articleTotalChars();
+    const prog=total>0?Math.round(((articleDoneChars()+GS.currentIndex)/total)*100):0;
     document.getElementById('wpm').textContent=wpm;document.getElementById('accuracy').textContent=acc;document.getElementById('progress-percent').textContent=prog+'%';
 }
 function startTimer(){
@@ -1423,10 +1502,10 @@ function updateStreak(){
     GS.lastPracticeDate=today;
 }
 function pausePractice(){GS.isPaused=true;document.getElementById('pause-modal').classList.add('active');}
-function resumePractice(){GS.isPaused=false;document.getElementById('pause-modal').classList.remove('active');}
+function resumePractice(){GS.isPaused=false;document.getElementById('pause-modal').classList.remove('active');focusImeInput();}
 function restartPractice(){document.getElementById('result-modal').classList.remove('active');if(GS.currentPractice==='articles'){startArticlePractice(GS.articleIdx||0);return;}startPractice(GS.currentPractice);}
 function exitPractice(){clearInterval(GS.timerInterval);document.getElementById('result-modal').classList.remove('active');showScreen('practice-screen');}
-function closeResultAndGo(id){document.getElementById('result-modal').classList.remove('active');showScreen(id);}
+function closeResultAndGo(id){document.getElementById('result-modal').classList.remove('active');showScreen(id);if(id==='typing-screen')focusImeInput();}
 function updateScoreDisplay(){
     document.getElementById('score-level').textContent='Lv.'+GS.level+' '+getLevelTitle();
     const xn=GS.level*100;document.getElementById('score-xp').textContent=GS.xp+' / '+xn+' XP';
@@ -2173,7 +2252,15 @@ document.addEventListener('DOMContentLoaded',async function(){
         if(!GS.startTime){GS.startTime=Date.now();startTimer();}
         const e=new KeyboardEvent('keydown',{key:this.dataset.key});document.dispatchEvent(e);
     });});
-document.getElementById('setting-guide').addEventListener('change',function(){
-    document.getElementById('virtual-keyboard').style.display=(this.checked&&GS.currentPractice!=='articles')?'block':'none';
-});
+    document.getElementById('setting-guide').addEventListener('change',function(){
+        applyVirtualKeyboardVisibility();
+    });
+    ['text-content','input-display'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el)el.addEventListener('click',function(){if(GS.currentScreen==='typing-screen')focusImeInput();});
+    });
+    document.getElementById('ime-input').addEventListener('compositionstart',function(){
+        imeBuffer='';
+    });
+    document.getElementById('ime-input').addEventListener('compositionupdate',function(e){imeBuffer=e.data||'';});
 });

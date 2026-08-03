@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>潘庄小学打字练习乐园</title>
-    <link rel="stylesheet" href="style.css?v=20260806">
+    <link rel="stylesheet" href="style.css?v=20260808">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -452,7 +452,10 @@
                 <div class="stat stat-prog"><span class="stat-label">进度</span><span id="progress-percent" class="stat-value">0%</span></div>
             </div>
             <div id="article-practice-title" class="article-practice-title" style="display:none"></div>
+            <div id="article-page-indicator" class="article-page-indicator" style="display:none"></div>
             <div class="text-display"><div id="text-content"></div></div>
+            <div id="input-display" class="input-display" style="display:none"></div>
+            <input id="ime-input" class="ime-input" autocomplete="off" spellcheck="false">
             <div class="current-key-hint">
                 <span>请按：</span>
                 <span id="hint-key" class="hint-key">A</span>
@@ -846,6 +849,6 @@
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
-    <script src="app.js?v=20260806"></script>
+    <script src="app.js?v=20260808"></script>
 </body>
 </html>
