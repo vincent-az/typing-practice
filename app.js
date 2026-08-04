@@ -1627,9 +1627,9 @@ function startGame(type){
     showScreen('gameplay-screen');
     document.querySelectorAll('.game-area').forEach(a=>a.style.display='none');
     document.getElementById('game-'+type).style.display='block';
-    const titles={race:'🏎️ 打字赛车',bubble:'🫧 泡泡大作战',star:'🌟 摘星星'};
+    const titles={race:'🏎️ 打字赛车',bubble:'🫧 泡泡大作战',star:'🌟 摘星星',apple:'🍎 接苹果'};
     document.getElementById('game-title').textContent=titles[type]||'打字游戏';
-    if(type==='race')initRace();else if(type==='bubble')initBubble();else if(type==='star')initStar();
+    if(type==='race')initRace();else if(type==='bubble')initBubble();else if(type==='star')initStar();else if(type==='apple')initApple();
     gameInterval=setInterval(()=>{gameTimeLeft--;document.getElementById('game-time').textContent='时间: '+gameTimeLeft+'s';if(gameTimeLeft<=0)endGame();},1000);
 }
 function initRace(){
@@ -1661,6 +1661,58 @@ function initStar(){
     nextStarTarget();
 }
 function nextStarTarget(){const stars=document.querySelectorAll('.star-item');if(stars.length===0){gameScore+=100;document.getElementById('game-score').textContent='得分: '+gameScore;initStar();return;}gameTarget=stars[0].dataset.letter;document.getElementById('star-target').textContent=gameTarget.toUpperCase()+' ⭐';const badge=document.querySelector('.star-target-badge');if(badge)badge.textContent='目标: '+gameTarget.toUpperCase();}
+
+let appleItems=[];let appleTimer=null;
+function initApple(){
+    appleItems=[];
+    const ac=document.getElementById('apple-container');ac.innerHTML='';
+    document.getElementById('apple-target').textContent='等待苹果…';
+    if(appleTimer)clearInterval(appleTimer);
+    spawnApple();
+    appleTimer=setInterval(appleTick,80);
+}
+function spawnApple(){
+    const ac=document.getElementById('apple-container');
+    const letters='abcdefghijklmnopqrstuvwxyz';
+    const letter=letters[Math.floor(Math.random()*26)];
+    const a=document.createElement('div');a.className='apple-item';
+    a.innerHTML='<div class="apple-fruit">'+letter.toUpperCase()+'</div>';
+    const left=5+Math.random()*90;
+    a.style.left=left+'%';
+    const apple={el:a,letter,left,speed:0.4+Math.random()*0.9,missed:false};
+    ac.appendChild(a);
+    appleItems.push(apple);
+    updateAppleTarget();
+}
+function appleTick(){
+    const ac=document.getElementById('apple-container');
+    const areaH=ac.offsetHeight;
+    for(let i=appleItems.length-1;i>=0;i--){
+        const ap=appleItems[i];
+        ap.speed+=0.02;
+        const y=parseFloat(ap.el.style.top)||-60;
+        const ny=y+ap.speed;
+        ap.el.style.top=ny+'px';
+        if(ny>=areaH-50&&!ap.missed){
+            ap.missed=true;gameScore-=5;
+            document.getElementById('game-score').textContent='得分: '+gameScore;
+            ap.el.classList.add('missed');
+            setTimeout(()=>{ap.el.remove();},500);
+            appleItems.splice(i,1);
+        }
+    }
+    if(appleItems.length<6)spawnApple();
+    updateAppleTarget();
+}
+function updateAppleTarget(){
+    const t=document.getElementById('apple-target');
+    if(appleItems.length===0){if(t)t.textContent='等待苹果…';return;}
+    const sorted=appleItems.slice().sort((a,b)=>b.speed-a.speed);
+    const ap=sorted[0];
+    gameTarget=ap.letter;
+    if(t)t.textContent='接住: '+ap.letter.toUpperCase();
+}
+
 function handleGameKey(key){
     if(GS.currentScreen!=='gameplay-screen'||gameTimeLeft<=0)return;
     if(key===gameTarget){
@@ -1669,8 +1721,9 @@ function handleGameKey(key){
         if(gameType==='race'){const player=document.getElementById('race-player');const cur=parseFloat(player.style.left)||10;player.style.left=Math.min(cur+8,75)+'%';document.querySelectorAll('.cpu-car').forEach(c=>{const cl=parseFloat(c.style.left)||10;c.style.left=Math.min(cl+Math.random()*5,75)+'%';});if(cur>=70){gameScore+=50;document.getElementById('game-score').textContent='得分: '+gameScore;player.style.left='10%';}nextRaceWord();
         }else if(gameType==='bubble'){const b=document.querySelector('.bubble');if(b){b.style.transform='scale(1.5)';b.style.opacity='0';setTimeout(()=>{b.remove();nextBubbleTarget();},300);}else{nextBubbleTarget();}
         }else if(gameType==='star'){const s=document.querySelector('.star-item');if(s){s.style.transform='scale(1.5)';s.style.opacity='0';setTimeout(()=>s.remove(),300);}nextStarTarget();}
+        else if(gameType==='apple'){const ap=appleItems.find(a=>a.letter===key);if(ap){ap.missed=true;gameScore+=5;document.getElementById('game-score').textContent='得分: '+gameScore;ap.el.classList.add('caught');setTimeout(()=>ap.el.remove(),300);appleItems=appleItems.filter(a=>a!==ap);updateAppleTarget();}}
     }else{if(document.getElementById('setting-sound').checked)playSound('error');
-        const t=document.getElementById(gameType==='race'?'race-target':gameType==='bubble'?'bubble-target':'star-target');
+        const t=document.getElementById(gameType==='race'?'race-target':gameType==='bubble'?'bubble-target':gameType==='star'?'star-target':'apple-target');
         if(t){t.classList.add('target-flash');setTimeout(()=>t.classList.remove('target-flash'),400);}
     }
 }
@@ -1686,8 +1739,8 @@ document.addEventListener('keydown',function(e){
     }
     handleGameKey(key.toLowerCase());
 });
-function endGame(){clearInterval(gameInterval);gameInterval=null;const stars=gameScore>=100?3:gameScore>=50?2:1;document.getElementById('gameover-stars').textContent='⭐'.repeat(stars);document.getElementById('gameover-score').textContent=gameScore;document.getElementById('gameover-correct').textContent=gameCorrect;const msgs=['继续加油！','很棒！','太厉害了！'];document.getElementById('gameover-msg').textContent=msgs[stars-1];document.getElementById('gameover-modal').classList.add('active');}
-function exitGame(){clearInterval(gameInterval);gameInterval=null;document.getElementById('gameover-modal').classList.remove('active');showScreen('game-screen');}
+function endGame(){clearInterval(gameInterval);gameInterval=null;clearInterval(appleTimer);appleTimer=null;const stars=gameScore>=100?3:gameScore>=50?2:1;document.getElementById('gameover-stars').textContent='⭐'.repeat(stars);document.getElementById('gameover-score').textContent=gameScore;document.getElementById('gameover-correct').textContent=gameCorrect;const msgs=['继续加油！','很棒！','太厉害了！'];document.getElementById('gameover-msg').textContent=msgs[stars-1];document.getElementById('gameover-modal').classList.add('active');}
+function exitGame(){clearInterval(gameInterval);gameInterval=null;clearInterval(appleTimer);appleTimer=null;document.getElementById('gameover-modal').classList.remove('active');showScreen('game-screen');}
 function restartCurrentGame(){document.getElementById('gameover-modal').classList.remove('active');if(gameType)startGame(gameType);}
 function closeGameOverAndGo(id){document.getElementById('gameover-modal').classList.remove('active');showScreen(id);}
 
